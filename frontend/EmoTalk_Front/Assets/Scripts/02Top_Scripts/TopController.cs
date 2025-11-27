@@ -21,10 +21,11 @@ public class TopController : MonoBehaviour
     // ここからチャットログ追加
     // -------------------------
     [Header("Chat Log")]
-    public Transform logContent;             // ScrollView の Content
-    public GameObject logItemUserPrefab;     // 自分の吹き出し
-    public GameObject logItemEmoPrefab;      // Emo の吹き出し
-    public RectTransform contentTransform;   // Content の RectTransform
+    public Transform logContent;
+    public GameObject logItemUserPrefab;    
+    public GameObject logItemEmoPrefab;      
+    public RectTransform contentTransform;
+     public ScrollRect scrollRect; 
 
     [Header("Input UI")]
     public InputField chatInput;
@@ -110,6 +111,7 @@ public class TopController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         AddLogItem("了解です！", false);
+        ScrollToBottom();
     }
 
     // -------------------------
@@ -126,5 +128,15 @@ public class TopController : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(item.GetComponent<RectTransform>());
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform);
 
+    }
+
+    // -------------------------
+    // スクロールを一番下に移動
+    // -------------------------
+    public void ScrollToBottom()
+    {
+        Canvas.ForceUpdateCanvases();
+        scrollRect.verticalNormalizedPosition = 0f;  
+        Canvas.ForceUpdateCanvases();
     }
 }

@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/02Top_Scripts/MicPopupContller.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/MenuController.cs" />
     <Compile Include="Assets/Scripts/01Login_Scripts/LoginController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/TopController.cs" />
   </ItemGroup>

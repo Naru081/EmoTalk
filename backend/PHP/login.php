@@ -1,5 +1,5 @@
 <?php
-// ログイン処理を行うPHP
+// ログイン処理とトークン発行リクエストを行うPHP
 
 require_once '../dbconnect.php';
 require_once '../DBPHP/DBuser.php';
@@ -21,14 +21,23 @@ if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// パスワードが8文字以上16文字内かチェック
-if ($password === "" || strlen($password) < 8 || strlen($password) > 16) {
+// パスワードが8文字以上16文字内で英数字のみかチェック また、英字と数字は必ず使用することとする
+if (
+    $password === "" || 
+    strlen($password) < 8 ||
+    strlen($password) > 16 ||
+    !preg_match('/[a-zA-Z]/', $password) || // 英字を含むか
+    !preg_match('/[0-9]/', $password) || // 数字を含むか
+    !preg_match('/^[a-zA-Z0-9]+$/', $password) // 英数字のみか
+) {
     echo json_encode(["success" => false, "message" => "メールアドレスまたはパスワードが不正です"], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// ログイン処理-DBuser.php(ユーザデバイス登録用のトークン発行も含む)
+// ログイン処理-DBuser.php
 $result = $DBuser->LoginUser($email, $password);
+
+// successとmessageとuser_idとuser_mailとtokenを返す
 echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 ?>

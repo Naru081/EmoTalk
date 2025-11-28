@@ -14,6 +14,9 @@ $data = json_decode($row, true);
 // 受け取ったデータを変数に格納 (空の場合は空白を代入)
 $localtoken = $data['localtoken'] ?? "";
 
+// 自動ログイン処理-DBuser.php
 $result = $DBuser->AutoLoginUser($localtoken);
-echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+// user_idとuser_mailとsuccessとmessageをJSONで返す
+echo json_encode($result, JSON_UNESCAPED_UNICODE);  
 ?>

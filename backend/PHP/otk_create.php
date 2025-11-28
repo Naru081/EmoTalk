@@ -43,7 +43,7 @@ $otk = random_int(100000,999999);
 $otk_created = date('Y-m-d H:i:s');
 
 // DBにワンタイムキーを保存-DBuser.php
-$result = $DBuser->createOTK($otk, $otk_created, $email);
+$result = $DBuser->CreateOtk($otk, $otk_created, $email);
 
 // ユーザメールアドレス宛にワンタイムキーの送信処理
 try {
@@ -57,8 +57,8 @@ try {
     $mail->Password   = $_ENV['MAIL_PASSWORD'];  // Gmail アプリパスワード
     $mail->SMTPSecure = 'tls'; 
     $mail->Port       = $_ENV['MAIL_PORT'];
-    $mail->Frommail   = $_ENV['MAIL_FROM']; // 送信者のメールアドレス
-    $mail->Sendmail   = $email; // 送信先のメールアドレス
+    $mail->setFrom($_ENV['MAIL_FROM']); // 送信者のメールアドレス
+    $mail->addAddress($email);          // 送信先のメールアドレス
 
     // メール内容
     $mail->isHTML(true);
@@ -73,10 +73,14 @@ try {
     // メール送信
     $mail->send();
 
-    echo json_encode([
-        "success"=> true,
-        "message"=> "ワンタイムキーをメールで送信しました"
-    ], JSON_UNESCAPED_UNICODE);
+    // DBにワンタイムキーを保存成功していればsuccessとmessageを返す
+    if ($result) {
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
+    else {
+        // DB保存失敗の場合
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    }
 
 } catch (Exception $e) {
     echo json_encode([

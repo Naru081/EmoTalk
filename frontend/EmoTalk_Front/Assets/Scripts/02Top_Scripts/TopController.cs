@@ -17,15 +17,22 @@ public class TopController : MonoBehaviour
     private bool isOpen = false;
     private float slideSpeed = 10f;
 
+    // ★ ここからスワイプ用の変数を追加 ★
+    private bool isDragging = false;
+    private Vector2 dragStartPos;
+    private float panelStartX;
+    [Range(0.1f, 0.9f)]
+    public float openThreshold = 0.5f;   // 開き具合が何割以上なら「開く」とみなすか
+
     // -------------------------
     // ここからチャットログ追加
     // -------------------------
     [Header("Chat Log")]
     public Transform logContent;
-    public GameObject logItemUserPrefab;    
-    public GameObject logItemEmoPrefab;      
+    public GameObject logItemUserPrefab;
+    public GameObject logItemEmoPrefab;
     public RectTransform contentTransform;
-     public ScrollRect scrollRect; 
+    public ScrollRect scrollRect;
 
     [Header("Input UI")]
     public InputField chatInput;
@@ -49,15 +56,29 @@ public class TopController : MonoBehaviour
 
     void Update()
     {
-        float targetX = isOpen ? openX : closeX;
-        Vector3 pos = logPanel.localPosition;
-        pos.x = Mathf.Lerp(pos.x, targetX, Time.deltaTime * slideSpeed);
-        logPanel.localPosition = pos;
+        // ---- ドラッグしていないときだけ、Lerp でスムーズに目標位置へ ----
+        if (!isDragging)
+        {
+            float targetX = isOpen ? openX : closeX;
+            Vector3 pos = logPanel.localPosition;
+            pos.x = Mathf.Lerp(pos.x, targetX, Time.deltaTime * slideSpeed);
+            logPanel.localPosition = pos;
+        }
+
+        // ---- iPhone コントロールセンター風のドラッグ処理 ----
+        DetectDrag();
     }
 
     public void ToggleLogPanel()
     {
-        isOpen = !isOpen;
+        if (isOpen)
+        {
+            // スワイプ中断
+            isDragging = false;
+
+            // アニメーションに任せて閉じる
+            isOpen = false;
+        }
     }
 
     // -------------------------
@@ -106,7 +127,6 @@ public class TopController : MonoBehaviour
         StartCoroutine(DebugAutoReply());
     }
 
-
     IEnumerator DebugAutoReply()
     {
         yield return new WaitForSeconds(0.5f);
@@ -127,7 +147,6 @@ public class TopController : MonoBehaviour
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(item.GetComponent<RectTransform>());
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform);
-
     }
 
     // -------------------------
@@ -136,7 +155,72 @@ public class TopController : MonoBehaviour
     public void ScrollToBottom()
     {
         Canvas.ForceUpdateCanvases();
-        scrollRect.verticalNormalizedPosition = 0f;  
+        scrollRect.verticalNormalizedPosition = 0f;
         Canvas.ForceUpdateCanvases();
+    }
+
+    // =====================================
+    // iPhone風スワイプ開閉処理
+    // =====================================
+    void DetectDrag()
+    {
+        #if UNITY_EDITOR || UNITY_STANDALONE
+        // --- マウス操作（エディタ確認用） ---
+        if (Input.GetMouseButtonDown(0))
+        {
+            isDragging = true;
+            dragStartPos = Input.mousePosition;
+            panelStartX = logPanel.localPosition.x;
+        }
+        else if (Input.GetMouseButton(0) && isDragging)
+        {
+            float diffX = Input.mousePosition.x - dragStartPos.x;
+            float newX = Mathf.Clamp(panelStartX + diffX, closeX, openX);
+            logPanel.localPosition = new Vector3(newX, logPanel.localPosition.y, logPanel.localPosition.z);
+        }
+        else if (Input.GetMouseButtonUp(0) && isDragging)
+        {
+            EndDrag();
+        }
+        #else
+        // --- タッチ操作（スマホ実機） ---
+        if (Input.touchCount > 0)
+        {
+            Touch t = Input.GetTouch(0);
+
+            if (t.phase == TouchPhase.Began)
+            {
+                isDragging = true;
+                dragStartPos = t.position;
+                panelStartX = logPanel.localPosition.x;
+            }
+            else if (t.phase == TouchPhase.Moved && isDragging)
+            {
+                float diffX = t.position.x - dragStartPos.x;
+                float newX = Mathf.Clamp(panelStartX + diffX, closeX, openX);
+                logPanel.localPosition = new Vector3(newX, logPanel.localPosition.y, logPanel.localPosition.z);
+            }
+            else if ((t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled) && isDragging)
+            {
+                EndDrag();
+            }
+        }
+        #endif
+    }
+
+    void EndDrag()
+    {
+        isDragging = false;
+
+        float currentX = logPanel.localPosition.x;
+        float width = openX - closeX;
+
+        // closeX〜openX を 0〜1 に正規化
+        float ratio = (currentX - closeX) / width;
+
+        // 指を離した位置が「一定以上右に出ていれば」開く
+        isOpen = (ratio >= openThreshold);
+        // ※ isOpen が決まると、Update() 内の Lerp で
+        //    openX or closeX へ「スッ」と吸い付く動きになります
     }
 }

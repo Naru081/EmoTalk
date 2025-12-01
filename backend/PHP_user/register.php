@@ -66,7 +66,25 @@ if (!$createdefaultprofile) {
     exit;
 }
 
-// successとmessageを返す
+// profileテーブルから、user_idに対応したprof_idが一番小さいデータを取得する-DBprofile.php(新規登録直後の選択プロファイルを設定するため)
+$defaultset_profile = $DBprofile->GetDefaultSetProfile($user_id);
+
+if (!$defaultset_profile) {
+    // デフォルトセットプロファイル取得失敗
+    echo json_encode(["success"=> false, "message"=> "デフォルトセットプロファイルの取得に失敗しました"], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// userテーブルのuser_currentprofにデフォルトセットプロファイル(defaultset_profile)をセット-DBuser.php
+$defaultset_profile_result = $DBuser->ChangeProfile($user_id, $defaultset_profile);
+
+if (!$defaultset_profile_result['success']) {
+    // プロファイル切り替え失敗
+    echo json_encode(["success"=> false, "message"=> "デフォルトセットプロファイルの登録に失敗しました"], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// 全処理が成功時、successとmessageを返す
 echo json_encode($result,JSON_UNESCAPED_UNICODE);
 
 ?>

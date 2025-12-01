@@ -79,7 +79,7 @@ public class LoginController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // ログイン処理を行うPHPのurl (実機稼働時にはサーバーのURLに変更すること)
-        string url = "http://localhost/backend/PHP/login.php";
+        string url = "http://localhost/backend/PHP_user/login.php";
 
         // リクエストデータ作成
         RequestData reqData = new RequestData();
@@ -220,7 +220,7 @@ public class LoginController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // 新規登録処理を行うPHPのurl (実機稼働時にはサーバーのURLに変更すること)
-        string url = "http://localhost/backend/PHP/register.php";
+        string url = "http://localhost/backend/PHP_user/register.php";
 
         // リクエストデータ作成
         RequestData reqData = new RequestData();
@@ -322,10 +322,10 @@ public class LoginController : MonoBehaviour
     // メール入力と確認
     public void OnSendResetMailButtonClicked()
     {
-        string mail = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
+        string email = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
 
         // メールアドレス未入力チェック
-        if (string.IsNullOrEmpty(mail))
+        if (string.IsNullOrEmpty(email))
         {
             ShowResetMailError("メールアドレスを入力してください");
             return;
@@ -335,34 +335,20 @@ public class LoginController : MonoBehaviour
         ClearAllResetErrors();
 
         // メール送信リクエスト開始
-        StartCoroutine(SendResetMailRequest(mail));
+        StartCoroutine(SendResetMailRequest(email));
     }
 
     // メール送信リクエスト
-    private IEnumerator SendResetMailRequest(string mail)
+    private IEnumerator SendResetMailRequest(string email)
     {
         yield return new WaitForSeconds(0.5f);
 
-
-        // 後ほど確認
-        //if (mail.Exists)
-        //{
-        //    if (resetMailPanel != null) resetMailPanel.SetActive(false);
-        //    if (resetKeyPanel != null) resetKeyPanel.SetActive(true);
-
-        //    if (resetKeyInput != null) resetKeyInput.text = "";
-        //}
-        //else
-        //{
-        //    ShowResetMailError("このメールアドレスは登録されていません。");
-        //}
-
         // ワンタイムキーを発行してメール送信するPHPのurl (実機稼働時にはサーバーのURLに変更すること)
-        string url = "http://localhost/backend/PHP/otk_create.php";
+        string url = "http://localhost/backend/PHP_user/otk_create.php";
 
         // リクエストデータ作成
         RequestData reqData = new RequestData();
-        reqData.email = mail;
+        reqData.email = email;
 
         // JSONに変換
         string json = JsonUtility.ToJson(reqData);
@@ -398,6 +384,9 @@ public class LoginController : MonoBehaviour
             yield break;
         }
 
+        // ダミー成功処理 (後で削除)
+        res.success = true;
+
         // 結果の処理
         if (res.success)
         {
@@ -408,13 +397,9 @@ public class LoginController : MonoBehaviour
         }
         else
         {
-            // エラー表示 次回ここから エラーが出てこない
             ShowResetMailError(res.message);
             yield break;
         }
-        
-
-
     }
 
     // メール送信エラー表示
@@ -429,28 +414,74 @@ public class LoginController : MonoBehaviour
     // ワンタイムキー入力後の確認
     public void OnSendResetKeyButtonClicked()
     {
-        string key = resetKeyInput != null ? resetKeyInput.text.Trim() : "";
+        string otk = resetKeyInput != null ? resetKeyInput.text.Trim() : "";
+        string mail = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
 
-        if (string.IsNullOrEmpty(key))
+
+        if (string.IsNullOrEmpty(otk))
         {
             ShowResetKeyError("ワンタイムキーを入力してください");
             return;
         }
 
         ClearAllResetErrors();
-        StartCoroutine(CheckResetKeyRequest(key));
+        StartCoroutine(CheckResetKeyRequest(mail, otk));
     }
 
     // ワンタイムキー確認リクエスト
-    private IEnumerator CheckResetKeyRequest(string key)
+    private IEnumerator CheckResetKeyRequest(string mail, string key)
     {
-        // TODO: 後でキー検証APIと接続
         yield return new WaitForSeconds(0.5f);
 
-        bool keyValid = true; // ダミー成功
+        // ワンタイムキーの認証を行うPHPのurl (実機稼働時にはサーバーのURLに変更すること)
+        string url = "http://localhost/backend/PHP_user/otk_auth.php";
 
-        if (keyValid)
+        // リクエストデータ作成
+        RequestData reqData = new RequestData();
+        reqData.email = mail;
+        reqData.otk = key;
+
+        // JSONに変換
+        string json = JsonUtility.ToJson(reqData);
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+
+        // 通信準備
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        request.uploadHandler = new UploadHandlerRaw(body);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        // 通信開始
+        yield return request.SendWebRequest();
+
+        // 通信エラー
+        if (request.result != UnityWebRequest.Result.Success)
         {
+            ShowResetKeyError("通信エラーが発生しました。");
+            yield break;
+        }
+
+        // データ取得(レスポンスデータ)
+        string responseText = request.downloadHandler.text;
+        Debug.Log("サーバー応答:" + responseText);
+
+        // JSON解析
+        ResponseData res;
+        try
+        {
+            res = JsonUtility.FromJson<ResponseData>(responseText);
+        } catch {
+            ShowResetKeyError("サーバー応答の解析に失敗しました。");
+            yield break;
+        }
+
+        // ダミー成功処理 (後で削除)
+        res.success = true;
+
+        // 結果の処理
+        if (res.success)
+        {
+            // 成功時、新パスワード入力パネルへ
             if (resetKeyPanel != null) resetKeyPanel.SetActive(false);
             if (resetPasswordPanel != null) resetPasswordPanel.SetActive(true);
 
@@ -459,7 +490,7 @@ public class LoginController : MonoBehaviour
         }
         else
         {
-            ShowResetKeyError("ワンタイムキーが正しくありません。");
+            ShowResetKeyError(res.message);
         }
     }
 
@@ -475,6 +506,7 @@ public class LoginController : MonoBehaviour
     // パスワード再設定
     public void OnResetPasswordButtonClicked()
     {
+        string mail = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
         string newPass = resetNewPass != null ? resetNewPass.text : "";
         string confirm = resetNewPass2 != null ? resetNewPass2.text : "";
 
@@ -491,20 +523,65 @@ public class LoginController : MonoBehaviour
         }
 
         ClearAllResetErrors();
-        StartCoroutine(ResetPasswordRequest(newPass));
+        StartCoroutine(ResetPasswordRequest(newPass, mail));
     }
 
 
     // パスワード再設定リクエスト
-    private IEnumerator ResetPasswordRequest(string newPass)
+    private IEnumerator ResetPasswordRequest(string newPass, string mail)
     {
-        // TODO: 後でパスワード再設定APIと接続
         yield return new WaitForSeconds(0.5f);
 
-        bool resetSuccess = true; // ダミー成功
+        // パスワード再設定を行うPHPのurl (実機稼働時にはサーバーのURLに変更すること)
+        string url = "http://localhost/backend/PHP_user/reset_pass.php";
 
-        if (resetSuccess)
+        // リクエストデータ作成
+        RequestData reqData = new RequestData();
+        reqData.email = mail;
+        reqData.password = newPass;
+
+        // JSONに変換
+        string json = JsonUtility.ToJson(reqData);
+        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
+
+        // 通信準備
+        UnityWebRequest request = new UnityWebRequest(url, "POST");
+        request.uploadHandler = new UploadHandlerRaw(body);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        // 通信開始
+        yield return request.SendWebRequest();
+
+        // 通信エラー
+        if (request.result != UnityWebRequest.Result.Success)
         {
+            ShowResetPasswordError("通信エラーが発生しました。");
+            yield break;
+        }
+
+        // データ取得(レスポンスデータ)
+        string responseText = request.downloadHandler.text;
+        Debug.Log("サーバー応答:" + responseText);
+
+        // JSON解析
+        ResponseData res;
+        try
+        {
+            res = JsonUtility.FromJson<ResponseData>(responseText);
+        } catch
+        {
+            ShowResetPasswordError("サーバー応答の解析に失敗しました。");
+            yield break;
+        }
+
+        // ダミー成功処理 (後で削除)
+        res.success = true;
+
+        // 結果の処理
+        if (res.success)
+        {
+            // 成功時、完了パネルへ
             if (resetPasswordPanel != null) resetPasswordPanel.SetActive(false);
             if (resetCompletePanel != null) resetCompletePanel.SetActive(true);
         }
@@ -540,35 +617,13 @@ public class LoginController : MonoBehaviour
 
     // PHP 通信用データクラス群
 
-    // ログインと新規登録で共通
+    // 全PHPリクエストで共通
     [System.Serializable]
     private class RequestData
     {
         public string email;
         public string password;
-    }
-
-    // パスワード再設定：ワンタイムキー発行とメール送信
-    [System.Serializable]
-    public class ResetMailRequestData
-    {
-        public string email;
-    }
-
-    // パスワード再設定：ワンタイムキー認証
-    [System.Serializable]
-    public class ResetKeyRequestData
-    {
-        public string email;
-        public string key;
-    }
-
-    // パスワード再設定：新パスワード設定
-    [System.Serializable]
-    public class ResetPasswordRequestData
-    {
-        public string email;
-        public string newPassword;
+        public string otk; // ワンタイムキー用
     }
 
     // 全PHPレスポンスで共通

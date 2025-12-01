@@ -1135,7 +1135,6 @@ GameObject:
   - component: {fileID: 357019404}
   - component: {fileID: 357019403}
   - component: {fileID: 357019402}
-  - component: {fileID: 357019407}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1239,18 +1238,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &357019407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 357019401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26eebbfc3e721481f818db6426d05822, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &395214082
 GameObject:
   m_ObjectHideFlags: 0
@@ -3942,14 +3929,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1130958037}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d188046726844ea6866a50df119a8c0, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c8ce992d35142e4aac1efb4c3a95809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   loginUserMail: {fileID: 477412895}
   loginUserPass: {fileID: 1353635973}
   loginErrorText: {fileID: 346976799}
   loadingPanel: {fileID: 906099247}
-  loadingText: {fileID: 631527667}
+  loadingText: {fileID: 747154899}
   registerPanel: {fileID: 1401722168}
   registerNewMail: {fileID: 1963353114}
   registerNewPass: {fileID: 1983624289}

@@ -265,5 +265,28 @@ class DBuser
             ];
         }
     }
+
+    // -------------------- change_profile.php --------------------
+
+    // ユーザの現在のプロファイルを変更
+    public function ChangeProfile($user_id, $prof_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE user SET user_currentprof = ? WHERE user_id = ?");
+        $result = $stmt->execute([$prof_id, $user_id]); // SQL実行 成功ならtrue、失敗ならfalseを返す
+        $row = $stmt->rowCount(); // データを更新した行数を取得(1なら成功、0なら失敗判定にするため)
+
+        if ($result && $row > 0) {
+            return [
+                "success" => true,
+                "message" => "プロファイルの切り替えに成功しました"
+            ];
+        } else {
+            return [
+                "success" => false,
+                "message" => "プロファイルの切り替えに失敗しました"
+            ];
+        }
+    }
+
 }
 ?>

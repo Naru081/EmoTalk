@@ -24,6 +24,7 @@ if ($otk == "" || $otklength != 6 || !is_numeric($otk))
     exit;
 } 
 
+// ワンタイムキー認証処理-DBuser.php
 $result = $DBuser->AuthOtk($otk, $email);
 
 // successとmessageを返す

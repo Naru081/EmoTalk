@@ -5,7 +5,7 @@ require_once '../dbconnect.php';
 require_once '../DBPHP/DBuser.php';
 require_once '../DBPHP/DBprofile.php';
 
-$DBuser = new DBUser($pdo);
+$DBuser = new DBuser($pdo);
 $DBprofile = new DBprofile($pdo);
 
 // unityからデータを取得(JSON形式)
@@ -14,8 +14,8 @@ $row = file_get_contents('php://input');
 $data = json_decode($row, true);
 
 // 受け取ったデータを変数に格納 (空の場合は空白を代入)
-$email = $data['email'] ?? "";
-$password = $data['password'] ?? "";
+$email = $data['user_mail'] ?? "";
+$password = $data['user_pass'] ?? "";
 
 // メールアドレスの形式チェック
 if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -37,20 +37,22 @@ if (
 }
 
 // メールアドレスのDB重複チェック-DBuser.php
-if ($DBuser->isEmailDuplicate($email)) {
+$result = $DBuser->isEmailDuplicate($email);
+if ($result) {
     echo json_encode([
         "success" => false,
-        "message" => "このメールアドレスは既に登録されています"
-    ], JSON_UNESCAPED_UNICODE);
+        "message" => "そのメールアドレスは既に登録されています"
+    ]
+    );
     exit;
-}
+} 
 
 // ユーザ情報登録-DBuser.php
 $result = $DBuser->registerUser($email, $password);
 
-if (!$result) {
+if (!$result['success']) {
     // 登録失敗
-    echo json_encode(["success" => false, "message" => "ユーザ登録に失敗しました"], JSON_UNESCAPED_UNICODE);
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -60,7 +62,7 @@ $user_id = $result['user_id'];
 // デフォルトプロファイル作成-DBprofile.php
 $createdefaultprofile = $DBprofile->createDefaultProfile($user_id);
 
-if (!$createdefaultprofile) {
+if (!$createdefaultprofile['success']) {
     // プロファイル作成失敗
     echo json_encode(["success" => false, "message" => "プロファイルの作成に失敗しました"], JSON_UNESCAPED_UNICODE);
     exit;
@@ -69,14 +71,15 @@ if (!$createdefaultprofile) {
 // profileテーブルから、user_idに対応したprof_idが一番小さいデータを取得する-DBprofile.php(新規登録直後の選択プロファイルを設定するため)
 $defaultset_profile = $DBprofile->GetDefaultSetProfile($user_id);
 
-if (!$defaultset_profile) {
-    // デフォルトセットプロファイル取得失敗
-    echo json_encode(["success"=> false, "message"=> "デフォルトセットプロファイルの取得に失敗しました"], JSON_UNESCAPED_UNICODE);
+// 取得に失敗した場合
+if (!$defaultset_profile["success"]) {
+    echo json_encode($defaultset_profile, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
 // userテーブルのuser_currentprofにデフォルトセットプロファイル(defaultset_profile)をセット-DBuser.php
-$defaultset_profile_result = $DBuser->ChangeProfile($user_id, $defaultset_profile);
+$prof_id = $defaultset_profile['min_prof_id'];  // 連想配列の中の値を取得
+$defaultset_profile_result = $DBuser->ChangeProfile($user_id, $prof_id);
 
 if (!$defaultset_profile_result['success']) {
     // プロファイル切り替え失敗
@@ -84,7 +87,12 @@ if (!$defaultset_profile_result['success']) {
     exit;
 }
 
-// 全処理が成功時、successとmessageを返す
-echo json_encode($result,JSON_UNESCAPED_UNICODE);
+// 処理が完全に成功したら以下を返す
+$finalResult = [
+    "success" => true,
+    "message" => "ユーザ登録が完了しました",
+    "user_id" => $user_id,
+];
+echo json_encode($finalResult, JSON_UNESCAPED_UNICODE);
 
 ?>

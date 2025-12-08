@@ -4,7 +4,7 @@
 require_once '../dbconnect.php';
 require_once '../DBPHP/DBuser.php';
 
-$DBuser = new DBUser($pdo);
+$DBuser = new DBuser($pdo);
 
 // unityからデータを取得(JSON形式)
 $row = file_get_contents('php://input');

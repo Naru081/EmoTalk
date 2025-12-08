@@ -11,7 +11,7 @@ $dotenv->load();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-$DBuser = new DBUser($pdo);
+$DBuser = new DBuser($pdo);
 
 // unityからデータを取得(JSON形式)
 $row = file_get_contents('php://input');
@@ -19,8 +19,7 @@ $row = file_get_contents('php://input');
 $data = json_decode($row, true);
 
 // 受け取ったデータを変数に格納 (空の場合は空白を代入)
-$email = $data['email'] ?? "";
-$password = $data['password'] ?? "";
+$email = $data['user_mail'] ?? "";
 
 // メールアドレスの形式チェック
 if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -73,14 +72,8 @@ try {
     // メール送信
     $mail->send();
 
-    // DBにワンタイムキーを保存成功していればsuccessとmessageを返す
-    if ($result) {
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-    else {
-        // DB保存失敗の場合
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
+    // 最終結果success(trueかfalse)とmessageを返す
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
     echo json_encode([

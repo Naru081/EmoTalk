@@ -4,7 +4,7 @@
 require_once '../dbconnect.php';
 require_once '../DBPHP/DBuser.php';
 
-$DBuser = new DBUser($pdo);
+$DBuser = new DBuser($pdo);
 
 // unityからデータを取得(JSON形式)
 $row = file_get_contents('php://input');
@@ -17,6 +17,6 @@ $localtoken = $data['localtoken'] ?? "";
 // 自動ログイン処理-DBuser.php
 $result = $DBuser->AutoLoginUser($localtoken);
 
-// user_idとuser_mailとsuccessとmessageをJSONで返す
+// user_idとuser_mailとuser_currentprofとsuccessとmessageをJSONで返す
 echo json_encode($result, JSON_UNESCAPED_UNICODE);  
 ?>

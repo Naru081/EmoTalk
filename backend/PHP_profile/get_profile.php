@@ -1,5 +1,5 @@
 <?php
-// 新規プロファイル作成を行うPHP
+// プロファイルデータの取得を行うPHP
 
 require_once '../dbconnect.php';
 require_once '../DBPHP/DBprofile.php';

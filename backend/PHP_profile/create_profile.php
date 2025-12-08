@@ -72,7 +72,7 @@ if (!$profiles['success']) {
 echo json_encode([
     "success" => true,
     "message" => "プロファイルの作成に成功しました",
-    "profiles" => $profiles['profiles']
+    "profiles" => $profiles['profile_data']
 ], JSON_UNESCAPED_UNICODE); 
 
 ?>

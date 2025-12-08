@@ -38,15 +38,20 @@ if (!$result['success'])
     exit;
 }
 
+// mesasgeテーブルからも該当prof_idのデータを削除する
+// 後ほど
+
 // user_idに対応した全profileデータを取得する-DBprofile.php(ハンバーガーメニューに戻った際に更新されているようにするため)
-$result = $DBprofile->GetProfileData($user_id);
+$profile_data = $DBprofile->GetProfileData($user_id);
 
 // もしプロファイルデータ取得が失敗なら
-if (!$result['success'])
+if (!$profile_data['success'])
 {
     echo json_encode($result, JSON_UNESCAPED_UNICODE);
     exit;
 }
+
+$result['profiles'] = $profile_data['profiles'];
 
 // 全処理が成功時、successとmessageとprofile_dataを返す
 echo json_encode($result, JSON_UNESCAPED_UNICODE);

@@ -4,7 +4,7 @@
 require_once '../dbconnect.php';
 require_once '../DBPHP/DBuser.php';
 
-$DBuser = new DBUser($pdo);
+$DBuser = new DBuser($pdo);
 
 // unityからデータを取得(JSON形式)
 $row = file_get_contents('php://input');
@@ -12,8 +12,8 @@ $row = file_get_contents('php://input');
 $data = json_decode($row, true);
 
 // 受け取ったデータを変数に格納 (空の場合は空白を代入)
-$email = $data['email'] ?? "";
-$password = $data['password'] ?? "";
+$email = $data['user_mail'] ?? "";
+$password = $data['user_pass'] ?? "";
 
 // メールアドレスの形式チェック
 if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -37,6 +37,11 @@ if (
 // ログイン処理-DBuser.php
 $result = $DBuser->LoginUser($email, $password);
 
+// ログイン処理に失敗した場合
+if (!$result['success']) {
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    exit;
+}
 // successとmessageとuser_idとuser_mailとtokenを返す
 echo json_encode($result, JSON_UNESCAPED_UNICODE);
 

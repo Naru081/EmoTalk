@@ -1,4 +1,5 @@
 <?PHP
+require_once 'DBcommon.php';
 // データベースuserテーブルとのやり取りを行う処理をまとめたPHP
 
 /*
@@ -15,25 +16,19 @@ user_currentprof    INT(8)
 ==================================================
 */
 
-class DBuser
+class DBuser extends DBcommon
 {
-    private $pdo;
-
     public function __construct($pdo)
     {
-        $this->pdo = $pdo;
+        parent::__construct($pdo);
     }
-
     // -------------------- register.php --------------------
 
     // メールアドレスのDB重複チェック
     public function isEmailDuplicate($email)
     {
-        // メールアドレスのDB重複チェック
-        $stmt = $this->pdo->prepare("SELECT user_id FROM user WHERE user_mail = ?");
-        $stmt->execute([$email]);   // SQL実行
-
-        return $stmt->fetch() !== false;    // 重複している場合はtrueを返す
+        $emaildup = $this->ExecuteSelect("SELECT user_id FROM user WHERE user_mail = ?", [$email]);
+        return !empty($emaildup); // 重複している場合はtrueを返す
     }
 
     // ユーザ情報(メールアドレスとパスワード(ハッシュ化)をDBに保存
@@ -42,26 +37,31 @@ class DBuser
         // パスワードをハッシュ化
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
-        // DBに保存
-        $stmt = $this->pdo->prepare("INSERT INTO user (user_mail, user_pass) VALUES (?, ?)");
-        $result = $stmt->execute([$email, $hash]);  // SQL実行 成功ならtrue、失敗ならfalseを返す
-        $row = $stmt->rowCount(); // データを更新した行数を取得(1なら成功、0なら失敗判定にするため)
+        // ユーザ情報をDBに保存
+        $result = $this->ExecuteUpdate("INSERT INTO user (user_mail, user_pass) VALUES (?, ?)", [$email, $hash]);
+  
+        if (!$result || !$result['success']) { // ユーザ情報がDBに保存失敗した場合
+            return [ 
+                "success" => false,
+                "message" => "ユーザ登録に失敗しました",
+            ];
+        }
+  
+        // ユーザデータ(user_id)の取得
+        $user = $this->ExecuteSelect("SELECT user_id FROM user WHERE user_mail = ?", [$email]);
 
-        if ($result && $row > 0) {
-            // 成功した場合、登録したユーザIDも取得して返す
-            $stmt = $this->pdo->prepare("SELECT user_id FROM user WHERE user_mail = ?");
-            $stmt->execute([$email]);  // SQL実行
-            $user = $stmt->fetch(); // 実行した結果(ユーザ情報)を取得
+        if (!empty($user)) {    // ユーザデータの取得に成功した場合
+            $user = $user[0];   // 1行のみ取り出す
 
             return [
                 "success" => true,
-                "message" => "ユーザ登録が完了しました",
+                "message" => "ユーザデータの取得に成功しました",
                 "user_id" => $user["user_id"]
             ];
         } else {
             return [
                 "success" => false,
-                "message" => "ユーザ登録に失敗しました"
+                "message" => "ユーザデータ登録に失敗しました"
             ];
         }
     }
@@ -71,58 +71,45 @@ class DBuser
     // ログインの認証処理とトークン発行、DBに保存
     public function LoginUser($email, $password)
     {
-        try {
-            // メールアドレスからユーザ情報を取得
-            $stmt = $this->pdo->prepare("SELECT user_id, user_pass FROM user WHERE user_mail = ?");
-            $stmt->execute([$email]);   // SQL実行
-            $user = $stmt->fetch(); // 実行した結果(ユーザ情報)を取得
+        // メールアドレスからユーザ情報を取得
+        $row = $this->ExecuteSelect("SELECT user_id, user_pass, user_mail FROM user WHERE user_mail = ?", [$email]);
 
-            // ユーザ情報が存在しない場合の処理
-            if (!$user) {
-                return [
-                    "success" => false,
-                    "message" => "メールアドレスまたはパスワードが不正です"
-                ];
-            }
+        // ユーザ情報が存在しない場合の処理
+        if (empty($row)) {
+            return [
+                "success" => false,
+                "message" => "メールアドレスまたはパスワードが不正です"
+            ];
+        }
 
-            // パスワードの照合
-            if (!password_verify($password, $user["user_pass"])) {
-                return [
-                    "success" => false,
-                    "message" => "メールアドレスまたはパスワードが不正です"
-                ];
-            }
+        $user = $row[0];   // 1行のみ取り出す
 
-            // 認証成功時、トークンを発行してDBに保存(Unityにも返す)
-            while (true) {  // 重複防止チェックループ 
-                $token = bin2hex(random_bytes(32)); // 64文字のランダムなトークンを生成
+        // パスワードの照合
+        if (!password_verify($password, $user["user_pass"])) {
+            return [
+                "success" => false,
+                "message" => "メールアドレスまたはパスワードが不正です"
+            ];
+        }
 
-                // トークンのDB重複チェック
-                $stmt = $this->pdo->prepare("SELECT user_id FROM user WHERE user_token = ?");
-                $stmt->execute([$token]);  // SQL実行
+        // 認証成功時、トークンを発行してDBに保存(Unityにも返す)
+        $token = bin2hex(random_bytes(32)); // 64文字のランダムなトークンを生成
 
-                // 重複していない場合はループを抜ける
-                if ($stmt->fetch() === false) {
-                    break;
-                }
-            }
+        // トークンをDBに保存
+        $update = $this->ExecuteUpdate("UPDATE user SET user_token = ? WHERE user_id = ?", [$token, $user["user_id"]]);
 
-            // トークンをDBに保存
-            $stmt = $this->pdo->prepare("UPDATE user SET user_token = ? WHERE user_id = ?");
-            $stmt->execute([$token, $user["user_id"]]);  // SQL実行
-
+        if ($update["success"]) {
             return [
                 "success" => true,
                 "message" => "ログインに成功しました",
-                "token" => $token,
                 "user_id" => $user["user_id"],
-                "user_mail" => $email
+                "user_mail" => $user["user_mail"],
+                "token" => $token
             ];
-
-        } catch (PDOException $e) {
+        } else {
             return [
                 "success" => false,
-                "message" => "サーバーエラーが発生しました"
+                "message" => "DBにトークン保存失敗しました",
             ];
         }
     }
@@ -130,20 +117,19 @@ class DBuser
     // -------------------- logout.php --------------------
 
     // ログアウト処理（トークンを削除)
-    public function LogoutUser($email)
+    public function LogoutUser($user_id)
     {
-        $stmt = $this->pdo->prepare("UPDATE user SET user_token = NULL WHERE user_mail = ?");
-        $result = $stmt->execute([$email]); // SQL実行 成功ならtrue、失敗ならfalseを返す
-        $row = $stmt->rowCount(); // データを更新した行数を取得(1なら成功、0なら失敗判定にするため)
-        if ($result && $row > 0) {
+        // トークンを削除(NULLに)する
+        $result = $this->ExecuteUpdate("UPDATE user SET user_token = NULL WHERE user_id = ?", [$user_id]);
+        if ($result["success"]) {
             return [
                 "success" => true,
-                "message" => "ログアウトしました"
+                "message" => "ログアウトに成功しました",
             ];
         } else {
             return [
                 "success" => false,
-                "message" => "ログアウトに失敗しました"
+                "message" => "ログアウトに失敗しました",
             ];
         }
     }
@@ -153,21 +139,22 @@ class DBuser
     // 自動ログイン認証
     public function AutoLoginUser($localtoken)
     {
-        $stmt = $this->pdo->prepare("SELECT user_id, user_mail, user_currentprof FROM user WHERE user_token = ?");    // ユーザデバイスのトークンとDBのトークンを照合するSQL
-        $stmt->execute([$localtoken]); // SQL実行
-        $user = $stmt->fetch(); // 実行した結果(ユーザ情報)を取得
+        // トークンからユーザ情報を取得
+        $user = $this->ExecuteSelect("SELECT user_id, user_mail, user_currentprof FROM user WHERE user_token = ?", [$localtoken]);
 
-        if ($user) {    // SQL実行した結果ユーザ情報が存在する場合
+        if (!empty($user)) {    // SQL実行した結果ユーザ情報が存在する場合
+            $user = $user[0];   // 1行のみ取り出す
             return [
                 "success" => true,
                 "message" => "自動ログインに成功しました",
-                "email" => $user["user_mail"],
-                "user_id" => $user["user_id"]
+                "user_id" => $user["user_id"],
+                "user_mail" => $user["user_mail"],
+                "user_currentprof" => $user["user_currentprof"]
             ];
         } else {
             return [
                 "success" => false,
-                "message" => "自動ログインに失敗しました"
+                "message" => "自動ログインに失敗しました",
             ];
         }
     }
@@ -177,19 +164,16 @@ class DBuser
     // ワンタイムキーをDBに保存
     public function CreateOtk($otk, $otk_created, $email)
     {
-        $stmt = $this->pdo->prepare("UPDATE user SET user_otk = ?, user_otk_created = ? WHERE user_mail = ?");
-        $result = $stmt->execute([$otk, $otk_created, $email]);  // SQL実行 成功ならtrue、失敗ならfalseを返す
-        $row = $stmt->rowCount(); // データを更新した行数を取得(1なら成功、0なら失敗判定にするため)
-
-        if ($result && $row > 0) {
+        $result = $this->ExecuteUpdate("UPDATE user SET user_otk = ?, user_otk_created = ? WHERE user_mail = ?", [$otk, $otk_created, $email]);
+        if ($result["success"]) {
             return [
                 "success" => true,
-                "message" => "メールアドレスにワンタイムキーを送信しました"
+                "message" => "ワンタイムキーの送信に成功しました",
             ];
         } else {
             return [
                 "success" => false,
-                "message" => "ワンタイムキーの送信に失敗しました"
+                "message" => "ワンタイムキーの送信に失敗しました",
             ];
         }
     }
@@ -199,12 +183,10 @@ class DBuser
     // ユーザから送られたワンタイムキーとDBのワンタイムキーを照合し認証
     public function AuthOtk($otk, $email)
     {
-        $stmt = $this->pdo->prepare("SELECT user_id, user_otk, user_otk_created FROM user WHERE user_otk = ? AND user_mail = ?"); // ワンタイムキーを照合するSQL
-        $stmt->execute([$otk, $email]); // SQL実行
-        $user = $stmt->fetch(); // 実行した結果(ユーザ情報)を取得
+        $user = $this->ExecuteSelect("SELECT user_id, user_otk, user_otk_created FROM user WHERE user_otk = ? AND user_mail = ?", [$otk, $email]);
 
-        if ($user) {
-            // --- ワンタイムキーの照合が成功したとき(ユーザ情報が存在する場合) ---
+        if (!empty($user)) {    // ワンタイムキーの照合が成功したとき(ユーザ情報が存在する場合)
+            $user = $user[0];   // 1行のみ取り出す
 
             // ワンタイムキーの有効期限チェック (発行から30分以内)
             $now = new DateTime();  // 現在の日時を取得
@@ -220,23 +202,25 @@ class DBuser
             }
 
             // ワンタイムキー認証成功時、DBのワンタイムキー情報をクリア
-            $stmt = $this->pdo->prepare("UPDATE user SET user_otk = NULL, user_otk_created = NULL WHERE user_id = ?");
-            $stmt->execute([$user["user_id"]]); // SQL実行
+            $result = $this->ExecuteUpdate("UPDATE user SET user_otk = NULL, user_otk_created = NULL WHERE user_id = ?", [$user["user_id"]]);
 
-            return [
-                "success" => true,
-                "message" => "ワンタイムキーの認証に成功しました"
-            ];
-
-        } else {
-            // --- ワンタイムキーの照合が失敗したとき(ユーザ情報が存在しない場合) ---
-
+            if ($result["success"]) {
+                return [
+                    "success" => true,
+                    "message" => "ワンタイムキーの認証に成功しました",
+                ];
+            } else {
+                return [
+                    "success" => false,
+                    "message" => "ワンタイムキーの認証に失敗しました",
+                ];
+            }    
+        } else {  // ワンタイムキーの照合が失敗したとき(ユーザ情報が存在しない場合)
             return [
                 "success" => false,
                 "message" => "ワンタイムキーの認証に失敗しました"
             ];
         }
-
     }
 
     // -------------------- reset_pass.php --------------------
@@ -247,21 +231,16 @@ class DBuser
         // パスワードをハッシュ化
         $hash = password_hash($newpassword, PASSWORD_DEFAULT);
 
-        // DBに保存
-        $stmt = $this->pdo->prepare("UPDATE user SET user_pass = ? WHERE user_mail = ?");
-        $result = $stmt->execute([$hash, $email]); // SQL実行 成功ならtrue、失敗ならfalseを返す
-        $row = $stmt->rowCount(); // データを更新した行数を取得(1なら成功、0なら失敗判定にするため)
-
-        if ($result && $row > 0) {
-            // パスワード再設定成功時
+        $result = $this->ExecuteUpdate("UPDATE user SET user_pass = ? WHERE user_mail = ?", [$hash, $email]);
+        if ($result["success"]) {
             return [
                 "success" => true,
-                "message" => "パスワードの再設定が完了しました"
+                "message" => "パスワードの再設定に成功しました"
             ];
         } else {
             return [
                 "success" => false,
-                "message" => "パスワードの再設定に失敗しました"
+                "message" => "パスワードの再設定に失敗しました",
             ];
         }
     }
@@ -271,22 +250,18 @@ class DBuser
     // ユーザの現在のプロファイルを変更
     public function ChangeProfile($user_id, $prof_id)
     {
-        $stmt = $this->pdo->prepare("UPDATE user SET user_currentprof = ? WHERE user_id = ?");
-        $result = $stmt->execute([$prof_id, $user_id]); // SQL実行 成功ならtrue、失敗ならfalseを返す
-        $row = $stmt->rowCount(); // データを更新した行数を取得(1なら成功、0なら失敗判定にするため)
-
-        if ($result && $row > 0) {
+        $result = $this->ExecuteUpdate("UPDATE user SET user_currentprof = ? WHERE user_id = ?", [$prof_id, $user_id,]);
+        if ($result["success"]) {
             return [
                 "success" => true,
-                "message" => "プロファイルの切り替えに成功しました"
+                "message" => "プロファイルに切り替えに成功しました"
             ];
         } else {
             return [
-                "success" => false,
-                "message" => "プロファイルの切り替えに失敗しました"
+                "success"=> false,
+                "message"=> "プロファイルの切り替えに失敗しました"
             ];
         }
     }
-
 }
 ?>

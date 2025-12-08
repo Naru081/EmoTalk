@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,7 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169;USG0001</NoWarn>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <NoStandardLibraries>true</NoStandardLibraries>
@@ -63,10 +63,28 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.62f3/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileWindow.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ProfileListWrapper.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/DeleteConfirmDialog.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileModelSelect.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/MicPopupContller.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ModelSelectWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/MenuController.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ProfileMnanger.cs" />
     <Compile Include="Assets/Scripts/01Login_Scripts/LoginController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/TopController.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileInputPanel.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ModelManager.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ProfilePropertyWindow.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ProfileData.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ProfileController.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ProfileEditWindow.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ProfileLIstWindow.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets/mcs.rsp" />
+    <None Include="Assets/csc.rsp" />
+    <None Include="Assets/Models/fav_usaneko_kred/fav_usaneko_kred/KeySettings.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -1071,6 +1089,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Live2D.Cubism.Editor.csproj" />
+    <ProjectReference Include="Live2D.Cubism.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>

@@ -1,7 +1,0 @@
-{
-    "name": "e012/backend",
-    "require": {
-        "vlucas/phpdotenv": "^5.6",
-        "phpmailer/phpmailer": "^7.0"
-    }
-}

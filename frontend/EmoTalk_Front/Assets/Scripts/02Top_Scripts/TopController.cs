@@ -17,7 +17,9 @@ public class TopController : MonoBehaviour
     private bool isOpen = false;
     private float slideSpeed = 10f;
 
-    // ★ ここからスワイプ用の変数を追加 ★
+    // -------------------------
+    // スワイプ用の変数を追加
+    // -------------------------
     private bool isDragging = false;
     private Vector2 dragStartPos;
     private float panelStartX;
@@ -25,7 +27,7 @@ public class TopController : MonoBehaviour
     public float openThreshold = 0.5f;   // 開き具合が何割以上なら「開く」とみなすか
 
     // -------------------------
-    // ここからチャットログ追加
+    // チャットログ追加
     // -------------------------
     [Header("Chat Log")]
     public Transform logContent;
@@ -37,6 +39,7 @@ public class TopController : MonoBehaviour
     [Header("Input UI")]
     public InputField chatInput;
     public Button sendButton;
+
 
     void Start()
     {

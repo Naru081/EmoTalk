@@ -24,6 +24,9 @@ public class MenuController : MonoBehaviour
 
     private bool isOpen = false;
 
+    [Header("ProfileListWindow")]
+    public ProfileListWindow listWindow;
+
     void Start()
     {
         // パネル幅
@@ -72,6 +75,7 @@ public class MenuController : MonoBehaviour
         btnMenuImage.sprite = iconClose;
 
         menuMask.SetActive(true);
+        listWindow.RefreshList();
 
         // フェードイン
         StartCoroutine(FadeMask(0f, 0.6f, maskFadeDuration));
@@ -126,5 +130,36 @@ public class MenuController : MonoBehaviour
 
         maskImage.color = new Color(0, 0, 0, to);
         onComplete?.Invoke();
+    }
+
+    // モデル選択
+    public void OnClickModel1()
+    {
+        ChangeModel(0);
+    }
+
+    public void OnClickModel2()
+    {
+        ChangeModel(1);
+    }
+
+    public void OnClickModel3()
+    {
+        ChangeModel(2);
+    }
+
+    private void ChangeModel(int index)
+    {
+        if (ModelManager.Instance != null)
+        {
+            ModelManager.Instance.ShowModel(index);
+        }
+        else
+        {
+            Debug.LogWarning("MenuController: ModelManager.Instance が見つかりません。");
+        }
+
+        // モデルを選んだらメニューを閉じる
+        CloseMenu();
     }
 }

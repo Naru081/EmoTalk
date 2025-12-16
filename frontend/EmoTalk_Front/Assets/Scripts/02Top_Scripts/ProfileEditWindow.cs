@@ -4,129 +4,121 @@ using UnityEngine.UI;
 public class ProfileEditWindow : MonoBehaviour
 {
     [Header("UI")]
-    public Text titleText;
-    public InputField nameInput;
-    public Image iconImage;
+    public GameObject root;      // ウインドウの一番上のパネル(ないなら this.gameObject を使う)
+    public Image modelImg;
 
+    // ここは後で実装するボタン
+    public Button selectButton;
     public Button deleteButton;
     public Button detailButton;
-    public Button selectButton;
     public Button closeButton;
 
-    [Header("Windows")]
-    public ProfilePropertyWindow propertyWindow;   // 性格・口調のカスタム画面
-    public DeleteConfirmDialog deleteDialog;       // 削除確認ダイアログ
-    public ModelSelectWindow modelSelectWindow;    // モデル変更画面（Model #1, #2, #3）
+    [Header("Name Edit")]
+    [SerializeField] private Text nameText;
+    [SerializeField] private InputField nameInput;
+    [SerializeField] private Button editNameButton;
 
     private ProfileData currentProfile;
 
-    // -----------------------------
-    // 開く（ProfileListWindow から呼ばれる）
-    // -----------------------------
-    public void Open(ProfileData data)
+    // リスト名更新用
+    public ProfileListWindow listWindow;
+
+    
+    public void Open(ProfileData profile)
     {
-        currentProfile = data;
+        currentProfile = profile;
+        Debug.Log("Open called. currentProfile=" + (currentProfile != null ? currentProfile.displayName : "NULL"));
 
-        gameObject.SetActive(true);
+        // 表示用（Text）
+        if (nameText != null) nameText.text = profile.displayName;
 
-        RefreshUI();
+        if (modelImg != null) modelImg.sprite = ProfileController.GetImgSprite(profile.modelIndex);
+
+        // 編集用（InputField）
+        if (nameInput != null) nameInput.text = profile.displayName;
+
+        if (nameText != null) nameText.gameObject.SetActive(true);
+        if (nameInput != null) nameInput.gameObject.SetActive(false);
+
+        root.SetActive(true);
     }
 
-    // -----------------------------
-    // UI更新
-    // -----------------------------
-    private void RefreshUI()
-    {
-        nameInput.text = currentProfile.displayName;
-        titleText.text = currentProfile.displayName;
-
-        // モデルアイコン更新
-        iconImage.color = GetColorByModelIndex(currentProfile.modelIndex);
-
-        // 選択中プロフィールの場合は削除不可
-        bool isSelected = (ProfileManager.Instance.GetSelectedProfile() == currentProfile);
-        deleteButton.interactable = !isSelected;
-    }
-
-    private Color GetColorByModelIndex(int index)
-    {
-        switch (index)
-        {
-            case 0: return new Color(0.5f, 0.7f, 1f);
-            case 1: return new Color(1f, 0.7f, 0.4f);
-            case 2: return new Color(0.5f, 1f, 0.5f);
-        }
-        return Color.white;
-    }
-
-    // -----------------------------
-    // 名前変更
-    // -----------------------------
-    public void OnNameChanged(string newName)
-    {
-        currentProfile.displayName = newName;
-        ProfileManager.Instance.UpdateProfile(currentProfile);
-        RefreshUI();
-    }
-
-    // -----------------------------
-    // モデル変更（ModelSelectWindow を開く）
-    // -----------------------------
-    public void OnChangeModel()
-    {
-        modelSelectWindow.Open(currentProfile, OnModelSelected);
-    }
-
-    private void OnModelSelected(int newModelIndex)
-    {
-        currentProfile.modelIndex = newModelIndex;
-        ProfileManager.Instance.UpdateProfile(currentProfile);
-        RefreshUI();
-    }
-
-    // -----------------------------
-    // 詳細（性格・口調編集）
-    // -----------------------------
-    public void OnDetail()
-    {
-        propertyWindow.Open(currentProfile, OnPropertySaved);
-    }
-
-    private void OnPropertySaved()
-    {
-        ProfileManager.Instance.UpdateProfile(currentProfile);
-        RefreshUI();
-    }
-
-    // -----------------------------
-    // 選択（Live2D切り替え）
-    // -----------------------------
-    public void OnSelect()
-    {
-        ProfileManager.Instance.SelectProfile(currentProfile);
-        RefreshUI();
-    }
-
-    // -----------------------------
-    // 削除確認 → ダイアログへ
-    // -----------------------------
-    public void OnDelete()
-    {
-        deleteDialog.Open(
-            confirmAction: () =>
-            {
-                bool result = ProfileManager.Instance.DeleteProfile(currentProfile);
-                if (result)
-                    Close();
-            }
-        );
-    }
-
-    // -----------------------------
-    // 閉じる
-    // -----------------------------
     public void Close()
     {
-        gameObject.SetActive(false);
+        root.SetActive(false);
+
+        if(listWindow != null)listWindow.RefreshList();
+    }
+
+    // ▼ボタン用のダミー実装（後で中身を作る）
+    public void OnClickSelect()
+    {
+        Debug.Log($"Select profile: {currentProfile.displayName}");
+        // ProfileManager.Instance.SetCurrentProfile(currentProfile); みたいな処理を後で書く
+    }
+
+    public void OnClickDelete()
+    {
+        Debug.Log($"Delete request: {currentProfile.displayName}");
+        // ここで削除確認ポップアップを出す予定
+    }
+
+    public void OnClickDetail()
+    {
+        Debug.Log($"Detail: {currentProfile.displayName}");
+        // カスタム画面(CreatePanel_P 相当)へ遷移する処理を後で書く
+    }
+
+    public void OnClickClose()
+    {
+        Close();
+    }
+
+    // 名前編集ボタンの処理
+    public void OnClickEditName()
+    {
+        Debug.Log("EditName clicked");
+
+        if (nameText != null) nameText.gameObject.SetActive(false);
+        
+        if (nameInput != null)
+        {
+            nameInput.gameObject.SetActive(true);
+            nameInput.ActivateInputField();
+            nameInput.Select();
+        }
+    }
+     // 名前入力確定時の処理
+    public void OnEndEditName(string value)
+    {
+        // ★引数 value は信用せず、実体から読む
+        string newName = (nameInput != null) ? nameInput.text : value;
+
+        Debug.Log($"OnEndEditName fired: value='{value}' inputText='{newName}'");
+
+        if (currentProfile == null) return;
+
+        if (string.IsNullOrWhiteSpace(newName))newName = currentProfile.displayName;
+
+        currentProfile.displayName = newName;
+
+        if (nameText != null) nameText.text = currentProfile.displayName;
+
+         // 編集UIを戻す（やっているなら）
+        if (nameInput != null) nameInput.gameObject.SetActive(false);
+        if (nameText != null) nameText.gameObject.SetActive(true);
+
+        // リスト反映
+        ProfileManager.Instance.SaveProfiles();
+        //ProfileListWindow.Instance.RefreshList();
+    }
+    public void OnValueChangedName(string value)
+    {
+        if (currentProfile == null) return;
+
+        string newName = (nameInput != null) ? nameInput.text : value;
+
+        currentProfile.displayName = newName;
+        if (nameText != null) nameText.text = newName;
     }
 }

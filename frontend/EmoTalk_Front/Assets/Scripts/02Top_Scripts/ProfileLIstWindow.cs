@@ -5,7 +5,7 @@ public class ProfileListWindow : MonoBehaviour
 {
     [Header("UI")]
     public Transform contentRoot;            
-    public GameObject profileItemPrefab;    
+    public GameObject profileItemPrefab;
 
     // プロフィール編集画面を開く！
     public ProfileEditWindow editWindow;
@@ -38,19 +38,35 @@ public class ProfileListWindow : MonoBehaviour
         foreach (var data in list)
         {
             GameObject obj = Instantiate(profileItemPrefab, contentRoot);
-            ProfileItemController item = obj.GetComponent<ProfileItemController>();
+            ProfileController item = obj.GetComponent<ProfileController>();
             item.Setup(data, OnItemClicked);
         }
     }
 
     private void OnItemClicked(ProfileData data)
     {
-        // ★ 設計図通り：まずプロフィール編集画面へ！
-        editWindow.Open(data);
+
+        if(editWindow != null)
+        {
+            // ★ 設計図通り：まずプロフィール編集画面へ！
+            editWindow.Open(data);
+        }
+        else
+        {
+            Debug.LogWarning("editWindow is NULL");
+        }
     }
 
-    public void Close()
+    void OnEnable()
     {
-        gameObject.SetActive(false);
+        if (ProfileManager.Instance != null)
+            ProfileManager.Instance.OnProfilesChanged += RefreshList;
+
+        RefreshList();
+    }
+    void OnDisable()
+    {
+        if (ProfileManager.Instance != null)
+            ProfileManager.Instance.OnProfilesChanged -= RefreshList;
     }
 }

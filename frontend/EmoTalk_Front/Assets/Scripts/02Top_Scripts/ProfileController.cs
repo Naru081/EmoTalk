@@ -1,38 +1,48 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProfileItemController : MonoBehaviour
+public class ProfileController : MonoBehaviour
 {
-    [Header("UI")]
-    public Image iconImage;   // キャラ画像
-    public Text nameText;     // モデル名
-    public Button button;     // タップ全体
+    public Image iconImage;
+    public Text nameText;
+    public Button button;
 
-    private ProfileData profileData;
-    private System.Action<ProfileData> onClickCallback;
+    private ProfileData data;
+    private System.Action<ProfileData> onClick;
 
     public void Setup(ProfileData data, System.Action<ProfileData> onClick)
     {
-        profileData = data;
-        onClickCallback = onClick;
+        this.data = data;
+        this.onClick = onClick;
 
-        // 名前を表示
-        nameText.text = data.displayName;
+        if (nameText != null)
+            nameText.text = data.displayName;
 
-        // モデルの画像設定（modelIndex に応じて差し替え）
-        iconImage.sprite = GetIconSprite(data.modelIndex);
+        if (iconImage != null)
+            iconImage.sprite = GetIconSprite(data.modelIndex);
 
-        // ボタン押したらコールバック
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() => onClickCallback?.Invoke(profileData));
+        // ボタンのクリックイベントを登録（InspectorでOnClick設定しなくてOK）
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                onClick?.Invoke(this.data);
+            });
+        }
     }
 
-    // モデルのアバター画像を返す処理（必要に応じて差し替える）
-    private Sprite GetIconSprite(int index)
+    // ProfileEditWindow からも使いたいので static にしておく
+    public static Sprite GetIconSprite(int modelIndex)
     {
-        // ★ 必要ならここにモデルごとのアイコンを入れる
-        // 今は仮で Resources から読み込む例にしておきます
-
-        return Resources.Load<Sprite>($"ModelIcons/model_{index}");
+        // 例：Resources/ModelIcons/model_0.png などから読み込む
+        var sprite = Resources.Load<Sprite>($"ModelIcons/model_{modelIndex}");
+        return sprite;
+    }
+    // プロファイル画面専用
+    public static Sprite GetImgSprite(int modelIndex)
+    {
+        var sprite = Resources.Load<Sprite>($"ModelImgs/mimg_{modelIndex}");
+        return sprite;
     }
 }

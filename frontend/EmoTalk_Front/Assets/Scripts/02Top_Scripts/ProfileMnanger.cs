@@ -1,30 +1,46 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ProfileManager : MonoBehaviour
 {
-    public static ProfileManager Instance { get; private set; }
+    public static ProfileManager Instance;
 
     private const string KEY_PROFILES = "UserProfiles";
     private const string KEY_SELECTED = "SelectedProfileId";
 
     public List<ProfileData> Profiles = new List<ProfileData>();
 
+    // 選択中プロファイルID
     private int selectedProfileId = -1;
 
-    void Awake()
+    // プロフィールリスト変更通知
+    public event Action OnProfilesChanged;
+    public void NotifyChanged()
     {
+        OnProfilesChanged?.Invoke();
+    }
+
+    // ==============================
+    //  読み込み
+    // ==============================
+    private void Awake()
+    {
+        // すでに別のインスタンスがある場合は自分を破棄
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
+
+        // 最初の1個をシングルトンとして保持
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        Profiles = new List<ProfileData>();
+        // 起動時にプロフィールと選択状態を読み込む
+        LoadProfiles();
+        LoadSelectedProfile();
     }
-
 
     // ==============================
     //  プロフ読み込み
@@ -121,12 +137,4 @@ public class ProfileManager : MonoBehaviour
         }
         return null;
     }
-
-    #if UNITY_EDITOR
-    void OnApplicationQuit()
-    {
-        Profiles.Clear();
-    }
-    #endif
-
 }

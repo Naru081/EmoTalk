@@ -13,6 +13,7 @@ public class MenuController : MonoBehaviour
     public Image btnMenuImage;        // ボタン画像
     public Sprite iconMenu;           // 三本線
     public Sprite iconClose;          // ×
+    public LogoutPopup logoutPopup;   // ログアウト
 
     [Header("Animation")]
     public float slideDuration = 0.25f;      // スライド速度
@@ -27,6 +28,9 @@ public class MenuController : MonoBehaviour
     [Header("ProfileListWindow")]
     public ProfileListWindow listWindow;
 
+    // ==============================
+    // ハンバーガーメニュー制御
+    // ==============================
     void Start()
     {
         // パネル幅
@@ -51,7 +55,9 @@ public class MenuController : MonoBehaviour
         maskBtn.onClick.AddListener(CloseMenu);
     }
 
+    // ==============================
     // メニューボタン（三本線/×）が押されたとき
+    // ==============================
     public void ToggleMenu()
     {
         bool willOpen = !isOpen;   // このあと「開くのか/閉じるのか」
@@ -65,7 +71,9 @@ public class MenuController : MonoBehaviour
             CloseMenu();
     }
 
-    // メニューを開く
+    // ==============================
+    // メニューを開く処理
+    // ==============================
     public void OpenMenu()
     {
         if (isOpen) return;
@@ -83,7 +91,9 @@ public class MenuController : MonoBehaviour
         StartCoroutine(Slide(menuPanel, panelHiddenPos, panelShownPos, slideDuration));
     }
 
-    // メニューを閉じる（背景タップや×ボタンもここを呼べばOK）
+    // ==============================
+    // メニューを閉じる処理
+    // ==============================
     public void CloseMenu()
     {
         if (!isOpen) return;
@@ -101,7 +111,7 @@ public class MenuController : MonoBehaviour
         // スライドアウト
         StartCoroutine(Slide(menuPanel, panelShownPos, panelHiddenPos, slideDuration));
     }
-
+    // コルーチン：スライドアニメーション
     IEnumerator Slide(RectTransform target, Vector2 from, Vector2 to, float time)
     {
         float t = 0;
@@ -114,7 +124,7 @@ public class MenuController : MonoBehaviour
         }
         target.anchoredPosition = to;
     }
-
+    // コルーチン：マスクのフェードアニメーション
     IEnumerator FadeMask(float from, float to, float time, System.Action onComplete = null)
     {
         float t = 0;
@@ -132,7 +142,9 @@ public class MenuController : MonoBehaviour
         onComplete?.Invoke();
     }
 
+    // ==============================
     // モデル選択
+    // ==============================
     public void OnClickModel1()
     {
         ChangeModel(0);
@@ -148,6 +160,9 @@ public class MenuController : MonoBehaviour
         ChangeModel(2);
     }
 
+    // ==============================
+    // モデル変更共通処理
+    // ==============================
     private void ChangeModel(int index)
     {
         if (ModelManager.Instance != null)
@@ -161,5 +176,13 @@ public class MenuController : MonoBehaviour
 
         // モデルを選んだらメニューを閉じる
         CloseMenu();
+    }
+
+    // ==============================
+    // ログアウト
+    // ==============================
+    public void OnClickLogout()
+    {
+        logoutPopup.Open();
     }
 }

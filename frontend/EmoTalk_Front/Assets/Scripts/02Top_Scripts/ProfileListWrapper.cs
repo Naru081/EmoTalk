@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 
+// ==============================
+// データリストのラッパークラス
+// ==============================
 [Serializable]
 public class ProfileListWrapper
 {

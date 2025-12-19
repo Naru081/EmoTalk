@@ -39,7 +39,9 @@ public class ProfileManager : MonoBehaviour
 
         // 起動時にプロフィールと選択状態を読み込む
         LoadProfiles();
+        EnsureProfileIds();
         LoadSelectedProfile();
+        FixSelectedIfMissing();
     }
 
     // ==============================
@@ -57,6 +59,31 @@ public class ProfileManager : MonoBehaviour
 
         ProfileListWrapper wrapper = JsonUtility.FromJson<ProfileListWrapper>(json);
         Profiles = wrapper.profiles ?? new List<ProfileData>();
+    }
+    // ==============================
+    //  プロフIDの整合性チェック
+    // ==============================
+    private void EnsureProfileIds()
+    {
+        int nextId = PlayerPrefs.GetInt("NextProfileId", 1);
+
+        bool changed = false;
+
+        foreach (var profile in Profiles)
+        {
+            if (profile.profileId <= 0)
+            {
+                profile.profileId = nextId++;
+                changed = true;
+            }
+        }
+        if (changed)
+        {
+            PlayerPrefs.SetInt("NextProfileId", nextId);
+            PlayerPrefs.Save();
+            SaveProfiles();
+            NotifyChanged();
+        }
     }
 
     // ==============================
@@ -77,26 +104,32 @@ public class ProfileManager : MonoBehaviour
     // ==============================
     public ProfileData CreateProfile(int modelIndex)
     {
-        ProfileData data = new ProfileData(modelIndex, $"モデル{modelIndex + 1}");
+        // 表示名用の番号を決める（空いている番号）
+        int number = GetNextModelNumber();
+        string displayName = $"Model#{number}"; // ← ここはお好みで
+
+        ProfileData data = new ProfileData(modelIndex, displayName);
+
+        // ★ユニークIDを付与（PlayerPrefsで連番管理）
+        int nextId = PlayerPrefs.GetInt("NextProfileId", 1);
+        data.profileId = nextId;
+        PlayerPrefs.SetInt("NextProfileId", nextId + 1);
+        PlayerPrefs.Save();
+
         Profiles.Add(data);
         SaveProfiles();
         return data;
     }
 
+
     // ==============================
     //  プロフィール削除
     // ==============================
-    public bool DeleteProfile(ProfileData data)
+    public void DeleteProfile(int profileId)
     {
-        if (data.profileId == selectedProfileId)
-        {
-            Debug.LogWarning("選択中プロファイルのため削除不可");
-            return false;
-        }
-
-        Profiles.Remove(data);
+        Profiles.RemoveAll(p => p.profileId == profileId);
         SaveProfiles();
-        return true;
+        NotifyChanged();
     }
 
     // ==============================
@@ -105,6 +138,7 @@ public class ProfileManager : MonoBehaviour
     public void UpdateProfile(ProfileData data)
     {
         SaveProfiles();
+        NotifyChanged();
     }
 
     // ==============================
@@ -114,7 +148,7 @@ public class ProfileManager : MonoBehaviour
     {
         selectedProfileId = PlayerPrefs.GetInt(KEY_SELECTED, -1);
     }
-
+    // 選択中プロファイルを設定
     public void SelectProfile(ProfileData data)
     {
         selectedProfileId = data.profileId;
@@ -126,8 +160,10 @@ public class ProfileManager : MonoBehaviour
         {
             ModelManager.Instance.ShowModel(data.modelIndex);
         }
-    }
 
+        NotifyChanged();
+    }
+    // 選択中プロファイルを取得
     public ProfileData GetSelectedProfile()
     {
         foreach (var p in Profiles)
@@ -136,5 +172,56 @@ public class ProfileManager : MonoBehaviour
                 return p;
         }
         return null;
+    }
+    // 選択中プロファイルIDを取得
+    public int GetSelectedProfileId()
+    {
+        return selectedProfileId;
+    }
+    // 選択中プロフが存在しない場合、先頭を選択する
+    private void FixSelectedIfMissing()
+    {
+        // 選択IDがProfilesに存在しない場合、先頭を選択
+        bool exists = Profiles.Exists(p => p.profileId == selectedProfileId);
+        if (!exists && Profiles.Count > 0)
+        {
+            selectedProfileId = Profiles[0].profileId;
+            PlayerPrefs.SetInt(KEY_SELECTED, selectedProfileId);
+            PlayerPrefs.Save();
+            NotifyChanged();
+        }
+    }
+
+    // ==============================
+    //  表示名用の番号を決める
+    // ==============================
+    private int GetNextModelNumber()
+    {
+        // すでに使われている番号を集める
+        var usedNumbers = new HashSet<int>();
+
+        foreach (var p in Profiles)
+        {
+            if (string.IsNullOrEmpty(p.displayName))
+            continue;
+
+            // "Model#2" 形式だけを対象にする
+            if (p.displayName.StartsWith("Model#"))
+            {
+                var numPart = p.displayName.Replace("Model#", "");
+                if (int.TryParse(numPart, out int n))
+                {
+                    usedNumbers.Add(n);
+                }
+            }
+        }
+        // 1 から順に空いている番号を探す
+        int candidate = 1;
+        while (usedNumbers.Contains(candidate))
+        {
+            candidate++;
+        }
+
+        return candidate;
     }
 }

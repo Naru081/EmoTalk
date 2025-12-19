@@ -51,9 +51,67 @@ public class LoginController : MonoBehaviour
 
     // パスワード再設定：完了
     [Header("Reset Complete Panel")]
-    public GameObject resetCompletePanel;     // Canvas/ResetCompletePanel
+    public GameObject resetCompletePanel;     // Canvas/ResetCompletePanel
+
+    // =====================================================================
+    //  自動ログイン処理
+    // =====================================================================
+
+    // 自動ログイン機能
+    void Start()
+    {
+        #if UNITY_EDITOR
+            Debug.Log("エディタでは自動ログインをスキップ");
+            return;
+        #endif
+
+        string token = EncryptedPlayerPrefs.LoadString("token", "");
+        if (!string.IsNullOrEmpty(token))
+        {
+            Debug.Log("起動時にトークンが見つかりました: " + token);
+            // サーバーに照合リクエストを送る
+            StartCoroutine(CheckToken(token));
+        }
+    }
+
+    // トークン照合コルーチン
+    IEnumerator CheckToken(string token)
+    {
+        // リクエストデータの準備
+        TokenRequest request = new TokenRequest
+        {
+            token = token
+        };
+        // 通信を呼び出す トークン照合処理
+        yield return StartCoroutine(ApiConnect.Post<TokenRequest, TokenResponse>(
+            "PHP_user/auto_login.php",
+            request,
+            (res) =>
+            {
+                // 結果の処理
+                if (res.success)
+                {
+                    // トークンが有効ならログイン情報を取得してTOP画面へ遷移
+                    PlayerPrefs.SetInt("user_id", res.user_id);
+                    PlayerPrefs.SetString("user_mail", res.user_mail);
+                    PlayerPrefs.SetInt("user_currentprof", res.user_currentprof);
+                    PlayerPrefs.Save();
 
 
+                    SceneManager.LoadScene("TopScene");
+                }
+                else
+                {
+                    // トークンが無効なら削除
+                    EncryptedPlayerPrefs.DeleteKey("token");
+                }
+            },
+            (error) =>
+            {
+                Debug.LogError("トークン照合エラー: " + error);
+            }
+        ));
+    }
 
     // =====================================================================
     //  ログイン処理
@@ -68,77 +126,60 @@ public class LoginController : MonoBehaviour
             ShowLoginError("メールアドレスとパスワードを入力してください");
             return;
         }
-
         ClearLoginError();
+        //yield return new WaitForSeconds(0.5f);
 
-        StartCoroutine(LoginRequest(email, password));
+        // リクエストデータの準備
+        UserRequest request = new UserRequest
+        {
+            user_mail = email,
+            user_pass = password
+        };
+
+        // 通信を呼び出す ログイン認証処理
+        StartCoroutine(ApiConnect.Post<UserRequest, LoginResponse>(
+        "PHP_user/login.php",
+        request,
+        (res) =>
+        {
+            // 結果の処理
+            if (res.success)
+            {
+                // 取得したuser_idとuser_mailとtokenをPlayerPrefsに格納 (取り出すときはPlayerPrefs.GetInt("user_id");など)
+                PlayerPrefs.SetInt("user_id", res.user_id);
+                PlayerPrefs.SetString("user_mail", res.user_mail);
+                PlayerPrefs.SetString("user_token", res.token);
+                PlayerPrefs.Save();
+
+                // 自動ログイン用のトークンを保存
+                EncryptedPlayerPrefs.SaveString("token", res.token);
+
+                // ログイン成功時、ロード画面表示
+                SetLoading(true, "ログインに成功しました");
+
+                // 1秒待ってTOP画面へ行く処理を行う関数を呼び出す
+                StartCoroutine(LoginSuccessLoading());
+            }
+            else
+            {
+                // エラー表示
+                ShowLoginError(res.message);
+            }
+        },
+        (error) => { ShowLoginError(error); }
+        ));
     }
 
-    private IEnumerator LoginRequest(string email, string password)
+    private IEnumerator LoginSuccessLoading()
     {
-        yield return new WaitForSeconds(0.5f);
+        // ロード画面を1秒間表示する
+        yield return new WaitForSeconds(1f);
 
-        // ログイン処理を行うPHPのurl (実機稼働時にはサーバーのURLに変更すること)
-        string url = "http://localhost/backend/PHP/login.php";
+        // その後非表示にする
+        loadingPanel.SetActive(false);
 
-        // リクエストデータ作成
-        RequestData reqData = new RequestData();
-        reqData.email = email;
-        reqData.password = password;
-
-        // JSONに変換
-        string json = JsonUtility.ToJson(reqData);
-        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
-
-        // 通信準備
-        UnityWebRequest request = new UnityWebRequest(url, "POST");
-        request.uploadHandler = new UploadHandlerRaw(body);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        // 通信開始
-        yield return request.SendWebRequest();
-
-        // 通信エラー
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            ShowLoginError("通信エラーが発生しました。");
-            yield break;
-        }
-
-        string responseText = request.downloadHandler.text;
-        Debug.Log("サーバー応答:" + responseText);
-
-        // JSON解析
-        ResponseData res;
-        try
-        {
-            res = JsonUtility.FromJson<ResponseData>(responseText);
-        }
-        catch
-        {
-            ShowLoginError("サーバー応答の解析に失敗しました。");
-            yield break;
-        }
-
-        // 結果の処理
-        if (res.success)
-        {
-            // ログイン成功時、ロード画面表示
-            SetLoading(true, "ログインに成功しました");
-            // ロード画面を1秒間表示する
-            yield return new WaitForSeconds(1f);
-            // その後非表示にする
-            loadingPanel.SetActive(false);
-
-            // シーン移動(TOP画面へ)
-            SceneManager.LoadScene("TopScene");
-        }
-        else
-        {
-            // エラー表示
-            ShowLoginError(res.message);
-        }
+        // シーン移動(TOP画面へ)
+        SceneManager.LoadScene("TopScene");
     }
 
     private void ShowLoginError(string msg)
@@ -212,69 +253,36 @@ public class LoginController : MonoBehaviour
 
         if (registerErrorText != null) registerErrorText.text = "";
 
-        StartCoroutine(RegisterRequest(email, password));
+        // リクエストデータの準備
+        UserRequest request = new UserRequest
+        {
+            user_mail = email,
+            user_pass = password
+        };
+
+        // 通信を呼び出す ユーザ新規登録処理
+        StartCoroutine(ApiConnect.Post<UserRequest, RegisterResponse>(
+            "PHP_user/register.php",
+            request,
+            (res) =>
+            {
+                // 結果の処理
+                if (res.success)
+                {
+                    // 成功画面へ
+                    if (registerPanel != null) registerPanel.SetActive(false);
+                    if (registerCompletePanel != null) registerCompletePanel.SetActive(true);
+                }
+                else
+                {
+                    // エラー表示
+                    ShowRegisterError(res.message);
+                }
+            },
+            (error) => { ShowRegisterError(error); }
+        ));
     }
 
-    private IEnumerator RegisterRequest(string email, string password)
-    {
-        yield return new WaitForSeconds(0.5f);
-
-        // 新規登録処理を行うPHPのurl (実機稼働時にはサーバーのURLに変更すること)
-        string url = "http://localhost/backend/PHP/register.php";
-
-        // リクエストデータ作成
-        RequestData reqData = new RequestData();
-        reqData.email = email;
-        reqData.password = password;
-
-        // JSONに変換
-        string json = JsonUtility.ToJson(reqData);
-        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
-
-        // 通信準備
-        UnityWebRequest request = new UnityWebRequest(url, "POST");
-        request.uploadHandler = new UploadHandlerRaw(body);
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
-
-        // 通信開始
-        yield return request.SendWebRequest();
-
-        // 通信エラー
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            ShowRegisterError("通信エラーが発生しました。");
-            yield break;
-        }
-
-        string responseText = request.downloadHandler.text;
-        Debug.Log("サーバー応答:" + responseText);
-
-        // JSON解析
-        ResponseData res;
-        try
-        {
-            res = JsonUtility.FromJson<ResponseData>(responseText);
-        }
-        catch
-        {
-            ShowRegisterError("サーバー応答の解析に失敗しました。");
-            yield break;
-        }
-
-        // 結果の処理
-        if (res.success)
-        {
-            // 成功画面へ
-            if (registerPanel != null) registerPanel.SetActive(false);
-            if (registerCompletePanel != null) registerCompletePanel.SetActive(true);
-        }
-        else
-        {
-            // エラー表示
-            ShowRegisterError(res.message);
-        }
-    }
     private void ShowRegisterError(string msg)
     {
         if (registerErrorText == null) return;
@@ -291,7 +299,7 @@ public class LoginController : MonoBehaviour
 
 
     // =====================================================================
-    //  パスワード再設定フロー
+    //  パスワード再設定
     // =====================================================================
 
     // 「パスワードを忘れた場合はこちら」（Canvas/loss_pass）から呼ぶ
@@ -319,40 +327,52 @@ public class LoginController : MonoBehaviour
     }
 
     // ResetMailPanel/Window/send_mail から呼ぶ
+    // メール入力と確認
     public void OnSendResetMailButtonClicked()
     {
-        string mail = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
+        string email = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
 
-        if (string.IsNullOrEmpty(mail))
+        // メールアドレス未入力チェック
+        if (string.IsNullOrEmpty(email))
         {
             ShowResetMailError("メールアドレスを入力してください");
             return;
         }
 
+        // エラーメッセージクリア
         ClearAllResetErrors();
-        StartCoroutine(SendResetMailRequest(mail));
+
+        // リクエストデータの準備
+        User_mailRequest request = new User_mailRequest
+        {
+            user_mail = email
+        };
+
+        // 通信を呼び出す ワンタイムキーを発行しユーザのメールアドレスに送信
+        StartCoroutine(ApiConnect.Post<User_mailRequest, BaseResponseData>(
+            "PHP_user/otk_create.php",
+            request,
+            (res) =>
+            {
+                // 結果の処理
+                if (res.success)
+                {
+                    // 成功時、ワンタイムキー入力パネルへ
+                    if (resetMailPanel != null) resetMailPanel.SetActive(false);
+                    if (resetKeyPanel != null) resetKeyPanel.SetActive(true);
+                    if (resetKeyInput != null) resetKeyInput.text = "";
+                }
+                else
+                {
+                    // エラー表示
+                    ShowResetMailError(res.message);
+                }
+            },
+            (error) => { ShowResetMailError(error); }
+        ));
     }
 
-    private IEnumerator SendResetMailRequest(string mail)
-    {
-        // TODO: 後でメール送信APIと接続
-        yield return new WaitForSeconds(0.5f);
-
-        bool mailExists = true; // ダミーで成功
-
-        if (mailExists)
-        {
-            if (resetMailPanel != null) resetMailPanel.SetActive(false);
-            if (resetKeyPanel != null) resetKeyPanel.SetActive(true);
-
-            if (resetKeyInput != null) resetKeyInput.text = "";
-        }
-        else
-        {
-            ShowResetMailError("このメールアドレスは登録されていません。");
-        }
-    }
-
+    // メール送信エラー表示
     private void ShowResetMailError(string msg)
     {
         if (resetMailErrorText == null) return;
@@ -361,41 +381,54 @@ public class LoginController : MonoBehaviour
     }
 
     // ResetKeyPanel/Window/send_key から呼ぶ
+    // ワンタイムキー入力後の確認
     public void OnSendResetKeyButtonClicked()
     {
-        string key = resetKeyInput != null ? resetKeyInput.text.Trim() : "";
+        string otk = resetKeyInput != null ? resetKeyInput.text.Trim() : "";
+        string mail = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
 
-        if (string.IsNullOrEmpty(key))
+
+        if (string.IsNullOrEmpty(otk))
         {
             ShowResetKeyError("ワンタイムキーを入力してください");
             return;
         }
 
         ClearAllResetErrors();
-        StartCoroutine(CheckResetKeyRequest(key));
+        // リクエストデータの準備
+        OtkAuthRequest request = new OtkAuthRequest
+        {
+            user_mail = mail,
+            otk = otk
+        };
+
+        // 通信を呼び出す ワンタイムキーの認証
+        StartCoroutine(ApiConnect.Post<OtkAuthRequest, BaseResponseData>(
+            "PHP_user/otk_auth.php",
+            request,
+            (res) =>
+            {
+                // 結果の処理
+                if (res.success)
+                {
+                    // 成功時、新パスワード入力パネルへ
+                    if (resetKeyPanel != null) resetKeyPanel.SetActive(false);
+                    if (resetPasswordPanel != null) resetPasswordPanel.SetActive(true);
+
+                    if (resetNewPass != null) resetNewPass.text = "";
+                    if (resetNewPass2 != null) resetNewPass2.text = "";
+                }
+                else
+                {
+                    // エラー表示
+                    ShowResetKeyError(res.message);
+                }
+            },
+            (error) => { ShowResetKeyError(error); }
+        ));
     }
 
-    private IEnumerator CheckResetKeyRequest(string key)
-    {
-        // TODO: 後でキー検証APIと接続
-        yield return new WaitForSeconds(0.5f);
-
-        bool keyValid = true; // ダミー成功
-
-        if (keyValid)
-        {
-            if (resetKeyPanel != null) resetKeyPanel.SetActive(false);
-            if (resetPasswordPanel != null) resetPasswordPanel.SetActive(true);
-
-            if (resetNewPass != null) resetNewPass.text = "";
-            if (resetNewPass2 != null) resetNewPass2.text = "";
-        }
-        else
-        {
-            ShowResetKeyError("ワンタイムキーが正しくありません。");
-        }
-    }
-
+    // ワンタイムキーエラー表示
     private void ShowResetKeyError(string msg)
     {
         if (resetKeyErrorText == null) return;
@@ -404,8 +437,10 @@ public class LoginController : MonoBehaviour
     }
 
     // ResetPasswordPanel/Window/re_entry ボタンから呼ぶ
+    // パスワード再設定
     public void OnResetPasswordButtonClicked()
     {
+        string mail = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
         string newPass = resetNewPass != null ? resetNewPass.text : "";
         string confirm = resetNewPass2 != null ? resetNewPass2.text : "";
 
@@ -422,27 +457,38 @@ public class LoginController : MonoBehaviour
         }
 
         ClearAllResetErrors();
-        StartCoroutine(ResetPasswordRequest(newPass));
+
+        // リクエストデータの準備
+        ResetPassRequest request = new ResetPassRequest
+        {
+            user_mail = mail,
+            newpassword = newPass
+        };
+
+        // 通信を呼び出す パスワード再設定処理
+        StartCoroutine(ApiConnect.Post<ResetPassRequest, BaseResponseData>(
+            "PHP_user/reset_pass.php",
+            request,
+            (res) =>
+            {
+                // 結果の処理
+                if (res.success)
+                {
+                    // 成功時、完了パネルへ
+                    if (resetPasswordPanel != null) resetPasswordPanel.SetActive(false);
+                    if (resetCompletePanel != null) resetCompletePanel.SetActive(true);
+                }
+                else
+                {
+                    // エラー表示
+                    ShowResetPasswordError(res.message);
+                }
+            },
+            (error) => { ShowResetPasswordError(error); }
+        ));
     }
 
-    private IEnumerator ResetPasswordRequest(string newPass)
-    {
-        // TODO: 後でパスワード再設定APIと接続
-        yield return new WaitForSeconds(0.5f);
-
-        bool resetSuccess = true; // ダミー成功
-
-        if (resetSuccess)
-        {
-            if (resetPasswordPanel != null) resetPasswordPanel.SetActive(false);
-            if (resetCompletePanel != null) resetCompletePanel.SetActive(true);
-        }
-        else
-        {
-            ShowResetPasswordError("パスワードの再設定に失敗しました。");
-        }
-    }
-
+    // パスワード再設定エラー表示
     private void ShowResetPasswordError(string msg)
     {
         if (resetPasswordErrorText == null) return;
@@ -451,52 +497,17 @@ public class LoginController : MonoBehaviour
     }
 
     // ResetCompletePanel/Window/close ボタンから呼ぶ
-    public void OnCloseResetCompletePanel()
+    public void OnCloseResetCompletePanel() // 完了パネルを閉じる
     {
         if (resetCompletePanel != null)
             resetCompletePanel.SetActive(false);
     }
 
+    // すべてのパスワード再設定エラーメッセージをクリア
     private void ClearAllResetErrors()
     {
         if (resetMailErrorText != null) resetMailErrorText.text = "";
         if (resetKeyErrorText != null) resetKeyErrorText.text = "";
         if (resetPasswordErrorText != null) resetPasswordErrorText.text = "";
     }
-
-
-    // API 通信用データクラス群
-
-    // ログインと新規登録で共通
-    [System.Serializable]
-    private class RequestData
-    {
-        public string email;
-        public string password;
-    }
-
-    [System.Serializable]
-    private class ResponseData
-    {
-        public bool success;
-        public string message;
-    }
-
-    //[System.Serializable] 
-    //public class ResetMailRequestData 
-    //{ 
-    //    public string email; 
-    //}
-    //[System.Serializable] 
-    //public class ResetKeyRequestData 
-    //{ 
-    //    public string email;
-    //    public string key;
-    //}
-    //[System.Serializable] 
-    //public class ResetPasswordRequestData 
-    //{ 
-    //    public string email; 
-    //    public string newPassword;
-    //}
 }

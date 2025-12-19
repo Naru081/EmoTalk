@@ -14,6 +14,9 @@ public class CreateProfileInputPanel : MonoBehaviour
 
     private int selectedModelIndex = 0;
 
+    // ===============================
+    //  初期化
+    // ===============================
     public void Open(int modelIndex)
     {
         selectedModelIndex = modelIndex;
@@ -27,12 +30,17 @@ public class CreateProfileInputPanel : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    // ===============================
+    //  閉じる
+    // ===============================
     public void Close()
     {
         gameObject.SetActive(false);
     }
 
+    // ==============================
     // 保存処理
+    // ==============================
     public void OnSave()
     {
         // ① 新規作成
@@ -61,7 +69,9 @@ public class CreateProfileInputPanel : MonoBehaviour
         Close();
     }
 
-
+    // ==============================
+    // 戻る
+    // ==============================
     public void OnBack()
     {
         Close();

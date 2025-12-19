@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 39
+  controlID: 41
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -395,9 +395,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.0010785083, y: 0.00061923946, z: -0.006438749}
+    m_Target: {x: 0.00039148354, y: 0.00021941331, z: -0.0070612608}
     speed: 2
-    m_Value: {x: 0.0010760783, y: 0.0006178442, z: -0.006431249}
+    m_Value: {x: 0.0003424408, y: 0.00019118027, z: -0.006907511}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -447,9 +447,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 0.0026395116
+    m_Target: 0.00416082
     speed: 2
-    m_Value: 0.0026355584
+    m_Value: 0.004036692
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -498,7 +498,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 40
+  controlID: 42
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -524,7 +524,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 41
+  controlID: 43
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -589,9 +589,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 4a1e0100
-      m_LastClickedID: 73290
-      m_ExpandedIDs: dc9bfbff481c01007c1c0100c21c01004a1e0100
+      m_SelectedIDs: 2c490100
+      m_LastClickedID: 84268
+      m_ExpandedIDs: d232ffff18350100fa3c0100564501002c490100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -708,9 +708,9 @@ MonoBehaviour:
     m_VAllowExceedBaseRangeMax: 1
     m_ScaleWithWindow: 0
     m_HSlider: 0
-    m_VSlider: 0
+    m_VSlider: 1
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -884,7 +884,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Live2D/Cubism/Samples/Models/Rice
+    - Assets/Models/Estella2.0 Belongs_to_DG_STUDIO
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -892,16 +892,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Live2D/Cubism/Samples/Models/Rice
+  - Assets/Models/Estella2.0 Belongs_to_DG_STUDIO
   m_LastFoldersGridSize: -1
   m_LastProjectPath: /Users/oikawaharuonore/Workspace/EmoTalk/frontend/EmoTalk_Front
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 130}
-    m_SelectedIDs: 440f0100
-    m_LastClickedID: 69444
-    m_ExpandedIDs: 000000009488000096880000988800009a8800009c880000c0880000240f010000ca9a3b
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: fe880000
+    m_LastClickedID: 35070
+    m_ExpandedIDs: 00000000b0880000b2880000b4880000b6880000e6880000fe88000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -929,7 +929,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000009488000096880000988800009a8800009c880000
+    m_ExpandedIDs: 00000000b0880000b2880000b4880000b6880000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -954,8 +954,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 4a1e0100
-    m_LastClickedInstanceID: 73290
+    m_SelectedInstanceIDs: 2c490100
+    m_LastClickedInstanceID: 84268
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000b0700000ec62000000000000
     m_RenameOverlay:

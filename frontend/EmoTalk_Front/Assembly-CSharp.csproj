@@ -63,9 +63,10 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/2022.3.62f3/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Scripts/02Top_Scripts/DeleteConfirmPopup.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileListWrapper.cs" />
-    <Compile Include="Assets/Scripts/02Top_Scripts/DeleteConfirmDialog.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/DeleteDeniedPopup.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileModelSelect.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/MicPopupContller.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ModelSelectWindow.cs" />
@@ -75,14 +76,22 @@
     <Compile Include="Assets/Scripts/02Top_Scripts/TopController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileInputPanel.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ModelManager.cs" />
+    <Compile Include="Assets/Scripts/common/responsedata.cs" />
+    <Compile Include="Assets/Scripts/common/EncryptedPlayerPrefs.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfilePropertyWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileData.cs" />
+    <Compile Include="Assets/Scripts/common/apiconnect.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileEditWindow.cs" />
+    <Compile Include="Assets/Scripts/common/requestdata.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/PropertyWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileLIstWindow.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/ModelChangeWindow.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/LogoutPopup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/mcs.rsp" />
+    <None Include="Assets/Models/export/Read me.txt" />
     <None Include="Assets/csc.rsp" />
     <None Include="Assets/Models/fav_usaneko_kred/fav_usaneko_kred/KeySettings.txt" />
   </ItemGroup>

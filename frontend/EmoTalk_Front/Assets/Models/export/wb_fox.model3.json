@@ -1,0 +1,60 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "wb_fox.moc3",
+		"Textures": [
+			"textures/texture_00.png"
+		],
+		"Physics": "wb_fox.physics3.json",
+		"DisplayInfo": "wb_fox.cdi3.json",
+		"Expressions": [
+			{
+				"Name": "cheek1",
+				"File": "expressions/cheek1.exp3.json"
+			},
+			{
+				"Name": "cheek2",
+				"File": "expressions/cheek2.exp3.json"
+			},
+			{
+				"Name": "heart",
+				"File": "expressions/heart.exp3.json"
+			},
+			{
+				"Name": "shimeji",
+				"File": "expressions/shimeji.exp3.json"
+			},
+			{
+				"Name": "shock",
+				"File": "expressions/shock.exp3.json"
+			},
+			{
+				"Name": "smile",
+				"File": "expressions/smile.exp3.json"
+			},
+			{
+				"Name": "tears",
+				"File": "expressions/tears.exp3.json"
+			}
+		]
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": [
+				"ParamMouthForm",
+				"ParamMouthOpenY"
+			]
+		}
+	],
+	"HitAreas": []
+}

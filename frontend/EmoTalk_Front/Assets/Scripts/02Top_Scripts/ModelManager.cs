@@ -4,66 +4,56 @@ public class ModelManager : MonoBehaviour
 {
     public static ModelManager Instance { get; private set; }
 
-    [Header("modelRoot")]
-    public Transform modelRoot;          // TOP画面のモデル表示位置用のEmpty
+    public Transform modelRoot;
+    public GameObject[] modelPrefabs;
 
-    [Header("modelPrefabs（0:Model1, 1:Model2, 2:Model3）")]
-    public GameObject[] modelPrefabs;    // vtemモデル + Cubismサンプル2体
+    // indexごとの補正（Inspectorで調整）
+    public Vector3[] modelOffsets;   // 例: 0=(0,0,0) 1=(0,-0.8,0) 2=(0.2,-1.1,0)
+    public Vector3[] modelScales;    // 必要なら
 
     private int currentIndex = -1;
     private GameObject currentModel;
 
-    private void Awake()
+    // ==============================
+    // Singletonパターン
+    // ==============================
+    void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
     }
 
-    private void Start()
+    // ==============================
+    // モデル表示
+    // ==============================
+    void Start()
     {
-        // 起動時に前回選択していたモデルを復元
         int savedIndex = PlayerPrefs.GetInt("SelectedModel", 0);
         ShowModel(savedIndex);
     }
 
+    // ==============================
+    // 選択したモデルを表示
+    // ==============================
     public void ShowModel(int index)
     {
-        if (modelPrefabs == null || modelPrefabs.Length == 0)
-        {
-            Debug.LogWarning("ModelManager: modelPrefabs が設定されていません。");
-            return;
-        }
-        if (index < 0 || index >= modelPrefabs.Length)
-        {
-            Debug.LogWarning("ModelManager: index が範囲外です: " + index);
-            return;
-        }
-        if (index == currentIndex && currentModel != null)
-        {
-            // 同じモデルなら何もしない
-            return;
-        }
+        if (modelPrefabs == null || modelPrefabs.Length == 0) return;
+        if (index < 0 || index >= modelPrefabs.Length) return;
+        if (index == currentIndex && currentModel != null) return;
 
-        // 旧モデルを削除
-        if (currentModel != null)
-        {
-            Destroy(currentModel);
-            currentModel = null;
-        }
+        if (currentModel != null) Destroy(currentModel);
 
-        // 新しいモデルを生成
-        GameObject prefab = modelPrefabs[index];
-        currentModel = Instantiate(prefab, modelRoot);
-        currentModel.transform.localPosition = Vector3.zero;
-        currentModel.transform.localScale    = Vector3.one;
+        currentModel = Instantiate(modelPrefabs[index], modelRoot);
+        currentModel.transform.localRotation = Quaternion.identity;
+
+        var scale  = (modelScales  != null && index < modelScales.Length)  ? modelScales[index]  : Vector3.one;
+        var offset = (modelOffsets != null && index < modelOffsets.Length) ? modelOffsets[index] : Vector3.zero;
+
+        currentModel.transform.localScale = scale;
+        currentModel.transform.localPosition = offset;
 
         currentIndex = index;
 
-        // 選択状態を保存（次回起動時に復元）
         PlayerPrefs.SetInt("SelectedModel", index);
         PlayerPrefs.Save();
     }

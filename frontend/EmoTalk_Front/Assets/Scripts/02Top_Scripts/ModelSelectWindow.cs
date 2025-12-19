@@ -5,6 +5,9 @@ public class ModelSelectWindow : MonoBehaviour
     private ProfileData currentProfile;
     private System.Action<int> onSelected;
 
+    // ==============================
+    // モデル選択ウィンドウの表示
+    // ==============================
     public void Open(ProfileData data, System.Action<int> onSelected)
     {
         currentProfile = data;
@@ -12,12 +15,17 @@ public class ModelSelectWindow : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    // ==============================
+    // モデル選択ウィンドウの非表示
+    // ==============================
     public void Close()
     {
         gameObject.SetActive(false);
     }
 
-    // 例：UIボタンから呼ぶ
+    // ==============================
+    // モデル選択時の処理
+    // ==============================
     public void OnSelectModel(int index)
     {
         onSelected?.Invoke(index);

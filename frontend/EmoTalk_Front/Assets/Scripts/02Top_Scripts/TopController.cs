@@ -4,31 +4,26 @@ using System.Collections;
 
 public class TopController : MonoBehaviour
 {
-    // -------------------------
-    // パネル開閉（既存）
-    // -------------------------
+    // 会話ログパネル
     [Header("Log Panel")]
     public RectTransform logPanel;
     public Button handleButton;
 
+    // パネル位置設定
     [Header("Positions")]
     public float openX = 0f;
     public float closeX = -1028f;
     private bool isOpen = false;
     private float slideSpeed = 10f;
 
-    // -------------------------
     // スワイプ用の変数を追加
-    // -------------------------
     private bool isDragging = false;
     private Vector2 dragStartPos;
     private float panelStartX;
     [Range(0.1f, 0.9f)]
     public float openThreshold = 0.5f;   // 開き具合が何割以上なら「開く」とみなすか
 
-    // -------------------------
     // チャットログ追加
-    // -------------------------
     [Header("Chat Log")]
     public Transform logContent;
     public GameObject logItemUserPrefab;
@@ -36,11 +31,14 @@ public class TopController : MonoBehaviour
     public RectTransform contentTransform;
     public ScrollRect scrollRect;
 
+    // チャット入力UI
     [Header("Input UI")]
     public InputField chatInput;
     public Button sendButton;
 
-
+    // ==============================
+    // TOP画面UI制御
+    // ==============================
     void Start()
     {
         // パネル開閉
@@ -57,6 +55,9 @@ public class TopController : MonoBehaviour
         sendButton.onClick.AddListener(OnSendMessage);
     }
 
+    // ==============================
+    // 毎フレーム更新
+    // ==============================
     void Update()
     {
         // ---- ドラッグしていないときだけ、Lerp でスムーズに目標位置へ ----
@@ -72,6 +73,9 @@ public class TopController : MonoBehaviour
         DetectDrag();
     }
 
+    // ==============================
+    // 会話ログパネル開閉処理
+    // ==============================
     public void ToggleLogPanel()
     {
         if (isOpen)
@@ -84,9 +88,9 @@ public class TopController : MonoBehaviour
         }
     }
 
-    // -------------------------
+    // ==============================
     // 改行の処理
-    // -------------------------
+    // ==============================
     private string InsertLineBreaks(string text, int maxCharsPerLine = 12)
     {
         if (string.IsNullOrEmpty(text)) return text;
@@ -109,9 +113,9 @@ public class TopController : MonoBehaviour
         return sb.ToString();
     }
 
-    // -------------------------
+    // ==============================
     // 送信ボタンの処理
-    // -------------------------
+    // ==============================
     public void OnSendMessage()
     {
         string msg = chatInput.text.Trim();
@@ -129,7 +133,9 @@ public class TopController : MonoBehaviour
         // ▼ テスト返信
         StartCoroutine(DebugAutoReply());
     }
-
+    // ==============================
+    // テスト返信（デバッグ用）
+    // ==============================
     IEnumerator DebugAutoReply()
     {
         yield return new WaitForSeconds(0.5f);
@@ -137,9 +143,9 @@ public class TopController : MonoBehaviour
         ScrollToBottom();
     }
 
-    // -------------------------
+    // ==============================
     // 吹き出し生成
-    // -------------------------
+    // ==============================
     public void AddLogItem(string message, bool isUser)
     {
         GameObject prefab = isUser ? logItemUserPrefab : logItemEmoPrefab;
@@ -152,9 +158,9 @@ public class TopController : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform);
     }
 
-    // -------------------------
-    // スクロールを一番下に移動
-    // -------------------------
+    // ==============================
+    // 会話更新時スクロールを一番下に移動
+    // ==============================
     public void ScrollToBottom()
     {
         Canvas.ForceUpdateCanvases();
@@ -211,6 +217,9 @@ public class TopController : MonoBehaviour
         #endif
     }
 
+    // ==============================
+    // ドラッグ終了時の処理
+    // ==============================
     void EndDrag()
     {
         isDragging = false;

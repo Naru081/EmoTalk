@@ -1,5 +1,8 @@
 using System;
 
+// ==============================
+// プロフィールデータクラス
+// ==============================
 [Serializable]
 public class ProfileData
 {
@@ -10,7 +13,9 @@ public class ProfileData
     public string tone;          // 口調
     public string pronoun;       // 一人称
 
-    // コンストラクタ（新規作成用）
+    // ==============================
+    // 新規作成用のコンストラクタ
+    // ==============================
     public ProfileData(int modelIndex, string name = "New Profile")
     {
         this.profileId   = -1;           // 未保存

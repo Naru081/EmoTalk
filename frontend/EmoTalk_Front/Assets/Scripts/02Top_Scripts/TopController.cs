@@ -131,6 +131,7 @@ public class TopController : MonoBehaviour
     {
         string msg = chatInput.text.Trim();
         if (string.IsNullOrEmpty(msg)) return;
+        string rawMsg = msg;
 
         // ▼ 改行処理を先に行う
         msg = InsertLineBreaks(msg, 20);
@@ -141,74 +142,69 @@ public class TopController : MonoBehaviour
         // 入力欄クリア
         chatInput.text = "";
 
-        // ▼ ここだけ変更：PHPへ送信
-        StartCoroutine(SendToPhpAndReceiveReply(msg));
+        // AIに送信
+        StartCoroutine(SendMessageToAI(rawMsg));
     }
 
     // ==============================
     // ★ 追加：PHPへ送って返信を表示
     // ==============================
-    private IEnumerator SendToPhpAndReceiveReply(string userMessage)
+    private IEnumerator SendMessageToAI(string messageContent)
     {
-        if (string.IsNullOrEmpty(serverUrl))
+        int profileId = ProfileManager.Instance != null ? ProfileManager.Instance.GetSelectedProfileId() : -1;
+        if (profileId <= 0)
         {
-            Debug.LogWarning("serverUrl is empty. Fallback reply.");
-            if (fallbackToDebugReply) yield return DebugAutoReply();
+            Debug.LogError("プロファイルが選択されていません。");
+            AddLogItem("プロファイルが選択されていません。", false);
+            ScrollToBottom();
             yield break;
         }
 
-        // prof_idを取得
-        int prof_id = UserData.GetUserCurrentProfId();
-
-        // control_message.php に投げるPOST（必要に応じて項目を増やしてOK）
-        WWWForm form = new WWWForm();
-        form.AddField("message_content", userMessage);
-        form.AddField("prof_id", prof_id);
-
-        using (UnityWebRequest req = UnityWebRequest.Post(serverUrl, form))
+        var req = new MessageRequest
         {
-            // タイムアウト（任意）
-            req.timeout = 20;
+            prof_id = profileId,
+            message_content = messageContent
+        };
 
-            yield return req.SendWebRequest();
-
-            if (req.result != UnityWebRequest.Result.Success)
+        yield return ApiConnect.Post<MessageRequest, MessageResponse>(
+            "PHP_message/control_message.php",
+            req,
+            (res) =>
             {
-                Debug.LogWarning("PHP request failed: " + req.error);
+                if (!res.success)
+                {
+                    Debug.LogError("メッセージ送信失敗: " + res.message);
+                    AddLogItem("メッセージ送信失敗: " + res.message, false);
+                    ScrollToBottom();
+                    return;
+                }
 
-                // 通信失敗でもデモが止まらないように
-                if (fallbackToDebugReply)
-                    yield return DebugAutoReply();
+                string responseText = string.IsNullOrEmpty(res.response_text)
+                    ? "返答が取得できませんでした。"
+                    : res.response_text;
+                responseText = InsertLineBreaks(responseText, 20);
 
-                yield break;
-            }
-
-            // 返信本文（PHP側がJSONなら、ここでJSON解析に変える）
-            string responseText = req.downloadHandler.text;
-
-            // 空ならフォールバック
-            if (string.IsNullOrWhiteSpace(responseText))
+                AddLogItem(responseText, false);
+                ScrollToBottom();
+            },
+            error =>
             {
-                Debug.LogWarning("PHP response is empty.");
-                if (fallbackToDebugReply) yield return DebugAutoReply();
-                yield break;
+                Debug.LogError("メッセージ送信エラー: " + error);
+                AddLogItem("通信エラーが発生しました。", false);
+                ScrollToBottom();
             }
-
-            // ▼ 相手（Emo）の吹き出し追加
-            AddLogItem(responseText, false);
-            ScrollToBottom();
-        }
+        );
     }
 
     // ==============================
     // テスト返信（デバッグ用）※元のまま残す
     // ==============================
-    IEnumerator DebugAutoReply()
-    {
-        yield return new WaitForSeconds(0.5f);
-        AddLogItem("了解です！", false);
-        ScrollToBottom();
-    }
+    // IEnumerator DebugAutoReply()
+    // {
+    //     yield return new WaitForSeconds(0.5f);
+    //     AddLogItem("了解です！", false);
+    //     ScrollToBottom();
+    // }
 
     // ==============================
     // 吹き出し生成

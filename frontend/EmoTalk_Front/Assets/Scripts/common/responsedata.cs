@@ -70,7 +70,7 @@ public class CreateProfileResponse
 }
 
 [Serializable]                      // メインチャットレスポンス
-public class  ChatResponse
+public class  MessageResponse
 {
     public bool success;
     public string message;

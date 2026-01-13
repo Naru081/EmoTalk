@@ -96,7 +96,7 @@ public class DeleteProfileRequest
 }
 
 [Serializable]                  // テキストメッセージ送信リクエスト
-public class SendTextRequest
+public class MessageRequest
 {
     public int prof_id;
     public string message_content;

@@ -9,7 +9,7 @@ using System;
 public static class ApiConnect
 {
     // 実際の環境でのテスト及び本番稼働時では、localhostの部分をサーバを起動している端末のIPアドレスに変更が必要です
-    private const string BASE_URL = "http://localhost/backend/";
+    private const string BASE_URL = "http://172.20.10.6/backend/";
 
     [Serializable]
     // 基本的にPHPからはsuccessとmessageを返す。 追加のデータを返す場合は別のクラスをつくって対応
@@ -59,13 +59,16 @@ public static class ApiConnect
         // 返送されたJSONをTResponseに変換
         try
         {
+            Debug.Log("HTTP: " + request.responseCode);
             Debug.Log("レスポンス生データ: [" + request.downloadHandler.text + "]");
             TResponse res = JsonUtility.FromJson<TResponse>(request.downloadHandler.text);
             onSuccess?.Invoke(res);
         }
-        catch
+        catch (Exception e)
         {
-            onError?.Invoke("レスポンス解析エラー");
+            onError?.Invoke("レスポンス解析エラー: " + e.Message +
+            "\nHTTP: " + request.responseCode +
+            "\nRAW: " + request.downloadHandler.text);
         }
     }
 
@@ -100,13 +103,16 @@ public static class ApiConnect
 
         try
         {
-            Debug.Log("レスポンス: " + request.downloadHandler.text);
+            Debug.Log("HTTP: " + request.responseCode);
+            Debug.Log("レスポンス生データ: [" + request.downloadHandler.text + "]");
             TResponse res = JsonUtility.FromJson<TResponse>(request.downloadHandler.text);
             onSuccess?.Invoke(res);
         }
-        catch
+        catch (Exception e)
         {
-            onError?.Invoke("レスポンス解析エラー");
+            onError?.Invoke("レスポンス解析エラー: " + e.Message +
+            "\nHTTP: " + request.responseCode +
+            "\nRAW: " + request.downloadHandler.text);
         }
     }
 }

@@ -1,12 +1,21 @@
 <?PHP
+header('Content-Type: application/json; charset=utf-8');
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+ob_start();
+
 // 会話(メイン機能)に関してのコントロールを行うPHP
 require_once __DIR__ . '/../common_function.php';
 
 // prof_idを取得し、中身がなければエラーを返す
-$prof_id = $_POST['prof_id'] ?? '';
-$message_content = $_POST['message_content'] ?? '';
+$row = file_get_contents('php://input');
+$data = json_decode($row, true);
+$prof_id = $data['prof_id'] ?? ($_POST['prof_id'] ?? '');
+$message_content = $data['message_content'] ?? ($_POST['message_content'] ?? '');
+
 
 if (empty($prof_id)) {
+    ob_clean();
     echo json_encode([
         "success" => false,
         "message" => "prof_idが設定されていません"
@@ -24,6 +33,7 @@ if (!empty($_FILES['audio']['tmp_name'])) {
 
     // もしWisper APIのレスポンスに"text"キーが存在しない場合はエラーを返す
     if (!$wisper_res['text']) {
+        ob_clean();
         echo json_encode([
             "success" => false,
             "message" => "音声データのテキスト変換に失敗しました"
@@ -34,11 +44,9 @@ if (!empty($_FILES['audio']['tmp_name'])) {
     // 変換されたテキストをメッセージ内容として使用
     $message_content = $wisper_res["text"];
 } else {
-    // テキスト形式の場合、メッセージ内容を取得
-    $message_content = $_POST["message_content"] ?? '';
-
     // message_contentが空の場合はエラーを返す
     if (empty($message_content)) {
+        ob_clean();
         echo json_encode([
             "success" => false,
             "message" => "メッセージ内容が空です"
@@ -52,8 +60,12 @@ $message_sender = 0; // ユーザが送信したメッセージなので0を指�
 $result = $DBmessage->InsertMessage($prof_id, $message_sender, $message_content);
 
 // DBにユーザが送信したテキストメッセージを保存失敗した場合
-if (!$result) {
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+if (!$result || (is_array($result) && isset($result['success']) && !$result['success'])) {
+    ob_clean();
+    echo json_encode([
+        "success" => false,
+        "message" => "ユーザメッセージの保存に失敗しました"
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -104,34 +116,30 @@ if (!$result['success']) {
     exit;
 }
 
-// CoeiroInk APIのウォーミングアップ-connect_api.php
+// CoeiroInk APIのウォーミングアップ
 WarmUpCoeiroInkAPI($model_voice);
 
-// CoeiroInk APIに接続してAIの応答メッセージを音声データに変換-connect_api.php
+// 音声生成
 $voice_wav = ConnectCoeiroInkAPI($model_voice, $response_text_hiragana);
 
-// CoeiroInk APIから音声データの取得に失敗した場合
-if (empty($voice_wav)) {
-    echo json_encode([
-        "success" => false,
-        "message" => "CoeiroInk APIから音声データの取得に失敗しました"
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
+// 音声データをBase64化（失敗時は空）
+$wav_base64 = "";
+if (!empty($voice_wav)) {
+    $wav_base64 = base64_encode($voice_wav);
 }
 
-// 音声データをBase64エンコード形式に変換
-$wav_base64 = base64_encode($voice_wav );
-
 // Unity(C#)に返送するデータを作成
-echo json_encode(
-    [
-        "success" => true,
-        "message" => "メインプロセスの処理が完了しました",
-        "response_text" => $message_content,
-        // "response_text_hiragana" => $response_text_hiragana, // リップシンク用に必要ならば有効化
-        "emotion" => $emotion,
-        "voice_wav_base64" => $wav_base64
-    ],
-    JSON_UNESCAPED_UNICODE
-);
+$response = [
+    "success" => true,
+    "message" => empty($voice_wav)
+        ? "音声生成に失敗しました（テキストのみ表示します）"
+        : "OK",
+    "response_text" => $message_content,
+    "emotion" => $emotion,
+    "voice_wav_base64" => $wav_base64
+];
+
+ob_clean();
+echo json_encode($response, JSON_UNESCAPED_UNICODE);
+exit;
 ?>

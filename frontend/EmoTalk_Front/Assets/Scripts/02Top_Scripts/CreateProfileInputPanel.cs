@@ -43,29 +43,25 @@ public class CreateProfileInputPanel : MonoBehaviour
     // ==============================
     public void OnSave()
     {
-        // ① 新規作成
-        ProfileData data = ProfileManager.Instance.CreateProfile(selectedModelIndex);
+        string title = nameInput.text.Trim();
+        string chara = personalityInput.text.Trim();
+        string tone = toneInput.text.Trim();
+        string firstPerson = pronounInput.text.Trim();
 
-        // ② 入力反映
-        data.displayName = nameInput.text;
-        data.personality = personalityInput.text;
-        data.tone        = toneInput.text;
-        data.pronoun     = pronounInput.text;
-
-        // ③ 更新保存
-        ProfileManager.Instance.UpdateProfile(data);
-
-        // ④ ハンバーガーメニュー更新
-        if (ProfileListWindow.Instance != null)
+        if (string.IsNullOrEmpty(title))
         {
-            ProfileListWindow.Instance.RefreshList();
-        }
-        else
-        {
-            Debug.LogWarning("ProfileListWindow.Instance が null です！");
+            Debug.LogWarning("タイトルを入力してください。");
+            return;
         }
 
-        // ⑤ 閉じる
+        ProfileManager.Instance.CreateProfile(
+            selectedModelIndex,
+            title,
+            chara,
+            tone,
+            firstPerson
+            );
+
         Close();
     }
 

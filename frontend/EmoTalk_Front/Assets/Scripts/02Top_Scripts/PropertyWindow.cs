@@ -68,7 +68,7 @@ public class PropertyWindow : MonoBehaviour
         target.pronoun = pronounInput != null ? pronounInput.text : "";
 
         // 保存＆通知（あなたのUpdateProfileはNotifyChangedも入っている）:contentReference[oaicite:3]{index=3}
-        ProfileManager.Instance.UpdateProfile(target);
+        ProfileManager.Instance.UpdateProfileCustom(target);
 
         Close();
     }

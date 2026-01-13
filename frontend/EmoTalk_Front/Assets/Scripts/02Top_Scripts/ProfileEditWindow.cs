@@ -103,7 +103,6 @@ public class ProfileEditWindow : MonoBehaviour
         deleteConfirmPopup.Open(() =>
         {
             ProfileManager.Instance.DeleteProfile(currentProfile.profileId);
-            ProfileManager.Instance.NotifyChanged();
             Close();
         });
     }
@@ -140,6 +139,7 @@ public class ProfileEditWindow : MonoBehaviour
             nameInput.Select();
         }
     }
+
     // ==============================
     // 名前入力確定時の処理
     // ==============================
@@ -152,20 +152,25 @@ public class ProfileEditWindow : MonoBehaviour
 
         if (currentProfile == null) return;
 
-        if (string.IsNullOrWhiteSpace(newName))newName = currentProfile.displayName;
+        if (string.IsNullOrWhiteSpace(newName))
+            newName = currentProfile.displayName;
 
         currentProfile.displayName = newName;
 
         if (nameText != null) nameText.text = currentProfile.displayName;
 
-         // 編集UIを戻す（やっているなら）
+        // DB保存
+        ProfileManager.Instance.UpdateProfileTitle(currentProfile);
+
+        // 編集UIを戻す（やっているなら）
         if (nameInput != null) nameInput.gameObject.SetActive(false);
         if (nameText != null) nameText.gameObject.SetActive(true);
 
         // リスト反映
-        ProfileManager.Instance.SaveProfiles();
+        //ProfileManager.Instance.SaveProfiles();
         //ProfileListWindow.Instance.RefreshList();
     }
+
     // ==============================
     // 名前入力変更時の処理
     // ==============================
@@ -189,6 +194,7 @@ public class ProfileEditWindow : MonoBehaviour
 
         modelChangeWindow.Open(currentProfile);
     }
+
     // ==============================
     // 画面表示を更新する
     // ==============================

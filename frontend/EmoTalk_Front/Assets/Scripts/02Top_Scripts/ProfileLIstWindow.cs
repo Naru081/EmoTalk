@@ -7,47 +7,59 @@ public class ProfileListWindow : MonoBehaviour
     public Transform contentRoot;            
     public GameObject profileItemPrefab;
 
-    // プロフィール編集画面を開く
+    // プロファイル編集画面を開く
     public ProfileEditWindow editWindow;
 
     // プロファイルデータ更新
     public static ProfileListWindow Instance{ get; private set;}
 
     // ==============================
-    // 保存されたプロフィールデータをリスト表示
+    // 保存されたプロファイルデータをリスト表示
     // ==============================
     public void Awake()
     {
         Instance = this;
     }
-    // プロフィールリストの更新を開始
-    public void Start()
+
+    // ==============================
+    // プロファイルデータの変更を監視
+    // ==============================
+    void OnEnable()
     {
-        RefreshList();
+        if (ProfileManager.Instance == null) return;
+
+        ProfileManager.Instance.OnProfilesChanged += RefreshList;
+        ProfileManager.Instance.LoadProfilesFromDB();
     }
 
     // ==============================
-    // プロフィールリストの更新
+    // プロファイルデータの変更監視解除
+    // ==============================
+    void OnDisable()
+    {
+        if (ProfileManager.Instance != null)
+            ProfileManager.Instance.OnProfilesChanged -= RefreshList;
+    }
+
+    // ==============================
+    // プロファイルリストの更新
     // ==============================
     public void RefreshList()
     {
-        if (ProfileManager.Instance == null || ProfileManager.Instance.Profiles == null)
-        {
-            Debug.Log("ProfileManager not ready yet");
+        if (ProfileManager.Instance == null)
             return;
-        }
 
         foreach (Transform child in contentRoot)
             Destroy(child.gameObject);
 
-        List<ProfileData> list = ProfileManager.Instance.Profiles;
-
-        foreach (var data in list)
+        foreach (var data in ProfileManager.Instance.Profiles)
         {
             GameObject obj = Instantiate(profileItemPrefab, contentRoot);
             ProfileController item = obj.GetComponent<ProfileController>();
             item.Setup(data, OnItemClicked);
         }
+
+        Debug.Log("RefreshList: " + ProfileManager.Instance.Profiles.Count);
     }
 
     // ==============================
@@ -56,31 +68,8 @@ public class ProfileListWindow : MonoBehaviour
     private void OnItemClicked(ProfileData data)
     {
 
-        if(editWindow != null)
-        {
+        if (editWindow != null)
             editWindow.Open(data);
-        }
-        else
-        {
-            Debug.LogWarning("editWindow is NULL");
-        }
     }
-    // ==============================
-    // プロフィールデータの変更を監視
-    // ==============================
-    void OnEnable()
-    {
-        if (ProfileManager.Instance != null)
-            ProfileManager.Instance.OnProfilesChanged += RefreshList;
 
-        RefreshList();
-    }
-    // ==============================
-    // プロフィールデータの変更監視解除
-    // ==============================
-    void OnDisable()
-    {
-        if (ProfileManager.Instance != null)
-            ProfileManager.Instance.OnProfilesChanged -= RefreshList;
-    }
 }

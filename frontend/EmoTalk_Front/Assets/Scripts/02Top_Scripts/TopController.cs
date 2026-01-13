@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Networking;
 
 public class TopController : MonoBehaviour
 {
@@ -35,6 +36,16 @@ public class TopController : MonoBehaviour
     [Header("Input UI")]
     public InputField chatInput;
     public Button sendButton;
+
+    // ==============================
+    // ★ ここだけ追加：PHP送信用
+    // ==============================
+    [Header("Server (PHP)")]
+    [Tooltip("例: http://localhost/control_message.php  /  実機なら http://PCのIP/control_message.php")]
+    public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
+
+    [Tooltip("通信失敗時に従来のテスト返信を出す（デバッグ用）")]
+    public bool fallbackToDebugReply = true;
 
     // ==============================
     // TOP画面UI制御
@@ -130,11 +141,67 @@ public class TopController : MonoBehaviour
         // 入力欄クリア
         chatInput.text = "";
 
-        // ▼ テスト返信
-        StartCoroutine(DebugAutoReply());
+        // ▼ ここだけ変更：PHPへ送信
+        StartCoroutine(SendToPhpAndReceiveReply(msg));
     }
+
     // ==============================
-    // テスト返信（デバッグ用）
+    // ★ 追加：PHPへ送って返信を表示
+    // ==============================
+    private IEnumerator SendToPhpAndReceiveReply(string userMessage)
+    {
+        if (string.IsNullOrEmpty(serverUrl))
+        {
+            Debug.LogWarning("serverUrl is empty. Fallback reply.");
+            if (fallbackToDebugReply) yield return DebugAutoReply();
+            yield break;
+        }
+
+        // prof_idを取得
+        int prof_id = UserData.GetUserCurrentProfId();
+
+        // control_message.php に投げるPOST（必要に応じて項目を増やしてOK）
+        WWWForm form = new WWWForm();
+        form.AddField("message_content", userMessage);
+        form.AddField("prof_id", prof_id);
+
+        using (UnityWebRequest req = UnityWebRequest.Post(serverUrl, form))
+        {
+            // タイムアウト（任意）
+            req.timeout = 20;
+
+            yield return req.SendWebRequest();
+
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogWarning("PHP request failed: " + req.error);
+
+                // 通信失敗でもデモが止まらないように
+                if (fallbackToDebugReply)
+                    yield return DebugAutoReply();
+
+                yield break;
+            }
+
+            // 返信本文（PHP側がJSONなら、ここでJSON解析に変える）
+            string responseText = req.downloadHandler.text;
+
+            // 空ならフォールバック
+            if (string.IsNullOrWhiteSpace(responseText))
+            {
+                Debug.LogWarning("PHP response is empty.");
+                if (fallbackToDebugReply) yield return DebugAutoReply();
+                yield break;
+            }
+
+            // ▼ 相手（Emo）の吹き出し追加
+            AddLogItem(responseText, false);
+            ScrollToBottom();
+        }
+    }
+
+    // ==============================
+    // テスト返信（デバッグ用）※元のまま残す
     // ==============================
     IEnumerator DebugAutoReply()
     {
@@ -169,11 +236,11 @@ public class TopController : MonoBehaviour
     }
 
     // =====================================
-    // iPhone風スワイプ開閉処理
+    // iPhone風スワイプ開閉処理（元のまま）
     // =====================================
     void DetectDrag()
     {
-        #if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE
         // --- マウス操作（エディタ確認用） ---
         if (Input.GetMouseButtonDown(0))
         {
@@ -191,7 +258,7 @@ public class TopController : MonoBehaviour
         {
             EndDrag();
         }
-        #else
+#else
         // --- タッチ操作（スマホ実機） ---
         if (Input.touchCount > 0)
         {
@@ -214,7 +281,7 @@ public class TopController : MonoBehaviour
                 EndDrag();
             }
         }
-        #endif
+#endif
     }
 
     // ==============================
@@ -232,7 +299,5 @@ public class TopController : MonoBehaviour
 
         // 指を離した位置が「一定以上右に出ていれば」開く
         isOpen = (ratio >= openThreshold);
-        // ※ isOpen が決まると、Update() 内の Lerp で
-        //    openX or closeX へ「スッ」と吸い付く動きになります
     }
 }

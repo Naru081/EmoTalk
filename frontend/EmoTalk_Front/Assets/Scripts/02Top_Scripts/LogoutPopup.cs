@@ -40,6 +40,9 @@ public class LogoutPopup : MonoBehaviour
     // ==============================
     private void DoLogout()
     {
+        // 自動ログインのためのトークンを削除
+        EncryptedPlayerPrefs.DeleteKey("token");
+
         // 今回は「仮ログアウト」なのでシーン遷移のみ
         SceneManager.LoadScene(loginSceneName);
     }

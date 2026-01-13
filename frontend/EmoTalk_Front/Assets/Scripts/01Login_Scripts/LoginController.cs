@@ -60,10 +60,10 @@ public class LoginController : MonoBehaviour
     // 自動ログイン機能
     void Start()
     {
-        #if UNITY_EDITOR
-            Debug.Log("エディタでは自動ログインをスキップ");
-            return;
-        #endif
+        //#if UNITY_EDITOR
+        //    Debug.Log("エディタでは自動ログインをスキップ");
+        //    return;
+        //#endif
 
         string token = EncryptedPlayerPrefs.LoadString("token", "");
         if (!string.IsNullOrEmpty(token))
@@ -91,13 +91,12 @@ public class LoginController : MonoBehaviour
                 // 結果の処理
                 if (res.success)
                 {
-                    // トークンが有効ならログイン情報を取得してTOP画面へ遷移
-                    PlayerPrefs.SetInt("user_id", res.user_id);
-                    PlayerPrefs.SetString("user_mail", res.user_mail);
-                    PlayerPrefs.SetInt("user_currentprof", res.user_currentprof);
-                    PlayerPrefs.Save();
+                    // トークンが有効ならログイン情報を取得・保存してTOP画面へ遷移
+                    UserData.SaveUserId(res.user_id);
+                    UserData.SaveUserMail(registerNewMail.text);
+                    UserData.SaveUserCurrentProfId(res.user_currentprof);
 
-
+                    // ロード画面表示
                     SceneManager.LoadScene("TopScene");
                 }
                 else
@@ -145,13 +144,12 @@ public class LoginController : MonoBehaviour
             // 結果の処理
             if (res.success)
             {
-                // 取得したuser_idとuser_mailとtokenをPlayerPrefsに格納 (取り出すときはPlayerPrefs.GetInt("user_id");など)
-                PlayerPrefs.SetInt("user_id", res.user_id);
-                PlayerPrefs.SetString("user_mail", res.user_mail);
-                PlayerPrefs.SetString("user_token", res.token);
-                PlayerPrefs.Save();
+                // 取得したuser_idとuser_mailとtokenをPlayerPrefsに格納
+                UserData.SaveUserId(res.user_id);
+                UserData.SaveUserMail(registerNewMail.text);
+                UserData.SaveUserCurrentProfId(res.user_currentprof);;
 
-                // 自動ログイン用のトークンを保存
+                // 自動ログイン用のトークンを暗号化保存
                 EncryptedPlayerPrefs.SaveString("token", res.token);
 
                 // ログイン成功時、ロード画面表示
@@ -269,6 +267,10 @@ public class LoginController : MonoBehaviour
                 // 結果の処理
                 if (res.success)
                 {
+                    // UserDataに登録情報を保存
+                    UserData.SaveUserId(res.user_id);
+                    UserData.SaveUserMail(registerNewMail.text);
+                    UserData.SaveUserCurrentProfId(res.user_currentprof);
                     // 成功画面へ
                     if (registerPanel != null) registerPanel.SetActive(false);
                     if (registerCompletePanel != null) registerCompletePanel.SetActive(true);

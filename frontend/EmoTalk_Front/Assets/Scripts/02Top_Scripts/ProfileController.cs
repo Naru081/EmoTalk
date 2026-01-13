@@ -29,7 +29,7 @@ public class ProfileController : MonoBehaviour
                    && ProfileManager.Instance.GetSelectedProfile().profileId == data.profileId;
 
         if (background != null)
-            background.color = selected ? new Color(0.85f, 0.95f, 1f, 1f) : Color.white;
+            background.color = selected ? new Color(1f, 1f, 0.5f, 1f) : Color.white;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => this.onClick?.Invoke(this.data));

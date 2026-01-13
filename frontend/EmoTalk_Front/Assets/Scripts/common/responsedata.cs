@@ -1,26 +1,17 @@
 using System;
+using System.Collections.Generic;
 
-// ===== PHP ’ÊM—pƒŒƒXƒ|ƒ“ƒXƒf[ƒ^ƒNƒ‰ƒXŒQ =====
+// ===== PHP é€šä¿¡ç”¨ãƒ¬ã‚¹ãƒãƒ³ã‚¹ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ç¾¤ =====
 
 [System.Serializable]
-public class BaseResponseData  // success‚Æmessage‚ğ•Ô‚·‹¤’ÊƒŒƒXƒ|ƒ“ƒX
+public class BaseResponseData       // successã¨messageã‚’è¿”ã™å…±é€šãƒ¬ã‚¹ãƒãƒ³ã‚¹
 {
     public bool success;
     public string message;
 }
 
 [System.Serializable]
-public class LoginResponse      // ƒƒOƒCƒ“ƒŒƒXƒ|ƒ“ƒX
-{
-    public bool success;
-    public string message;
-    public int user_id;
-    public string user_mail;
-    public string token;
-}
-
-[System.Serializable]
-public class TokenResponse // ƒg[ƒNƒ“”FØƒŒƒXƒ|ƒ“ƒX
+public class RegisterResponse   // æ–°è¦ç™»éŒ²ãƒªã‚¯ã‚¨ã‚¹ãƒˆ
 {
     public bool success;
     public string message;
@@ -29,3 +20,61 @@ public class TokenResponse // ƒg[ƒNƒ“”FØƒŒƒXƒ|ƒ“ƒX
     public int user_currentprof;
 }
 
+[System.Serializable]
+public class LoginResponse          // ãƒ­ã‚°ã‚¤ãƒ³ãƒ¬ã‚¹ãƒãƒ³ã‚¹
+{
+    public bool success;
+    public string message;
+    public int user_id;
+    public string user_mail;
+    public int user_currentprof;
+    public string token;
+}
+
+[System.Serializable]
+public class TokenResponse          // ãƒˆãƒ¼ã‚¯ãƒ³èªè¨¼ãƒ¬ã‚¹ãƒãƒ³ã‚¹
+{
+    public bool success;
+    public string message;
+    public int user_id;
+    public string user_mail;
+    public int user_currentprof;
+}
+
+[System.Serializable]          
+public class GetProfileResponse     // ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§å–å¾—ãƒ¬ã‚¹ãƒãƒ³ã‚¹
+{
+    public bool success;
+    public string message;
+    public List<ProfileDataFromDB> profile_data;
+}
+
+[System.Serializable]               // DBã‹ã‚‰å–å¾—ã—ãŸãƒ—ãƒ­ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‡ãƒ¼ã‚¿æ ¼ç´ç”¨ã‚¯ãƒ©ã‚¹
+public class ProfileDataFromDB
+{
+    public int prof_id;
+    public int user_id;
+    public int model_id;
+    public string prof_title;
+    public string prof_chara;
+    public string prof_tone;
+    public string prof_fp;
+}
+
+[Serializable]                      // ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆãƒ¬ã‚¹ãƒãƒ³ã‚¹
+public class CreateProfileResponse
+{
+    public bool success;
+    public string message;
+    public List<ProfileDataFromDB> profiles;
+}
+
+[Serializable]                      // ãƒ¡ã‚¤ãƒ³ãƒãƒ£ãƒƒãƒˆãƒ¬ã‚¹ãƒãƒ³ã‚¹
+public class  ChatResponse
+{
+    public bool success;
+    public string message;
+    public string response_text;
+    public string emotion;
+    public string voice_wav_base64;
+}

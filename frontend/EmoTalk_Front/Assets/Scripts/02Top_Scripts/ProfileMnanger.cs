@@ -1,28 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class ProfileManager : MonoBehaviour
 {
     public static ProfileManager Instance;
 
-    private const string KEY_PROFILES = "UserProfiles";
-    private const string KEY_SELECTED = "SelectedProfileId";
-
+    // プロファイル一覧
     public List<ProfileData> Profiles = new List<ProfileData>();
 
-    // 選択中プロファイルID
+    // 選択中プロファイルID (UserData管理)
     private int selectedProfileId = -1;
 
-    // プロフィールリスト変更通知
+    // プロファイルリスト変更通知
     public event Action OnProfilesChanged;
     public void NotifyChanged()
     {
+        // リスト更新処理
         OnProfilesChanged?.Invoke();
+
+        if (ProfileListWindow.Instance != null)
+        {
+            ProfileListWindow.Instance.RefreshList();
+        }
     }
 
     // ==============================
-    //  読み込み
+    // 起動
     // ==============================
     private void Awake()
     {
@@ -37,191 +42,333 @@ public class ProfileManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // 起動時にプロフィールと選択状態を読み込む
-        LoadProfiles();
-        EnsureProfileIds();
-        LoadSelectedProfile();
-        FixSelectedIfMissing();
+        // 起動時に選択中のプロファイルIDを取得(UserDataから)
+        selectedProfileId = UserData.GetUserCurrentProfId();
     }
 
     // ==============================
-    //  プロフ読み込み
+    //  DBからプロファイル一覧を取得
     // ==============================
-    private void LoadProfiles()
+    public void LoadProfilesFromDB()
     {
-        string json = PlayerPrefs.GetString(KEY_PROFILES, "");
+        // user_id取得 (UserDataから)
+        int user_id = UserData.GetUserId();
 
-        if (string.IsNullOrEmpty(json))
+        // DB接続関数を呼び出してプロファイル一覧を取得
+        StartCoroutine(
+            GetProfileList.GetProfiles(
+                user_id,
+                OnProfilesLoaded,
+                OnProfileLoadError
+            )
+        );
+    }
+
+    private void OnProfilesLoaded(GetProfileResponse res)
+    {
+        Profiles.Clear();
+
+        foreach (var dbProf in res.profile_data)
         {
-            Profiles = new List<ProfileData>();
-            return;
+            Profiles.Add(ConvertFromDB(dbProf));
         }
 
-        ProfileListWrapper wrapper = JsonUtility.FromJson<ProfileListWrapper>(json);
-        Profiles = wrapper.profiles ?? new List<ProfileData>();
+        // 選択中プロフの確認
+        NotifyChanged();
     }
-    // ==============================
-    //  プロフIDの整合性チェック
-    // ==============================
-    private void EnsureProfileIds()
+
+    private void OnProfileLoadError(string error)
     {
-        int nextId = PlayerPrefs.GetInt("NextProfileId", 1);
-
-        bool changed = false;
-
-        foreach (var profile in Profiles)
-        {
-            if (profile.profileId <= 0)
-            {
-                profile.profileId = nextId++;
-                changed = true;
-            }
-        }
-        if (changed)
-        {
-            PlayerPrefs.SetInt("NextProfileId", nextId);
-            PlayerPrefs.Save();
-            SaveProfiles();
-            NotifyChanged();
-        }
+        Debug.LogError("プロファイル取得失敗: " + error);
     }
 
     // ==============================
-    //  プロフ保存
+    //  DBデータからProfileDataへ変換
     // ==============================
-    public void SaveProfiles()
+    private ProfileData ConvertFromDB(ProfileDataFromDB db)
     {
-        ProfileListWrapper wrapper = new ProfileListWrapper();
-        wrapper.profiles = Profiles;
+        ProfileData data = new ProfileData(
+            db.model_id,
+            db.prof_title
+        );
 
-        string json = JsonUtility.ToJson(wrapper);
-        PlayerPrefs.SetString(KEY_PROFILES, json);
-        PlayerPrefs.Save();
-    }
+        // DBデータをセット
+        data.profileId = db.prof_id;
+        data.personality = db.prof_chara;
+        data.tone = db.prof_tone;
+        data.pronoun = db.prof_fp;
 
-    // ==============================
-    //  新規プロフィール追加
-    // ==============================
-    public ProfileData CreateProfile(int modelIndex)
-    {
-        // 表示名用の番号を決める（空いている番号）
-        int number = GetNextModelNumber();
-        string displayName = $"Model#{number}"; // ← ここはお好みで
-
-        ProfileData data = new ProfileData(modelIndex, displayName);
-
-        // ★ユニークIDを付与（PlayerPrefsで連番管理）
-        int nextId = PlayerPrefs.GetInt("NextProfileId", 1);
-        data.profileId = nextId;
-        PlayerPrefs.SetInt("NextProfileId", nextId + 1);
-        PlayerPrefs.Save();
-
-        Profiles.Add(data);
-        SaveProfiles();
         return data;
     }
 
-
     // ==============================
-    //  プロフィール削除
+    // プロファイル作成
     // ==============================
-    public void DeleteProfile(int profileId)
+    public void CreateProfile
+    (
+        int modelIndex,
+        string title,
+        string chara,
+        string tone,
+        string firstPerson
+    )
     {
-        Profiles.RemoveAll(p => p.profileId == profileId);
-        SaveProfiles();
-        NotifyChanged();
+        StartCoroutine(CreateProfileCoroutine(
+            modelIndex,
+            title,
+            chara,
+            tone,
+            firstPerson
+        ));
+    }
+
+    private IEnumerator CreateProfileCoroutine(
+        int modelIndex,
+        string title,
+        string chara,
+        string tone,
+        string firstPerson
+        )
+    {
+        var req = new CreateProfileRequest
+        {
+            user_id = UserData.GetUserId(),
+            model_id = modelIndex,
+            prof_title = title,
+            prof_chara = chara,
+            prof_tone = tone,
+            prof_fp = firstPerson
+        };
+
+        yield return ApiConnect.Post<CreateProfileRequest, CreateProfileResponse>(
+            "PHP_profile/create_profile.php",
+            req,
+            (res) =>
+            {
+                if (!res.success)
+                {
+                    Debug.LogError(res.message);
+                    return;
+                }
+
+                LoadProfilesFromDB();   // プロファイル一覧を再取得して更新
+            }
+        );
     }
 
     // ==============================
-    //  プロフィール更新
+    // プロファイル更新
     // ==============================
     public void UpdateProfile(ProfileData data)
     {
-        SaveProfiles();
+        // 後にDB更新処理を追加予定
         NotifyChanged();
     }
 
-    // ==============================
-    //  選択中プロフの管理
-    // ==============================
-    private void LoadSelectedProfile()
+    // プロファイルのタイトルを変更
+    public void UpdateProfileTitle(ProfileData data)
     {
-        selectedProfileId = PlayerPrefs.GetInt(KEY_SELECTED, -1);
+        StartCoroutine(UpdateProfileTitleCoroutine(data));
     }
-    // 選択中プロファイルを設定
+
+    private IEnumerator UpdateProfileTitleCoroutine(ProfileData data)
+    {
+        var req = new UpdateProfileTitleRequest
+        {
+            user_id = UserData.GetUserId(),
+            prof_id = data.profileId,
+            prof_title = data.displayName
+        };
+
+        yield return ApiConnect.Post<UpdateProfileTitleRequest, GetProfileResponse>(
+            "PHP_profile/update_profile_title.php",
+            req,
+            (res) =>
+            {
+                if (!res.success)
+                {
+                    Debug.LogError("プロファイルタイトル更新失敗");
+                    return;
+                }
+
+                LoadProfilesFromDB();
+            }
+        );
+    }
+
+    // プロファイルの性格・口調・一人称を変更
+    public void UpdateProfileCustom(ProfileData data)
+    {
+        StartCoroutine(UpdateProfileCustomCoroutine(data));
+    }
+
+    private IEnumerator UpdateProfileCustomCoroutine(ProfileData data)
+    {
+        var req = new UpdateProfileCustomRequest
+        {
+            user_id = UserData.GetUserId(),
+            prof_id = data.profileId,
+            prof_chara = data.personality,
+            prof_tone = data.tone,
+            prof_fp = data.pronoun
+        };
+        yield return ApiConnect.Post<UpdateProfileCustomRequest, GetProfileResponse>(
+            "PHP_profile/update_profile_custom.php",
+            req,
+            (res) =>
+            {
+                if (!res.success)
+                {
+                    Debug.LogError("プロファイルカスタム更新失敗");
+                    return;
+                }
+
+                LoadProfilesFromDB();
+            },
+            error => Debug.LogError("プロファイルカスタム更新エラー: " + error)
+        );
+    }
+
+    // プロファイルのモデルを変更
+    public void UpdateProfileModel(ProfileData data)
+    {
+        StartCoroutine(UpdateProfileModelCoroutine(data));
+    }
+
+    private IEnumerator UpdateProfileModelCoroutine(ProfileData data)
+    {
+        var req = new UpdateProfileModelRequest
+        {
+            user_id = UserData.GetUserId(),
+            prof_id = data.profileId,
+            model_id = data.modelIndex
+        };
+        yield return ApiConnect.Post<UpdateProfileModelRequest, GetProfileResponse>(
+            "PHP_profile/update_profile_model.php",
+            req,
+            (res) =>
+            {
+                if (!res.success)
+                {
+                    Debug.LogError("プロファイルモデル更新失敗");
+                    return;
+                }
+
+                LoadProfilesFromDB();
+            },
+            error => Debug.LogError("プロファイルモデル更新エラー: " + error)
+        );
+    }
+
+    // ==============================
+    // プロファイル削除
+    // ==============================
+    public void DeleteProfile(int profileId)
+    {
+        StartCoroutine(DeleteProfilesCoroutine(profileId));
+    }
+
+    private IEnumerator DeleteProfilesCoroutine(int profileId)
+    {
+        var req = new DeleteProfileRequest
+        {
+            user_id = UserData.GetUserId(),
+            prof_id = profileId
+        };
+
+        yield return ApiConnect.Post<DeleteProfileRequest, GetProfileResponse>(
+            "PHP_profile/delete_profile.php",
+            req,
+            (res) =>
+            {
+                if (!res.success)
+                {
+                    Debug.LogError("プロファイル削除失敗: " + res.message);
+                    return;
+                }
+
+                LoadProfilesFromDB();   // プロファイル一覧を再取得して更新
+            },
+            error =>
+            {
+                Debug.LogError("プロファイル削除エラー: " + error);
+            }
+        );
+    }
+
+    public void RemoveProfileFromList(int profileId)
+    {
+        var target = Profiles.Find(p => p.profileId == profileId);
+        if (target != null)
+            Profiles.Remove(target);
+
+        NotifyChanged();    // プロファイルリスト更新通知
+    }
+
+    // ==============================
+    // プロファイル選択
+    // ==============================
     public void SelectProfile(ProfileData data)
     {
-        selectedProfileId = data.profileId;
-        PlayerPrefs.SetInt(KEY_SELECTED, data.profileId);
-        PlayerPrefs.Save();
+        int beforeId = UserData.GetUserCurrentProfId();   // 選択前ID (現在選択されているプロファイルかどうかの比較用に保存)
+        int newId = data.profileId;                       // 新選択ID
 
-        // ModelManager に反映して Live2D を変更
-        if (ModelManager.Instance != null)
-        {
-            ModelManager.Instance.ShowModel(data.modelIndex);
-        }
+        selectedProfileId = newId;
+
+        // PlayerPrefs(UserData) に保存
+        UserData.SaveUserCurrentProfId(selectedProfileId);
+
+        // DBにも保存
+        StartCoroutine(UpdateCurrentProfileOnDB(selectedProfileId));
+
+        // モデル反映
+        ModelManager.Instance?.ShowModel(data.modelIndex);
 
         NotifyChanged();
     }
+
     // 選択中プロファイルを取得
     public ProfileData GetSelectedProfile()
     {
-        foreach (var p in Profiles)
-        {
-            if (p.profileId == selectedProfileId)
-                return p;
-        }
-        return null;
+        return Profiles.Find(p => p.profileId == selectedProfileId);
     }
-    // 選択中プロファイルIDを取得
+
     public int GetSelectedProfileId()
     {
         return selectedProfileId;
     }
-    // 選択中プロフが存在しない場合、先頭を選択する
-    private void FixSelectedIfMissing()
-    {
-        // 選択IDがProfilesに存在しない場合、先頭を選択
-        bool exists = Profiles.Exists(p => p.profileId == selectedProfileId);
-        if (!exists && Profiles.Count > 0)
-        {
-            selectedProfileId = Profiles[0].profileId;
-            PlayerPrefs.SetInt(KEY_SELECTED, selectedProfileId);
-            PlayerPrefs.Save();
-            NotifyChanged();
-        }
-    }
 
     // ==============================
-    //  表示名用の番号を決める
+    // DBへ選択中プロファイルを保存
     // ==============================
-    private int GetNextModelNumber()
+    private IEnumerator UpdateCurrentProfileOnDB(int newprofileId)
     {
-        // すでに使われている番号を集める
-        var usedNumbers = new HashSet<int>();
+        int oldProfileId = selectedProfileId;   // 変更前プロファイルID
 
-        foreach (var p in Profiles)
+        var req = new UserCurrentProfileRequest
         {
-            if (string.IsNullOrEmpty(p.displayName))
-            continue;
+            user_id = UserData.GetUserId(),
+            prof_id = selectedProfileId,
+            current_prof_id = UserData.GetUserCurrentProfId() // 現在選択中プロファイルID
+        };
 
-            // "Model#2" 形式だけを対象にする
-            if (p.displayName.StartsWith("Model#"))
+        yield return ApiConnect.Post<UserCurrentProfileRequest, GetProfileResponse>(
+            "PHP_profile/change_profile.php",
+            req,
+            (res) =>
             {
-                var numPart = p.displayName.Replace("Model#", "");
-                if (int.TryParse(numPart, out int n))
+                if (!res.success)
                 {
-                    usedNumbers.Add(n);
+                    Debug.LogError("現在のプロファイル更新失敗: " + res.message);
+                    return;
                 }
-            }
-        }
-        // 1 から順に空いている番号を探す
-        int candidate = 1;
-        while (usedNumbers.Contains(candidate))
-        {
-            candidate++;
-        }
 
-        return candidate;
+                LoadProfilesFromDB();
+            },
+            (error) =>
+            {
+                Debug.LogError("現在のプロファイル更新エラー: " + error);
+            }
+        );
     }
 }

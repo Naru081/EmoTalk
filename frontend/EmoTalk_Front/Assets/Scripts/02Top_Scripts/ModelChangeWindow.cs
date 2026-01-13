@@ -36,12 +36,9 @@ public class ModelChangeWindow : MonoBehaviour
         // ① データ更新
         targetProfile.modelIndex = modelIndex;
 
-        // ② 保存
-        ProfileManager.Instance.UpdateProfile(targetProfile);  // SaveProfilesしてくれる :contentReference[oaicite:3]{index=3}
-
-        // ③ Live2D切替（あなたのModelManagerはShowModel） :contentReference[oaicite:4]{index=4}
-        if (ModelManager.Instance != null)
-            ModelManager.Instance.ShowModel(modelIndex);
+        // ② DB保存
+        //ProfileManager.Instance.UpdateProfile(targetProfile);  // SaveProfilesしてくれる :contentReference[oaicite:3]{index=3}
+        ProfileManager.Instance.UpdateProfileModel(targetProfile);
 
         // ④ 編集画面の表示更新（画像・名前など）
         if (editWindow != null)

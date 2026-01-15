@@ -33,19 +33,22 @@ if (!$result['success'])
     exit;
 }
 
-// user_idに対応した全profileデータを取得する-DBprofile.php(ハンバーガーメニューに戻った際に更新されているようにするため)
+// user_idに対応した全profileデータを取得
 $profile_data = $DBprofile->GetProfileData($user_id);
 
-// もしプロファイルデータ取得が失敗なら
-if (!$profile_data['success'])
-{
-    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+if (!$profile_data['success']) {
+    echo json_encode([
+        "success" => false,
+        "message" => "プロファイルデータ取得失敗"
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-$result['profiles'] = $profile_data['profiles'];
+// profilesキーが存在しない場合は空配列を代入
+$profiles = $profile_data['profiles'] ?? [];
 
-// 全処理が成功時、successとmessageとprofile_dataを返す
+$result['profiles'] = $profiles;
+
+// 全処理成功時
 echo json_encode($result, JSON_UNESCAPED_UNICODE);
-
 ?>

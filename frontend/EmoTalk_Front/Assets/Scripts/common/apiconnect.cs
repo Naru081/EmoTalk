@@ -1,4 +1,4 @@
-// Unityã‹ã‚‰PHP(ãƒãƒƒã‚¯ã‚¨ãƒ³ãƒ‰(ã‚µãƒ¼ãƒ))ã¸é€šä¿¡ã™ã‚‹å‡¦ç†ã‚’å…±é€šåŒ–ã™ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
+// Unity‚©‚çPHP(ƒoƒbƒNƒGƒ“ƒh(ƒT[ƒo))‚Ö’ÊM‚·‚éˆ—‚ğ‹¤’Ê‰»‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
 
 using UnityEngine;
 using UnityEngine.Networking;
@@ -8,111 +8,60 @@ using System;
 
 public static class ApiConnect
 {
-    // å®Ÿéš›ã®ç’°å¢ƒã§ã®ãƒ†ã‚¹ãƒˆåŠã³æœ¬ç•ªç¨¼åƒæ™‚ã§ã¯ã€localhostã®éƒ¨åˆ†ã‚’ã‚µãƒ¼ãƒã‚’èµ·å‹•ã—ã¦ã„ã‚‹ç«¯æœ«ã®IPã‚¢ãƒ‰ãƒ¬ã‚¹ã«å¤‰æ›´ãŒå¿…è¦ã§ã™
-    private const string BASE_URL = "http://172.20.10.6/backend/";
+    // ÀÛ‚ÌŠÂ‹«‚Å‚ÌƒeƒXƒg‹y‚Ñ–{”Ô‰Ò“­‚Å‚ÍAlocalhost‚Ì•”•ª‚ğƒT[ƒo‚ğ‹N“®‚µ‚Ä‚¢‚é’[––‚ÌIPƒAƒhƒŒƒX‚É•ÏX‚ª•K—v‚Å‚·
+    private const string BASE_URL = "http://localhost/backend/";
 
     [Serializable]
-    // åŸºæœ¬çš„ã«PHPã‹ã‚‰ã¯successã¨messageã‚’è¿”ã™ã€‚ è¿½åŠ ã®ãƒ‡ãƒ¼ã‚¿ã‚’è¿”ã™å ´åˆã¯åˆ¥ã®ã‚¯ãƒ©ã‚¹ã‚’ã¤ãã£ã¦å¯¾å¿œ
+    // Šî–{“I‚ÉPHP‚©‚ç‚Ísuccess‚Æmessage‚ğ•Ô‚·B ’Ç‰Á‚Ìƒf[ƒ^‚ğ•Ô‚·ê‡‚Í•Ê‚ÌƒNƒ‰ƒX‚ğ‚Â‚­‚Á‚Ä‘Î‰
     public class BasicResponse
     {
         public bool success;
         public string message;
     }
 
-    // é€šä¿¡ã®å‡¦ç†ã‚’å…±é€šåŒ–ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
-
-    // ==============================
-    // ãƒ†ã‚­ã‚¹ãƒˆç”¨
-    // ==============================
+    // ’ÊM‚Ìˆ—‚ğ‹¤’Ê‰»‚·‚éƒƒ\ƒbƒh
     public static IEnumerator Post<TRequest, TResponse>(
-        string endpoint,    // PHPã®ãƒ•ã‚¡ã‚¤ãƒ«å(ä¾‹ï¼šPHP_user/register.php)
-        TRequest requestData,   // é€ã‚‹ãƒ‡ãƒ¼ã‚¿ã®å†…å®¹ã‚’ã‚¯ãƒ©ã‚¹ã§å—ã‘å–ã‚‹
-        Action<TResponse> onSuccess,    // æˆåŠŸã—ãŸã¨ãã«å‘¼ã¶å‡¦ç†
-        Action<string> onError = null   // ã‚¨ãƒ©ãƒ¼æ™‚ã«å‘¼ã¶å‡¦ç†ï¼ˆçœç•¥å¯)
+        string endpoint,    // PHP‚Ìƒtƒ@ƒCƒ‹–¼(—áFPHP_user/register.php)
+        TRequest requestData,   // ‘—‚éƒf[ƒ^‚Ì“à—e‚ğƒNƒ‰ƒX‚Åó‚¯æ‚é
+        Action<TResponse> onSuccess,    // ¬Œ÷‚µ‚½‚Æ‚«‚ÉŒÄ‚Ôˆ—
+        Action<string> onError = null   // ƒGƒ‰[‚ÉŒÄ‚Ôˆ—iÈ—ª‰Â)
     )
     {
-        // URLã®ä½œæˆ
+        // URL‚Ìì¬
         string url = BASE_URL + endpoint;
 
-        // C#ã®ãƒ‡ãƒ¼ã‚¿ã‚’JSONã«å¤‰æ›
+        // C#‚Ìƒf[ƒ^‚ğJSON‚É•ÏŠ·
         string json = JsonUtility.ToJson(requestData);
 
-        // JSONã‚’é…åˆ—ã«å¤‰æ›
+        // JSON‚ğ”z—ñ‚É•ÏŠ·
         byte[] body = Encoding.UTF8.GetBytes(json);
 
-        // é€šä¿¡ã®æº–å‚™
+        // ’ÊM‚Ì€”õ
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         request.uploadHandler = new UploadHandlerRaw(body);
         request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");   // JSONå½¢å¼ã‚’ã‚»ãƒƒãƒˆ
+        request.SetRequestHeader("Content-Type", "application/json");   // JSONŒ`®‚ğƒZƒbƒg
 
-        // é€šä¿¡å®Ÿè¡Œ
+        // ’ÊMÀs
         yield return request.SendWebRequest();
 
-        // é€šä¿¡ã‚¨ãƒ©ãƒ¼ã®ãƒã‚§ãƒƒã‚¯
-        if (request.result != UnityWebRequest.Result.Success)   // é€šä¿¡ã«å¤±æ•—ã—ãŸå ´åˆ
+        // ’ÊMƒGƒ‰[‚Ìƒ`ƒFƒbƒN
+        if (request.result != UnityWebRequest.Result.Success)   // ’ÊM‚É¸”s‚µ‚½ê‡
         {
-            onError?.Invoke("é€šä¿¡ã‚¨ãƒ©ãƒ¼ï¼š" + request.error);
+            onError?.Invoke("’ÊMƒGƒ‰[F" + request.error);
             yield break;
         }
 
-        // è¿”é€ã•ã‚ŒãŸJSONã‚’TResponseã«å¤‰æ›
+        // •Ô‘—‚³‚ê‚½JSON‚ğTResponse‚É•ÏŠ·
         try
         {
-            Debug.Log("HTTP: " + request.responseCode);
-            Debug.Log("ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç”Ÿãƒ‡ãƒ¼ã‚¿: [" + request.downloadHandler.text + "]");
+            Debug.Log("ƒŒƒXƒ|ƒ“ƒX¶ƒf[ƒ^: [" + request.downloadHandler.text + "]");
             TResponse res = JsonUtility.FromJson<TResponse>(request.downloadHandler.text);
             onSuccess?.Invoke(res);
         }
-        catch (Exception e)
+        catch
         {
-            onError?.Invoke("ãƒ¬ã‚¹ãƒãƒ³ã‚¹è§£æã‚¨ãƒ©ãƒ¼: " + e.Message +
-            "\nHTTP: " + request.responseCode +
-            "\nRAW: " + request.downloadHandler.text);
-        }
-    }
-
-
-    // ==============================
-    // éŸ³å£°ç”¨
-    // ==============================
-    public static IEnumerator PostVoice<TResponse>(
-        string endpoint,
-        int profId,
-        byte[] wavData,
-        Action<TResponse> onSuccess,
-        Action<string> onError = null
-    )
-    {
-        string url = BASE_URL + endpoint;
-
-        WWWForm form = new WWWForm();
-        form.AddField("prof_id", profId);
-        form.AddBinaryData("audio", wavData, "input.wav", "audio/wav");
-
-        UnityWebRequest request = UnityWebRequest.Post(url, form);
-        request.downloadHandler = new DownloadHandlerBuffer();
-
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            onError?.Invoke("é€šä¿¡ã‚¨ãƒ©ãƒ¼ï¼š" + request.error);
-            yield break;
-        }
-
-        try
-        {
-            Debug.Log("HTTP: " + request.responseCode);
-            Debug.Log("ãƒ¬ã‚¹ãƒãƒ³ã‚¹ç”Ÿãƒ‡ãƒ¼ã‚¿: [" + request.downloadHandler.text + "]");
-            TResponse res = JsonUtility.FromJson<TResponse>(request.downloadHandler.text);
-            onSuccess?.Invoke(res);
-        }
-        catch (Exception e)
-        {
-            onError?.Invoke("ãƒ¬ã‚¹ãƒãƒ³ã‚¹è§£æã‚¨ãƒ©ãƒ¼: " + e.Message +
-            "\nHTTP: " + request.responseCode +
-            "\nRAW: " + request.downloadHandler.text);
+            onError?.Invoke("ƒŒƒXƒ|ƒ“ƒX‰ğÍƒGƒ‰[");
         }
     }
 }

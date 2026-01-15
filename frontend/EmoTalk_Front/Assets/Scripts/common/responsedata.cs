@@ -76,5 +76,15 @@ public class  MessageResponse
     public string message;
     public string response_text;
     public string emotion;
+    public string response_text_hiragana;
+    public string model_voice;
+}
+
+// 1/14追加
+[Serializable]                      // CoeiroInkレスポンス
+public class CoeiroInkResponse
+{
+    public bool success;
+    public string message;
     public string voice_wav_base64;
 }

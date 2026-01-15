@@ -310,21 +310,23 @@ public class ProfileManager : MonoBehaviour
     // ==============================
     public void SelectProfile(ProfileData data)
     {
-        int beforeId = UserData.GetUserCurrentProfId();   // 選択前ID (現在選択されているプロファイルかどうかの比較用に保存)
-        int newId = data.profileId;                       // 新選択ID
+        int newId = data.profileId;
+        int oldId = UserData.GetUserCurrentProfId();
+
+        if (newId == oldId)
+        {
+            // 同じプロファイルならDB更新は不要
+            selectedProfileId = newId;
+            NotifyChanged();
+            ModelManager.Instance?.ShowModel(data.modelIndex);
+            return;
+        }
 
         selectedProfileId = newId;
 
-        // PlayerPrefs(UserData) に保存
-        UserData.SaveUserCurrentProfId(selectedProfileId);
-
-        // DBにも保存
-        StartCoroutine(UpdateCurrentProfileOnDB(selectedProfileId));
-
-        // モデル反映
-        ModelManager.Instance?.ShowModel(data.modelIndex);
-
-        NotifyChanged();
+        // **DB更新を呼ぶ前にUserDataに保存はしない**
+        // StartCoroutine(UpdateCurrentProfileOnDB(selectedProfileId)) の中で更新後に保存する
+        StartCoroutine(UpdateCurrentProfileOnDB(newId, data.modelIndex));
     }
 
     // 選択中プロファイルを取得
@@ -341,15 +343,15 @@ public class ProfileManager : MonoBehaviour
     // ==============================
     // DBへ選択中プロファイルを保存
     // ==============================
-    private IEnumerator UpdateCurrentProfileOnDB(int newprofileId)
+    private IEnumerator UpdateCurrentProfileOnDB(int newProfileId, int modelIndex)
     {
-        int oldProfileId = selectedProfileId;   // 変更前プロファイルID
+        int oldProfileId = UserData.GetUserCurrentProfId(); // 変更前のIDをここで取得
 
         var req = new UserCurrentProfileRequest
         {
             user_id = UserData.GetUserId(),
-            prof_id = selectedProfileId,
-            current_prof_id = UserData.GetUserCurrentProfId() // 現在選択中プロファイルID
+            prof_id = newProfileId,
+            current_prof_id = oldProfileId
         };
 
         yield return ApiConnect.Post<UserCurrentProfileRequest, GetProfileResponse>(
@@ -363,7 +365,14 @@ public class ProfileManager : MonoBehaviour
                     return;
                 }
 
+                // DB更新成功後にUserDataに保存
+                UserData.SaveUserCurrentProfId(newProfileId);
+
+                // モデル反映
+                ModelManager.Instance?.ShowModel(modelIndex);
+
                 LoadProfilesFromDB();
+                NotifyChanged();
             },
             (error) =>
             {

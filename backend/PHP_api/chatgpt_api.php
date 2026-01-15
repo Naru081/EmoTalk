@@ -2,8 +2,11 @@
 require_once __DIR__ . '/../common_function.php';
 require_once __DIR__ . '/connect_api.php';
 
-$prof_id = $_POST['prof_id'] ?? '';
-$message_content = $_POST['message_content'] ?? '';
+$row = file_get_contents('php://input');
+$data = json_decode($row, true);
+
+$prof_id = $data['prof_id'] ?? ($_POST['prof_id'] ?? '');
+$message_content = $data['message_content'] ?? ($_POST['message_content'] ?? '');
 
 if (empty($prof_id) || empty($message_content)) {
     echo json_encode([
@@ -47,6 +50,9 @@ $ai_result = $DBmessage->InsertMessage($prof_id, $message_sender, $ChatGPT_res['
 
 // ChatGPT の返答をそのまま返す
 echo json_encode([
+    "success" => true,
+    "message" => "ChatGPT APIとの通信に成功しました",
+    "emotion" => $ChatGPT_res['emotion'],
     "response_text" => $ChatGPT_res['response_text'],
     "response_text_hiragana" => $ChatGPT_res['response_text_hiragana'],
     "model_voice" => $model_data['model_voice']   

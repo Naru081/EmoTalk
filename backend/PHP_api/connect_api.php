@@ -220,6 +220,13 @@ function ConnectCoeiroInkAPI($model_voice, $response_text_hiragana)
     ]);
 
     $res = curl_exec($ch);
+
+    if ($res === false) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        file_put_contents(__DIR__ . "/coeiro_error.log", $error);
+        return null;
+    }
     curl_close($ch);
 
     // WAVかどうか判定

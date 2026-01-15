@@ -147,7 +147,7 @@ public class TopController : MonoBehaviour
     }
 
     // ==============================
-    // ★ 追加：PHPへ送って返信を表示
+    // ★ 変更 model_voiceとemotion をPHPから持ってくるようにしました 1/14 kukinaka
     // ==============================
     private IEnumerator SendMessageToAI(string messageContent)
     {
@@ -167,7 +167,7 @@ public class TopController : MonoBehaviour
         };
 
         yield return ApiConnect.Post<MessageRequest, MessageResponse>(
-            "PHP_message/control_message.php",
+            "PHP_api/chatgpt_api.php",
             req,
             (res) =>
             {
@@ -186,6 +186,19 @@ public class TopController : MonoBehaviour
 
                 AddLogItem(responseText, false);
                 ScrollToBottom();
+
+                string responseText_hiragana = string.IsNullOrEmpty(res.response_text_hiragana)
+                    ? "返答が取得できませんでした"
+                    : res.response_text_hiragana;
+
+                string emotion = res.emotion;
+                Debug.Log("感情タグ: " + emotion);
+
+                string model_voice = res.model_voice;
+                 Debug.Log("モデル音声: " + model_voice);
+
+                // CoeiroInkに送信
+                StartCoroutine(RequestCoeiroInk(model_voice, responseText_hiragana));
             },
             error =>
             {
@@ -195,6 +208,38 @@ public class TopController : MonoBehaviour
             }
         );
     }
+
+    // 追加：CoeiroInkへ送信 1/14 kukinaka
+    private IEnumerator RequestCoeiroInk(string model_voice, string responseText_hiragana)
+    {
+        yield return ApiConnect.Post<CoeiroInkRequest, CoeiroInkResponse>(
+            "PHP_api/coeiroink_api.php",
+            new CoeiroInkRequest
+            {
+                model_voice = model_voice,
+                responseText_hiragana = responseText_hiragana
+            },
+            (res) =>
+            {
+                if (!res.success)
+                {
+                    Debug.LogError("CoeiroInkリクエスト失敗: " + res.message);
+                    //Debug.Log("model_voice: " + model_voice);
+                    return;
+                }
+                // 音声データのbase64文字列を取得
+                string voiceBase64 = res.voice_wav_base64;
+                Debug.Log("CoeiroInk音声データ取得成功" + voiceBase64);
+                // ここで音声再生処理を呼び出すことができます
+                //AudioManager.Instance.PlayAudioFromUrl(audioUrl);
+            },
+            error =>
+            {
+                Debug.LogError("CoeiroInkリクエストエラー: " + error);
+            }
+        );
+    }
+
 
     // ==============================
     // テスト返信（デバッグ用）※元のまま残す

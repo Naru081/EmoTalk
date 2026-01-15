@@ -108,3 +108,11 @@ public class SendVoiceRequest
     public int prof_id;
     public byte[] wavdata;      
 }
+
+// 1/14追加
+[Serializable]                  // テキストメッセージ送信リクエスト
+public class CoeiroInkRequest
+{
+    public string model_voice;
+    public string responseText_hiragana;
+}

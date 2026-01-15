@@ -1,0 +1,1 @@
+{"detail":[{"loc":["body","text"],"msg":"none is not an allowed value","type":"type_error.none.not_allowed"}]}

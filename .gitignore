@@ -20,3 +20,10 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# Unity Package cache (generated)
+[Ll]ibrary/[Pp]ackage[Cc]ache/
+
+# iOS build outputs (generated)
+iosBuild*/
+**/iosBuild*/

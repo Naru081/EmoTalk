@@ -9,10 +9,10 @@ using System;
 public static class ApiConnect
 {
     // PC実機テスト時のURL
-    // private const string BASE_URL = "http://localhost/backend/";
+    private const string BASE_URL = "http://localhost/backend/";
 
     // 実機テスト時のURL(※ngrok http 80で起動したURLを指定すること)
-    private const string BASE_URL = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/";
+    // private const string BASE_URL = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/";
 
     [Serializable]
     // PHPからは、successとmessageを返す。追加のデータは別クラスを作り対応

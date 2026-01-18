@@ -41,8 +41,12 @@ public class TopController : MonoBehaviour
     // ★ ここだけ追加：PHP送信用
     // ==============================
     [Header("Server (PHP)")]
-    [Tooltip("例: http://localhost/control_message.php  /  実機なら http://PCのIP/control_message.php")]
-    public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
+    [Tooltip("例: http://localhost/control_message.php  /  実機なら http://<ngrok http 80>/control_message.php")]
+    // PC実機テスト時のURL
+    // public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
+
+    // ngrok http 80で起動したURLを指定すること
+    public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
 
     [Tooltip("通信失敗時に従来のテスト返信を出す（デバッグ用）")]
     public bool fallbackToDebugReply = true;
@@ -100,31 +104,6 @@ public class TopController : MonoBehaviour
     }
 
     // ==============================
-    // 改行の処理
-    // ==============================
-    private string InsertLineBreaks(string text, int maxCharsPerLine = 12)
-    {
-        if (string.IsNullOrEmpty(text)) return text;
-
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-
-        int count = 0;
-        foreach (char c in text)
-        {
-            sb.Append(c);
-            count++;
-
-            if (count >= maxCharsPerLine)
-            {
-                sb.Append("\n");
-                count = 0;
-            }
-        }
-
-        return sb.ToString();
-    }
-
-    // ==============================
     // 送信ボタンの処理
     // ==============================
     public void OnSendMessage()
@@ -132,9 +111,6 @@ public class TopController : MonoBehaviour
         string msg = chatInput.text.Trim();
         if (string.IsNullOrEmpty(msg)) return;
         string rawMsg = msg;
-
-        // ▼ 改行処理を先に行う
-        msg = InsertLineBreaks(msg, 20);
 
         // ▼ 自分の吹き出しを追加
         AddLogItem(msg, true);
@@ -182,7 +158,6 @@ public class TopController : MonoBehaviour
                 string responseText = string.IsNullOrEmpty(res.response_text)
                     ? "返答が取得できませんでした。"
                     : res.response_text;
-                responseText = InsertLineBreaks(responseText, 20);
 
                 AddLogItem(responseText, false);
                 ScrollToBottom();

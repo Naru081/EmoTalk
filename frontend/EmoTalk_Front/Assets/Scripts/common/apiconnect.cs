@@ -1,4 +1,4 @@
-// Unity‚©‚çPHP(ƒoƒbƒNƒGƒ“ƒh(ƒT[ƒo))‚Ö’ÊM‚·‚éˆ—‚ğ‹¤’Ê‰»‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
+// Unityã‹ã‚‰PHPã®APIã«æ¥ç¶šã™ã‚‹ãŸã‚ã®å…±é€šã‚¯ãƒ©ã‚¹
 
 using UnityEngine;
 using UnityEngine.Networking;
@@ -8,60 +8,63 @@ using System;
 
 public static class ApiConnect
 {
-    // ÀÛ‚ÌŠÂ‹«‚Å‚ÌƒeƒXƒg‹y‚Ñ–{”Ô‰Ò“­‚Å‚ÍAlocalhost‚Ì•”•ª‚ğƒT[ƒo‚ğ‹N“®‚µ‚Ä‚¢‚é’[––‚ÌIPƒAƒhƒŒƒX‚É•ÏX‚ª•K—v‚Å‚·
-    private const string BASE_URL = "http://localhost/backend/";
+    // PCå®Ÿæ©Ÿãƒ†ã‚¹ãƒˆæ™‚ã®URL
+    // private const string BASE_URL = "http://localhost/backend/";
+
+    // å®Ÿæ©Ÿãƒ†ã‚¹ãƒˆæ™‚ã®URL(â€»ngrok http 80ã§èµ·å‹•ã—ãŸURLã‚’æŒ‡å®šã™ã‚‹ã“ã¨)
+    private const string BASE_URL = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/";
 
     [Serializable]
-    // Šî–{“I‚ÉPHP‚©‚ç‚Ísuccess‚Æmessage‚ğ•Ô‚·B ’Ç‰Á‚Ìƒf[ƒ^‚ğ•Ô‚·ê‡‚Í•Ê‚ÌƒNƒ‰ƒX‚ğ‚Â‚­‚Á‚Ä‘Î‰
+    // PHPã‹ã‚‰ã¯ã€successã¨messageã‚’è¿”ã™ã€‚è¿½åŠ ã®ãƒ‡ãƒ¼ã‚¿ã¯åˆ¥ã‚¯ãƒ©ã‚¹ã‚’ä½œã‚Šå¯¾å¿œ
     public class BasicResponse
     {
         public bool success;
         public string message;
     }
 
-    // ’ÊM‚Ìˆ—‚ğ‹¤’Ê‰»‚·‚éƒƒ\ƒbƒh
+    // é€šä¿¡å‡¦ç†ã‚’è¡Œã†å…±é€šãƒ¡ã‚½ãƒƒãƒ‰
     public static IEnumerator Post<TRequest, TResponse>(
-        string endpoint,    // PHP‚Ìƒtƒ@ƒCƒ‹–¼(—áFPHP_user/register.php)
-        TRequest requestData,   // ‘—‚éƒf[ƒ^‚Ì“à—e‚ğƒNƒ‰ƒX‚Åó‚¯æ‚é
-        Action<TResponse> onSuccess,    // ¬Œ÷‚µ‚½‚Æ‚«‚ÉŒÄ‚Ôˆ—
-        Action<string> onError = null   // ƒGƒ‰[‚ÉŒÄ‚Ôˆ—iÈ—ª‰Â)
+        string endpoint,    // PHPã®ãƒ•ã‚¡ã‚¤ãƒ«å
+        TRequest requestData,   // é€ä¿¡ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã‚’ã‚¯ãƒ©ã‚¹ã§å—ã‘å–ã‚‹
+        Action<TResponse> onSuccess,    // æˆåŠŸæ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+        Action<string> onError = null   // ã‚¨ãƒ©ãƒ¼æ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
     )
     {
-        // URL‚Ìì¬
+        // URLä½œæˆ
         string url = BASE_URL + endpoint;
 
-        // C#‚Ìƒf[ƒ^‚ğJSON‚É•ÏŠ·
+        // C#ã®ãƒ‡ãƒ¼ã‚¿ã‚’JSONå½¢å¼ã«å¤‰æ›
         string json = JsonUtility.ToJson(requestData);
 
-        // JSON‚ğ”z—ñ‚É•ÏŠ·
+        // JSONã‚’é…åˆ—ã«å¤‰æ›
         byte[] body = Encoding.UTF8.GetBytes(json);
 
-        // ’ÊM‚Ì€”õ
+        // é€šä¿¡ã®æº–å‚™
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         request.uploadHandler = new UploadHandlerRaw(body);
         request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");   // JSONŒ`®‚ğƒZƒbƒg
+        request.SetRequestHeader("Content-Type", "application/json");   // JSONå½¢å¼ã‚’ã‚»ãƒƒãƒˆ
 
-        // ’ÊMÀs
+        // é€šä¿¡å®Ÿè¡Œ
         yield return request.SendWebRequest();
 
-        // ’ÊMƒGƒ‰[‚Ìƒ`ƒFƒbƒN
-        if (request.result != UnityWebRequest.Result.Success)   // ’ÊM‚É¸”s‚µ‚½ê‡
+        // é€šä¿¡ã‚¨ãƒ©ãƒ¼ã®ç¢ºèª
+        if (request.result != UnityWebRequest.Result.Success)   // é€šä¿¡ãŒå¤±æ•—ã—ãŸå ´åˆ
         {
-            onError?.Invoke("’ÊMƒGƒ‰[F" + request.error);
+            onError?.Invoke("é€šä¿¡ã‚¨ãƒ©ãƒ¼: " + request.error);
             yield break;
         }
 
-        // •Ô‘—‚³‚ê‚½JSON‚ğTResponse‚É•ÏŠ·
+        // è¿”é€ã•ã‚ŒãŸJSONã‚’TResponseå‹ã«å¤‰æ›
         try
         {
-            Debug.Log("ƒŒƒXƒ|ƒ“ƒX¶ƒf[ƒ^: [" + request.downloadHandler.text + "]");
+            Debug.Log("å—ä¿¡ã—ãŸJSONãƒ‡ãƒ¼ã‚¿: [" + request.downloadHandler.text + "]");
             TResponse res = JsonUtility.FromJson<TResponse>(request.downloadHandler.text);
             onSuccess?.Invoke(res);
         }
         catch
         {
-            onError?.Invoke("ƒŒƒXƒ|ƒ“ƒX‰ğÍƒGƒ‰[");
+            onError?.Invoke("JSONã®è§£æã«å¤±æ•—ã—ã¾ã—ãŸ");
         }
     }
 }

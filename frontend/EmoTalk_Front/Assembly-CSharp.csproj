@@ -73,12 +73,16 @@
     <Compile Include="Assets/Scripts/02Top_Scripts/ModelSelectWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/MenuController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileMnanger.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/WhisperClient.cs" />
     <Compile Include="Assets/Scripts/01Login_Scripts/LoginController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/TopController.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/WavUtility.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/TopSceneController.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/Base64WavPlayer.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileInputPanel.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ModelManager.cs" />
     <Compile Include="Assets/Scripts/common/responsedata.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/MicRecorder.cs" />
     <Compile Include="Assets/Scripts/common/EncryptedPlayerPrefs.cs" />
     <Compile Include="Assets/Scripts/common/GetProfileList.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfilePropertyWindow.cs" />

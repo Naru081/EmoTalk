@@ -1,0 +1,13 @@
+Array
+(
+    [audio] => Array
+        (
+            [name] => audio.wav
+            [full_path] => audio.wav
+            [type] => audio/wav
+            [tmp_name] => D:\XAMPP\tmp\phpFFA4.tmp
+            [error] => 0
+            [size] => 57324
+        )
+
+)

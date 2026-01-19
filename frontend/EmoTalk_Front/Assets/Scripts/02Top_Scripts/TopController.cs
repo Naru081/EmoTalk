@@ -37,16 +37,22 @@ public class TopController : MonoBehaviour
     public InputField chatInput;
     public Button sendButton;
 
+    private Base64WavPlayer wavPlayer;
+
+    void Awake()
+    {
+        wavPlayer = FindObjectOfType<Base64WavPlayer>();
+    }
+
     // ==============================
-    // ★ ここだけ追加：PHP送信用
+    // PHP送信用
     // ==============================
     [Header("Server (PHP)")]
-    [Tooltip("例: http://localhost/control_message.php  /  実機なら http://<ngrok http 80>/control_message.php")]
-    // PC実機テスト時のURL
+    [Tooltip("例: http://localhost/control_message.php  /  実機なら http://PCのIP/control_message.php")]
     // public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
 
     // ngrok http 80で起動したURLを指定すること
-    public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
+    public string serverUrl = "https://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
 
     [Tooltip("通信失敗時に従来のテスト返信を出す（デバッグ用）")]
     public bool fallbackToDebugReply = true;
@@ -123,7 +129,25 @@ public class TopController : MonoBehaviour
     }
 
     // ==============================
-    // ★ 変更 model_voiceとemotion をPHPから持ってくるようにしました 1/14 kukinaka
+    // 音声入力からの送信処理
+    // ==============================
+    public void SendMessageFromVoice(string rawText)
+    {
+        if (string.IsNullOrEmpty(rawText)) return;
+
+        // 表示用改行
+        //string displayText = InsertLineBreaks(rawText, 20);
+
+        // ▼ ユーザの吹き出しを追加
+        AddLogItem(rawText, true);
+        ScrollToBottom();
+
+        // ChatGPT APIに送信
+        StartCoroutine(SendMessageToAI(rawText));
+    }
+
+    // ==============================
+    // ChatGPTへメッセージ送信処理
     // ==============================
     private IEnumerator SendMessageToAI(string messageContent)
     {
@@ -184,7 +208,9 @@ public class TopController : MonoBehaviour
         );
     }
 
-    // 追加：CoeiroInkへ送信 1/14 kukinaka
+    // ==============================
+    // CoeiroInkへ音声生成リクエスト及び再生処理
+    // ==============================
     private IEnumerator RequestCoeiroInk(string model_voice, string responseText_hiragana)
     {
         yield return ApiConnect.Post<CoeiroInkRequest, CoeiroInkResponse>(
@@ -204,9 +230,9 @@ public class TopController : MonoBehaviour
                 }
                 // 音声データのbase64文字列を取得
                 string voiceBase64 = res.voice_wav_base64;
-                Debug.Log("CoeiroInk音声データ取得成功" + voiceBase64);
-                // ここで音声再生処理を呼び出すことができます
-                //AudioManager.Instance.PlayAudioFromUrl(audioUrl);
+                Debug.Log("CoeiroInk音声データ取得成功" + res.success);
+                // CoeiroInkからのキャラクターボイス再生
+                wavPlayer.PlayFromBase64(voiceBase64);
             },
             error =>
             {
@@ -214,7 +240,6 @@ public class TopController : MonoBehaviour
             }
         );
     }
-
 
     // ==============================
     // テスト返信（デバッグ用）※元のまま残す

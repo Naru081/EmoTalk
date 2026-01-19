@@ -37,23 +37,43 @@ function ConnectWisperAPI($tmpFile)
 
     // APIリクエストを実行してレスポンスを取得
     $wisper_res = curl_exec($ch);  // cURLセッションを実行
+
+    if ($wisper_res === false) {
+        move_uploaded_file($tmpFile, __DIR__ . "/debug.wav");
+
+        return [
+            "success" => false,
+            "message" => curl_error($ch)
+        ];
+    }
+    
     curl_close($ch);        // cURLセッションを終了
+
+    // ★追加：生レスポンス保存
+    file_put_contents(__DIR__ . "/whisper_raw.log", $wisper_res);
 
     // JSONデコードして配列に変換
     $json = json_decode($wisper_res, true);
+
+    if (isset($json['error'])) {
+        return [
+            "success" => false,
+            "message" => $json['error']['message']
+        ];
+    }
 
     // データが取得できなかった場合はエラーを返す
     if (!isset($json['text'])) {
         return [
             "success" => false,
-            "message" => "Wisper APIのレスポンスデータが不正です"
+            "message" => "Wisper APIのレスポンスデータが不正です",
+            "raw" => $wisper_res
         ];
     }
 
     // レスポンスを連想配列に変換して返す
     return [
         "success" => true,
-        "message" => "Wisper APIの接続に成功しました",
         "text" => $json['text']
     ];
 }
@@ -193,12 +213,39 @@ function ConnectChatGPTAPI($model_name, $message_content, $prof_chara, $prof_ton
 // CoeiroInk APIに接続してテキストを音声データに変換する関数
 function ConnectCoeiroInkAPI($model_voice, $response_text_hiragana)
 {
+    // ===== 音声モデルのUUIDから、StyleIDを決定 =====
+
+    // つくよみちゃん（冷静）
+    if ($model_voice === "3c37646f-3881-5374-2a83-149267990abc") {
+        $style_id = 0;
+    }
+
+    // アルマちゃん（ノーマル）
+    if ($model_voice === "c97966b1-d80c-04f5-aba5-d30a92843b59") {
+        $style_id = 10;
+    }
+
+    // 青葉くん（ノーマル）
+    if ($model_voice === "d219f5ab-a50b-4d99-a26a-a9fc213e9100") {
+        $style_id = 60;
+    }
+
+    // 銀河くん（叫び）
+    if ($model_voice === "d312d0fb-d38d-434e-825d-cbcbfd105ad0") {
+        $style_id = 74;
+    }
+
+    // 小春音あみ[あみたろ]（るんるん）
+    if ($model_voice === "d93140ec-d365-11ec-8f1d-0242ac1c0002") {
+        $style_id = 1564398633;
+    }
+
     $url = "http://127.0.0.1:50032/v1/synthesis";
 
     $postdata = [
         "speakerUuid" => $model_voice,
         "text" => $response_text_hiragana,
-        "styleId" => 0,
+        "styleId" => $style_id,
         "speedScale" => 1.0,
         "volumeScale" => 1.0,
         "prosodyDetail" => [],
@@ -229,13 +276,22 @@ function ConnectCoeiroInkAPI($model_voice, $response_text_hiragana)
     }
     curl_close($ch);
 
-    // WAVかどうか判定
-    if ($res === false || strncmp($res, "RIFF", 4) !== 0) {
-        file_put_contents(__DIR__ . "/coeiro_error.log", $res);
+    // WAVかどうか判定（緩め）
+    if ($res === false) {
+        file_put_contents(__DIR__ . "/coeiro_error.log", "curl failed");
         return null;
     }
 
-    return $res;
+    // 先頭の空白・改行を除去
+    $trimmed = ltrim($res);
+
+    // RIFFチェック
+    if (strncmp($trimmed, "RIFF", 4) !== 0) {
+        file_put_contents(__DIR__ . "/coeiro_error.log", $trimmed);
+        return null;
+    }
+
+    return $trimmed;
 }
 
 // ==================== CoeiroInk API ウォームアップ用 ====================

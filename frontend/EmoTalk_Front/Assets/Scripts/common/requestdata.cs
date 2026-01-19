@@ -110,7 +110,7 @@ public class SendVoiceRequest
 }
 
 // 1/14追加
-[Serializable]                  // テキストメッセージ送信リクエスト
+[Serializable]                  // CoeiroInk送信リクエスト
 public class CoeiroInkRequest
 {
     public string model_voice;

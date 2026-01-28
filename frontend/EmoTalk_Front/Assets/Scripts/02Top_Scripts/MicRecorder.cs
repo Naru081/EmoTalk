@@ -6,22 +6,46 @@ public class MicRecorder : MonoBehaviour
     private string device;
     private int sampleRate = 16000;
 
-    // ˜^‰¹ŠJn
-    public void StartRecording()
+    // éŒ²éŸ³é–‹å§‹
+    public bool StartRecording()
     {
-        // ƒ}ƒCƒNƒfƒoƒCƒX‚Ìæ“¾
+        // ãƒã‚¤ã‚¯ãƒ‡ãƒã‚¤ã‚¹ã®å–å¾—
         device = Microphone.devices.Length > 0 ? Microphone.devices[0] : null;
         if (device == null)
         {
-            Debug.LogError("ƒ}ƒCƒN‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
-            return;
+            Debug.LogError("ãƒã‚¤ã‚¯ãƒ‡ãƒã‚¤ã‚¹ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
+            return false;
         }
 
         recording = Microphone.Start(device, false, 30, sampleRate);
-        Debug.Log("˜^‰¹ŠJn");
+        Debug.Log("éŒ²éŸ³é–‹å§‹");
+        return true;
     }
 
-    // ˜^‰¹I—¹
+    // éŸ³é‡ã®å–å¾—
+    public float GetCurrentVolume()
+    {
+        if (recording == null || device == null) return 0f;
+
+        int micPosition = Microphone.GetPosition(device);
+        if (micPosition <= 0) return 0f;
+
+        int sampleSize = 256;
+        float[] samples = new float[sampleSize];
+
+        int startPosition = Mathf.Max(0, micPosition - sampleSize);
+        recording.GetData(samples, startPosition);
+
+        float sum = 0f;
+        for (int i = 0; i < sampleSize; i++)
+        {
+            sum += samples[i] * samples[i];
+        }
+
+        return Mathf.Sqrt(sum / sampleSize); // RMSå€¤ã‚’è¿”ã™
+    }
+
+    // éŒ²éŸ³åœæ­¢
     public AudioClip StopRecording()
     {
         if (recording == null || device == null)
@@ -34,7 +58,7 @@ public class MicRecorder : MonoBehaviour
 
         if (position <= 0)
         {
-            Debug.LogWarning("˜^‰¹‚ª³í‚És‚í‚ê‚Ü‚¹‚ñ‚Å‚µ‚½");
+            Debug.LogWarning("éŒ²éŸ³ãŒæ­£å¸¸ã«è¡Œã‚ã‚Œã¾ã›ã‚“ã§ã—ãŸã€‚");
             return null;
         }
 
@@ -42,7 +66,7 @@ public class MicRecorder : MonoBehaviour
         float[] data = new float[position * originalChannels];
         recording.GetData(data, 0);
 
-        // ƒ‚ƒmƒ‰ƒ‹•ÏŠ·
+        // ãƒ¢ãƒãƒ©ãƒ«å¤‰æ›
         float[] monoData = new float[position];
         if (originalChannels == 2)
         {
@@ -59,7 +83,7 @@ public class MicRecorder : MonoBehaviour
         AudioClip clip = AudioClip.Create(
             "RecordedClip",
             position,
-            1, // ƒ‚ƒmƒ‰ƒ‹
+            1, // ãƒ¢ãƒãƒ©ãƒ«
             recording.frequency,
             false
         );
@@ -67,7 +91,28 @@ public class MicRecorder : MonoBehaviour
 
         clip.SetData(monoData, 0);
 
-        Debug.Log("˜^‰¹I—¹");
+        Debug.Log("éŒ²éŸ³çµ‚äº†");
         return clip;
     }
+
+    // ==============================
+    // ãƒ€ãƒŸãƒ¼éŸ³å£°ç”Ÿæˆï¼ˆãƒ†ã‚¹ãƒˆç”¨ï¼‰
+    // ==============================
+    public AudioClip CreateDummyClip(float lengthSec = 1.2f)
+    {
+        int samples = Mathf.CeilToInt(sampleRate * lengthSec);
+        float[] data = new float[samples]; // å®Œå…¨ãªç„¡éŸ³
+
+        AudioClip clip = AudioClip.Create(
+            "DummyClip",
+            samples,
+            1,
+            sampleRate,
+            false
+        );
+        clip.SetData(data, 0);
+        return clip;
+    }
+
+
 }

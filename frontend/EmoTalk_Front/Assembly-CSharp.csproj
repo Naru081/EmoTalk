@@ -70,6 +70,7 @@
     <Compile Include="Assets/Scripts/02Top_Scripts/DeleteDeniedPopup.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileModelSelect.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/MicPopupContller.cs" />
+    <Compile Include="Assets/Scripts/03Motion_Scripts/SimpleLive2DLipSync.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ModelSelectWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/MenuController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileMnanger.cs" />

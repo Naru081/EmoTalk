@@ -1,1 +1,1 @@
-Failed to connect to 127.0.0.1 port 50032 after 2031 ms: Couldn't connect to server
+Failed to connect to 127.0.0.1 port 50032: Connection refused

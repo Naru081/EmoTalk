@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class WhisperClient : MonoBehaviour
 {
-    public TopController TopController; // ChatGPT‚Ö‘—M‚·‚é‚½‚ß‚ÌTopControllerQÆ
+    public TopController TopController; // ChatGPTã¸é€ä¿¡ã™ã‚‹ãŸã‚ã®TopControllerå‚ç…§
 
-    public event Action<string> OnWisperCompleted;
+    public event Action<string> OnWhisperCompleted;
 
     public void SendToWhisper(AudioClip clip)
     {
@@ -26,13 +26,13 @@ public class WhisperClient : MonoBehaviour
     {
         if (!res.success || string.IsNullOrEmpty(res.text))
         {
-            Debug.LogError("Whisper¸”s: " + res.message);
-            OnWisperCompleted?.Invoke("");
+            Debug.LogError("Whisperï¿½ï¿½ï¿½s: " + res.message);
+            OnWhisperCompleted?.Invoke("");
             return;
         }
 
-        //Debug.Log("Whisper¬Œ÷: " + res.text);
-        OnWisperCompleted?.Invoke(res.text);
+        //Debug.Log("WhisperæˆåŠŸ: " + res.text);
+        OnWhisperCompleted?.Invoke(res.text);
 
         TopController.SendMessageFromVoice(res.text);
     }
@@ -40,6 +40,14 @@ public class WhisperClient : MonoBehaviour
     private void OnError(string error)
     {
         Debug.LogError(error);
+        OnWhisperCompleted?.Invoke("");
+    }
+    
+    // ãƒ†ã‚¹ãƒˆç”¨
+    public void Test_SendText(string testText)
+    {
+        Debug.Log($"[TEST] Whisper result = {testText}");
+        OnWhisperCompleted?.Invoke(testText);
     }
 
     [Serializable]

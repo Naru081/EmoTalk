@@ -4,210 +4,210 @@ using UnityEngine.UI;
 
 public class MicController : MonoBehaviour
 {
+    [Header("TEST")]
+    [SerializeField] private bool TEST_MODE = true;
+
     [Header("Panel")]
-    public GameObject micPanel;            // MicPanel
+    public GameObject micPanel;
 
     [Header("UI")]
-    public Text titleText;                 // txt_title
-    public Image micImage;                 // img_mic
-    public Sprite micOnSprite;             // mic_on.png
-    public Sprite micDisableSprite;        // mic_disable.png
+    public Text titleText;
+    public Image micImage;
+    public Sprite micOnSprite;
+    public Sprite micDisableSprite;
+    public GameObject close;
 
-    [Header("Animation")]
-    public float blinkSpeed = 0.6f;        // 点滅速度
+    [Header("Auto Stop")]
+    public float silenceThreshold = 0.01f;
+    public float silenceDuration = 1.5f;
+    public float maxRecordTime = 10f;
 
-    private Coroutine blinkCoroutine;
+    [Header("Refs")]
+    public MicRecorder micRecorder;
+    public WhisperClient whisperClient;
 
-    [Header("Audio & API")]
-    public MicRecorder micRecorder;        // 録音担当クラス
-    public WhisperClient whisperClient;    // Whisper + ChatGpt + CoeiroInk 担当クラス
-        
-    private void Awake()
-    {
-        // Whisper完了時のイベント読み込み
-        whisperClient.OnWisperCompleted += HandleWhisperCompleted;
-    }
-
-    private void OnDestroy()
-    {
-        if (blinkCoroutine != null)
-        {
-            StopCoroutine(blinkCoroutine);
-        }
-
-        whisperClient.OnWisperCompleted -= HandleWhisperCompleted;
-    }
-
-    // Whiper完了時の処理
-    private void HandleWhisperCompleted(string recognizedText)
-    {
-        //Debug.Log($"HandleWhisperCompleted called / text='{recognizedText}'");
-
-        Debug.Log($"titleText={titleText}");
-        Debug.Log($"micImage={micImage}");
-        Debug.Log($"micPanel={micPanel}");
-
-        if (string.IsNullOrEmpty(recognizedText))
-        {
-            ShowNoInput();
-            return;
-        }
-
-        Debug.Log("Whisper認識完了 " + recognizedText);
-        ClosePanel();
-    }
-
-    // イベントを1回のみにするための変数
     private bool isRecording = false;
+    private float silenceTimer = 0f;
+    private float recordTimer = 0f;
+
+    // 一度でも音を検出したら無音検出を有効化するためのフラグ
+    private bool hasDetectedSound = false;
 
     // ==============================
-    // マイクボタンが押された処理
+    // マイクボタン
     // ==============================
     public void OnMicButton()
     {
-        if (isRecording) return; // 2回目以降の呼び出しを無視
-
         micPanel.SetActive(true);
 
-        // 権限チェック
-        if (!HasMicrophonePermission())
+        // ===== テストモード =====
+        if (TEST_MODE)
+        {
+            Debug.Log("TEST_MODE: ダミー音声で実行");
+
+            titleText.text = "解析中・・・";
+
+            whisperClient.Test_SendText("これはテスト音声からの認識結果です。");
+
+            AudioClip dummy = micRecorder.CreateDummyClip();
+            whisperClient.SendToWhisper(dummy);
+
+            StartCoroutine(TestAutoClose());
+            return;
+        }
+
+        // ===== 本番 =====
+        if (!micRecorder.StartRecording())
         {
             ShowMicDisabled();
             return;
         }
 
-        // 録音開始
+        // 録音状態初期化
         isRecording = true;
-        micRecorder.StartRecording();
-        StartRecordingUI();
+        recordTimer = 0f;
+        silenceTimer = 0f;
+        hasDetectedSound = false;
+
+        titleText.text = "録音中・・・";
+        micImage.sprite = micOnSprite;
     }
 
     // ==============================
-    // 録音停止ボタン or 自動停止時の処理
+    // 録音監視（無音 / 最大時間）
+    // ==============================
+    private void Update()
+    {
+        if (!isRecording) return;
+
+        // 最大録音時間を超えたら自動停止
+        recordTimer += Time.deltaTime;
+        if (recordTimer >= maxRecordTime)
+        {
+            if (!hasDetectedSound)
+            {
+                Debug.Log("10秒間無音のため自動停止及び解析失敗");
+                OnRecordingFailed("音声が検出されませんでした");
+            }
+            else 
+            {
+                Debug.Log("10秒経過で自動停止");
+                OnStopRecording();
+            }
+            return;
+        }
+
+        float volume = micRecorder.GetCurrentVolume();
+
+        // 音が出ているか判定
+        if (volume >= silenceThreshold)
+        {
+            hasDetectedSound = true;
+            silenceTimer = 0f;
+            return;
+        }
+
+        // 音が出るまでは無音判定なし
+        if (!hasDetectedSound) return;
+
+        // 音が出てから無音検出
+        silenceTimer += Time.deltaTime;
+        if (silenceTimer >= silenceDuration)
+        {
+            Debug.Log("無音検出で自動停止");
+            OnStopRecording();
+        }
+    }
+
+    // ==============================
+    // 停止処理
     // ==============================
     public void OnStopRecording()
     {
-        Debug.Log("StopRecording called");
-
-        if (!isRecording) return; // 2回目以降の呼び出しを無視
+        if (!isRecording) return;
         isRecording = false;
 
         AudioClip clip = micRecorder.StopRecording();
-
         if (clip == null)
         {
-            Debug.LogError("録音失敗：clipがnull");
-            ShowNoInput();
+            ShowMicDisabled();
             return;
         }
 
-        Debug.Log($"length={clip.length}");
-        Debug.Log($"samples={clip.samples}");
-        Debug.Log($"channels={clip.channels}");
-        Debug.Log($"frequency={clip.frequency}");
-
-        if (clip.length < 0.3f)
-        {
-            ShowNoInput();
-            return;
-        }
-
-        ClosePanel();
         titleText.text = "解析中・・・";
-
-        // Whisperへ送信
         whisperClient.SendToWhisper(clip);
+
     }
 
     // ==============================
-    // 録音UIを開始（録音中の見た目）
+    // UI
     // ==============================
-    private void StartRecordingUI()
-    {
-        titleText.text = "録音中・・・";
-        micImage.sprite = micOnSprite;
-        micImage.color = Color.white;
-
-        // 点滅開始
-        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
-        blinkCoroutine = StartCoroutine(BlinkMicIcon());
-    }
-
-    // ==============================
-    // エラー表示：聞き取れなかった場合
-    // ==============================
-    public void ShowNoInput()
-    {
-        //if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
-
-        titleText.text = "聞き取れませんでした";
-        micImage.sprite = micOnSprite;
-        micImage.color = Color.white; // 点滅終了
-    }
-
-    // ===============================
-    // エラー表示：マイクが無効の場合
-    // ===============================
     private void ShowMicDisabled()
     {
-        //if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
-
         titleText.text = "マイクが無効になっています";
         micImage.sprite = micDisableSprite;
-        micImage.color = Color.white;
+
+        if (close != null)
+            close.SetActive(false);
+
+        StartCoroutine(TestAutoClose());
     }
 
-    // ==============================
-    // マイクを閉じる
-    // ==============================
-    public void ClosePanel()
+    // テスト用：自動閉じる
+    private IEnumerator TestAutoClose()
     {
-        if (blinkCoroutine != null)
-        {
-            StopCoroutine(blinkCoroutine);
-            blinkCoroutine = null;
-        }
+        yield return new WaitForSeconds(3f);
+        micPanel.SetActive(false);
+    }
 
-        //micImage.color = Color.white;
+    // 閉じるボタン
+    public void OnCloseButton()
+    {
         micPanel.SetActive(false);
     }
 
     // ==============================
-    // 点滅アニメーション
+    // WhisperAPI 完了処理
     // ==============================
-    private IEnumerator BlinkMicIcon()
+    public void Start()
     {
-        while (micPanel.activeInHierarchy)
-        {
-            for (float a = 1; a >= 0.3f; a -= Time.deltaTime * 2f)
-            {
-                if (!micPanel.activeInHierarchy) yield break;
-                micImage.color = new Color(1, 1, 1, a);
-                yield return null;
-            }
+        whisperClient.OnWhisperCompleted += OnWhisperResult;
+    }
 
-            for (float a = 0.3f; a <= 1; a += Time.deltaTime * 2f)
-            {
-                if (!micPanel.activeInHierarchy) yield break;
-                micImage.color = new Color(1, 1, 1, a);
-                yield return null;
-            }
+    private void OnDestroy()
+    {
+        whisperClient.OnWhisperCompleted -= OnWhisperResult;
+    }
+
+    private void OnWhisperResult(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            // 解析失敗時
+            titleText.text = "音声を認識できませんでした";
+            if (close != null) close.SetActive(true);
+            return;
         }
+
+        // 解析成功時
+        micPanel.SetActive(false);
     }
 
     // ==============================
-    // マイク権限チェック（実装は後で追加）
+    // 録音失敗時処理
     // ==============================
-    private bool HasMicrophonePermission()
+    private void OnRecordingFailed(string message)
     {
-        #if UNITY_EDITOR
-        {
-            return true; // エディタでは常に許可
-        }
-        #else
-        {
-            return Application.HasUserAuthorization(UserAuthorization.Microphone);
-        }    
-        #endif
+        // 録音状態終了
+        isRecording = false;
+
+        // 念のためマイク停止
+        micRecorder.StopRecording();
+
+        titleText.text = message;
+        micImage.sprite = micDisableSprite;
+
+        // Whisperには行かない
+        StartCoroutine(TestAutoClose());
     }
 }

@@ -9,10 +9,10 @@ using System;
 public static class ApiConnect
 {
     // 実機テスト時のURL(※ngrok http 80で起動したURLを指定すること)
-    private const string BASE_URL = "https://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/";
+    // private const string BASE_URL = "https://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/";
 
     // 実際の環境でのテスト及び本番稼働時では、localhostの部分をサーバを起動している端末のIPアドレスに変更が必要です
-    // private const string BASE_URL = "http://localhost/backend/";
+    private const string BASE_URL = "http://localhost/backend/";
 
     [Serializable]
     // 基本的にPHPからはsuccessとmessageを返す。 追加のデータを返す場合は別のクラスをつくって対応

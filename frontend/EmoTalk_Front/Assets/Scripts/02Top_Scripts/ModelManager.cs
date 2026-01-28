@@ -14,6 +14,8 @@ public class ModelManager : MonoBehaviour
     private int currentIndex = -1;
     private GameObject currentModel;
 
+    public GameObject CurrentModel => currentModel;
+
     // ==============================
     // Singletonパターン
     // ==============================

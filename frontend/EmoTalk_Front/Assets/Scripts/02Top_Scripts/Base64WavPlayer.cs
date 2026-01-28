@@ -3,19 +3,31 @@ using System;
 
 public class Base64WavPlayer : MonoBehaviour
 {
-    public AudioSource audioSource;
+    // äº’æ›ç”¨ï¼šæœªæŒ‡å®šãªã‚‰ã“ã‚Œã‚’ä½¿ã†
+    public AudioSource defaultAudioSource;
 
-    public void PlayFromBase64(string base64)
+    private void Awake()
     {
+        if (defaultAudioSource == null)
+        {
+            defaultAudioSource = GetComponent<AudioSource>();
+        }
+    }
+
+    // â˜…å†ç”Ÿå…ˆã‚’æŒ‡å®šã§ãã‚‹ç‰ˆ
+    public void PlayFromBase64(string base64, AudioSource target)
+    {
+        AudioSource audioSource = target != null ? target : defaultAudioSource;
+
         if (audioSource == null)
         {
-            Debug.LogError("AudioSource ‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogError("AudioSourceãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“");
             return;
         }
 
         if (string.IsNullOrEmpty(base64))
         {
-            Debug.LogError("base64 ƒf[ƒ^‚ª‹ó‚Å‚·");
+            Debug.LogError("base64 æ–‡å­—åˆ—ãŒç©ºã§ã™");
             return;
         }
 
@@ -26,12 +38,11 @@ public class Base64WavPlayer : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("Base64 ƒfƒR[ƒh¸”s: " + e.Message);
+            Debug.LogError("Base64 ãƒ‡ã‚³ãƒ¼ãƒ‰ã‚¨ãƒ©ãƒ¼: " + e.Message);
             return;
         }
 
         AudioClip clip = WavUtility.ToAudioClip(wavBytes, "CoeiroInk");
-
         if (clip == null)
         {
             Debug.LogError("WAV decode failed");
@@ -41,7 +52,12 @@ public class Base64WavPlayer : MonoBehaviour
         audioSource.clip = clip;
         audioSource.Play();
 
-        // š Ä¶ŠJnƒƒO
-        Debug.Log($"CoeiroInk ‰¹ºÄ¶ŠJni’·‚³: {clip.length:F2} •bj");
+        Debug.Log($"CoeiroInk éŸ³å£°å†ç”Ÿé–‹å§‹: {clip.length:F2} ç§’");
+    }
+
+    // æ—¢å­˜ã‚³ãƒ¼ãƒ‰äº’æ›ï¼ˆå‘¼ã³å‡ºã—å´ã‚’ã™ãå¤‰ãˆã‚‰ã‚Œãªã„å ´åˆç”¨ï¼‰
+    public void PlayFromBase64(string base64)
+    {
+        PlayFromBase64(base64, null);
     }
 }

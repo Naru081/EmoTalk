@@ -29,7 +29,7 @@ copy($tmpFile, $debugPath);
 $convertedPath = __DIR__ . '/converted.wav';
 
 // FFmpegのパス
-$ffmpeg = "C:\\ffmpeg\\bin\\ffmpeg.exe";
+$ffmpeg = "/usr/local/bin/ffmpeg/bin/ffmpeg.exe";
 
 $cmd = "\"$ffmpeg\" -y -i " . escapeshellarg($tmpFile) .
        " -ar 16000 -ac 1 -acodec pcm_s16le " .

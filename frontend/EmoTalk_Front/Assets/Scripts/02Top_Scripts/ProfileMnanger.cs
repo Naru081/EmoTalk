@@ -13,6 +13,14 @@ public class ProfileManager : MonoBehaviour
     // 選択中プロファイルID (UserData管理)
     private int selectedProfileId = -1;
 
+    // 警告文ポップアップ
+    [SerializeField] private PopupManager successSavePopup;
+    [SerializeField] private PopupManager warningTitlePopup;
+    [SerializeField] private PopupManager warningCharaPopup;
+    [SerializeField] private PopupManager warningTonePopup;
+    [SerializeField] private PopupManager warningFpPopup;
+    [SerializeField] private PopupManager maskSendPopup;
+
     // プロファイルリスト変更通知
     public event Action OnProfilesChanged;
     public void NotifyChanged()
@@ -24,6 +32,13 @@ public class ProfileManager : MonoBehaviour
         {
             ProfileListWindow.Instance.RefreshList();
         }
+    }
+
+    // ユーザの新規登録後、選択中のプロファイルを強調表示する
+    public void SyncSelectedProfileFromUserData()
+    {
+        selectedProfileId = UserData.GetUserCurrentProfId();
+        NotifyChanged();
     }
 
     // ==============================
@@ -75,6 +90,7 @@ public class ProfileManager : MonoBehaviour
 
         // 選択中プロフの確認
         NotifyChanged();
+        SyncSelectedProfileFromUserData();
     }
 
     private void OnProfileLoadError(string error)
@@ -168,6 +184,14 @@ public class ProfileManager : MonoBehaviour
     // プロファイルのタイトルを変更
     public void UpdateProfileTitle(ProfileData data)
     {
+        if (string.IsNullOrEmpty(data.displayName))
+        {
+            // タイトルが空の場合は警告ポップアップを表示して終了
+            warningTitlePopup.Open();
+            StartCoroutine(OpenNextFrame(warningTitlePopup));
+            return;
+        }
+
         StartCoroutine(UpdateProfileTitleCoroutine(data));
     }
 
@@ -188,21 +212,33 @@ public class ProfileManager : MonoBehaviour
                 if (!res.success)
                 {
                     Debug.LogError("プロファイルタイトル更新失敗");
+
+                    if (res.message == "タイトルは10文字以内で入力してください")
+                    {
+                        warningTitlePopup.Open();
+                        StartCoroutine(OpenNextFrame(warningTitlePopup));
+                    }
                     return;
                 }
-
+                // 成功時
                 LoadProfilesFromDB();
+
+                // 保存成功ポップアップ表示
+                successSavePopup.Open();
+                StartCoroutine(OpenNextFrame(successSavePopup));
             }
         );
     }
 
     // プロファイルの性格・口調・一人称を変更
-    public void UpdateProfileCustom(ProfileData data)
+    public void UpdateProfileCustom(ProfileData data, Action onSuccess)
     {
-        StartCoroutine(UpdateProfileCustomCoroutine(data));
+        //Debug.Log("UpdateProfileCustom 呼び出し完了");
+
+        StartCoroutine(UpdateProfileCustomCoroutine(data, onSuccess));
     }
 
-    private IEnumerator UpdateProfileCustomCoroutine(ProfileData data)
+    private IEnumerator UpdateProfileCustomCoroutine(ProfileData data, Action onSuccess)
     {
         var req = new UpdateProfileCustomRequest
         {
@@ -220,13 +256,43 @@ public class ProfileManager : MonoBehaviour
                 if (!res.success)
                 {
                     Debug.LogError("プロファイルカスタム更新失敗");
+
+                    if (res.message == "性格は20文字以内で入力してください")
+                    {
+                        warningCharaPopup.Open();
+                        StartCoroutine(OpenNextFrame(warningCharaPopup));
+                    }
+                    else if (res.message == "口調は20文字以内で入力してください")
+                    {
+                        warningTonePopup.Open();
+                        StartCoroutine(OpenNextFrame(warningTonePopup));
+                    }
+                    else if (res.message == "一人称は20文字以内で入力してください")
+                    {
+                        warningFpPopup.Open();
+                        StartCoroutine(OpenNextFrame(warningFpPopup));
+                    }
                     return;
                 }
+                // 成功時
+                LoadProfilesFromDB();  // プロファイル一覧を再取得して更新
 
-                LoadProfilesFromDB();
+                // 保存成功ポップアップ表示
+                successSavePopup.Open();
+                StartCoroutine(OpenNextFrame(successSavePopup));
+
+                onSuccess?.Invoke();   // 成功通知コールバック
             },
             error => Debug.LogError("プロファイルカスタム更新エラー: " + error)
+
         );
+    }
+
+    // ポップアップを正しく表示するために1フレーム待つ
+    IEnumerator OpenNextFrame(PopupManager popup)
+    {
+        yield return null; // 1フレーム待つ
+        popup.Open();
     }
 
     // プロファイルのモデルを変更
@@ -379,5 +445,82 @@ public class ProfileManager : MonoBehaviour
                 Debug.LogError("現在のプロファイル更新エラー: " + error);
             }
         );
+    }
+
+    // ==============================
+    // ポップアップ表示
+    // ==============================
+
+    // 保存成功ポップアップ表示
+    public void ShowSuccessSavePopup()
+    {
+        if (successSavePopup == null)
+        {
+            Debug.LogWarning("successSavePopup が未設定です");
+            return;
+        }
+        successSavePopup.Open();
+        StartCoroutine(OpenNextFrame(successSavePopup));
+    }
+
+    // タイトル警告ポップアップ表示
+    public void ShowWarningTitlePopup()
+    {
+        if (warningTitlePopup == null)
+        {
+            Debug.LogWarning("warningTitlePopup が未設定です");
+            return;
+        }
+
+        warningTitlePopup.Open();
+        StartCoroutine(OpenNextFrame(warningTitlePopup));
+    }
+
+    // 性格警告ポップアップ表示
+    public void ShowWarningCharaPopup()
+    {
+        if (warningCharaPopup == null)
+        {
+            Debug.LogWarning("warningCharaPopup が未設定です");
+            return;
+        }
+        warningCharaPopup.Open();
+        StartCoroutine(OpenNextFrame(warningCharaPopup));
+    }
+
+    // 口調警告ポップアップ表示
+    public void ShowWarningTonePopup()
+    {
+        if (warningTonePopup == null)
+        {
+            Debug.LogWarning("warningTonePopup が未設定です");
+            return;
+        }
+        warningTonePopup.Open();
+        StartCoroutine(OpenNextFrame(warningTonePopup));
+    }
+
+    // 一人称警告ポップアップ表示
+    public void ShowWarningFpPopup()
+    {
+        if (warningFpPopup == null)
+        {
+            Debug.LogWarning("warningFpPopup が未設定です");
+            return;
+        }
+        warningFpPopup.Open();
+        StartCoroutine(OpenNextFrame(warningFpPopup));
+    }
+
+    // チャット機能処理中の入力受付禁止マスクポップアップ表示
+    public void ShowMaskSendPopup()
+    {
+        if (maskSendPopup == null)
+        {
+            Debug.LogWarning("maskSendPopup が未設定です");
+            return;
+        }
+        maskSendPopup.Open();
+        StartCoroutine(OpenNextFrame(maskSendPopup));
     }
 }

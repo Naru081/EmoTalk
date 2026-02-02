@@ -96,6 +96,8 @@ public class LoginController : MonoBehaviour
                     UserData.SaveUserMail(registerNewMail.text);
                     UserData.SaveUserCurrentProfId(res.user_currentprof);
 
+                    SEManager.Instance?.PlayLoginSuccess(); // ログイン成功SE再生
+
                     // ロード画面表示
                     SceneManager.LoadScene("TopScene");
                 }
@@ -153,6 +155,9 @@ public class LoginController : MonoBehaviour
                 EncryptedPlayerPrefs.SaveString("token", res.token);
 
                 // ログイン成功時、ロード画面表示
+
+                SEManager.Instance?.PlayLoginSuccess(); // ログイン成功SE再生
+
                 SetLoading(true, "ログインに成功しました");
 
                 // 1秒待ってTOP画面へ行く処理を行う関数を呼び出す
@@ -271,6 +276,9 @@ public class LoginController : MonoBehaviour
                     UserData.SaveUserId(res.user_id);
                     UserData.SaveUserMail(registerNewMail.text);
                     UserData.SaveUserCurrentProfId(res.user_currentprof);
+
+                    // プロファイルリスト内で、選択中のプロファイルを強調表示させる
+                    ProfileManager.Instance?.SyncSelectedProfileFromUserData();
                     // 成功画面へ
                     if (registerPanel != null) registerPanel.SetActive(false);
                     if (registerCompletePanel != null) registerCompletePanel.SetActive(true);

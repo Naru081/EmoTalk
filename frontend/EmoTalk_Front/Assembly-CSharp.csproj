@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/02Top_Scripts/DeleteConfirmPopup.cs" />
+    <Compile Include="Assets/Scripts/04SE/SEManager.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileListWrapper.cs" />
     <Compile Include="Assets/Scripts/common/UserData.cs" />
@@ -85,7 +86,9 @@
     <Compile Include="Assets/Scripts/common/responsedata.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/MicRecorder.cs" />
     <Compile Include="Assets/Scripts/common/EncryptedPlayerPrefs.cs" />
+    <Compile Include="Assets/Scripts/04SE/UISEPlayer.cs" />
     <Compile Include="Assets/Scripts/common/GetProfileList.cs" />
+    <Compile Include="Assets/Scripts/02Top_Scripts/PopupManager.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfilePropertyWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileData.cs" />
     <Compile Include="Assets/Scripts/common/apiconnect.cs" />

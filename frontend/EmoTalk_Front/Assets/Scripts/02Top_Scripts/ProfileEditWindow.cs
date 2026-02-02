@@ -22,6 +22,7 @@ public class ProfileEditWindow : MonoBehaviour
 
     // リスト名更新用
     public ProfileListWindow listWindow;
+    private string originalName;    // 名前変更前の値を避難用
 
     // モデル変更表示
     public ModelChangeWindow modelChangeWindow;
@@ -40,6 +41,8 @@ public class ProfileEditWindow : MonoBehaviour
     // ==============================
     public void Open(ProfileData profile)
     {
+        originalName = profile.displayName; // 名前変更前の値を避難
+
         currentProfile = profile;
         Debug.Log("Open called. currentProfile=" + (currentProfile != null ? currentProfile.displayName : "NULL"));
 
@@ -145,30 +148,52 @@ public class ProfileEditWindow : MonoBehaviour
     // ==============================
     public void OnEndEditName(string value)
     {
-        // ★引数 value は信用せず、実体から読む
-        string newName = (nameInput != null) ? nameInput.text : value;
-
-        Debug.Log($"OnEndEditName fired: value='{value}' inputText='{newName}'");
-
         if (currentProfile == null) return;
 
-        if (string.IsNullOrWhiteSpace(newName))
-            newName = currentProfile.displayName;
+        string newName = (nameInput != null) ? nameInput.text : value;
 
+        Debug.Log($"OnEndEditName fired: '{newName}'");
+
+        // 空チェック（空なら元の名前に戻す）
+        if (string.IsNullOrWhiteSpace(newName) || newName.Length > 10)
+        {
+            // 元に戻す
+            RestoreOriginalName();
+
+            // 警告ポップアップ表示
+            ProfileManager.Instance.ShowWarningTitlePopup();
+            return;
+        }
+
+        // チェックOKなら保存処理開始
         currentProfile.displayName = newName;
+        originalName = newName; // 名前変更前の値を更新
 
-        if (nameText != null) nameText.text = currentProfile.displayName;
+        if (nameText != null) nameText.text = newName;
 
         // DB保存
         ProfileManager.Instance.UpdateProfileTitle(currentProfile);
 
-        // 編集UIを戻す（やっているなら）
+        // リスト名更新
+        ResetNameUI();
+    }
+
+    // UIを元に戻し、元の名前に復元する処理関数
+    private void RestoreOriginalName()
+    {
+        if (nameInput != null) nameInput.text = originalName;
+        if (nameText != null) nameText.text = originalName;
+
+        currentProfile.displayName = originalName;
+
+        ResetNameUI();
+    }
+
+    //  タイトル名を元のUI状態に戻す関数
+    private void ResetNameUI()
+    {
         if (nameInput != null) nameInput.gameObject.SetActive(false);
         if (nameText != null) nameText.gameObject.SetActive(true);
-
-        // リスト反映
-        //ProfileManager.Instance.SaveProfiles();
-        //ProfileListWindow.Instance.RefreshList();
     }
 
     // ==============================

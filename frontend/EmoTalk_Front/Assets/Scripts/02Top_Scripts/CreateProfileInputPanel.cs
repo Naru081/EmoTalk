@@ -48,19 +48,51 @@ public class CreateProfileInputPanel : MonoBehaviour
         string tone = toneInput.text.Trim();
         string firstPerson = pronounInput.text.Trim();
 
-        if (string.IsNullOrEmpty(title))
+        // ----- 各種チェック処理 -----
+
+        // タイトルが空欄もしくは10文字を越える場合は警告ポップアップを出して保存処理を中止
+        if (string.IsNullOrWhiteSpace(title) || title.Length > 10)
         {
-            Debug.LogWarning("タイトルを入力してください。");
+            // 警告ポップアップ表示
+            ProfileManager.Instance.ShowWarningTitlePopup();
             return;
         }
 
+        // 性格が空欄もしくは20文字を越える場合は警告ポップアップを出して保存処理を中止
+        if (string.IsNullOrWhiteSpace(chara) || chara.Length > 20)
+        {
+            // 警告ポップアップ表示
+            ProfileManager.Instance.ShowWarningCharaPopup();
+            return;
+        }
+
+        // 口調が空欄もしくは20文字を越える場合は警告ポップアップを出して保存処理を中止
+        if (string.IsNullOrWhiteSpace(tone) || tone.Length > 20)
+        {
+            // 警告ポップアップ表示
+            ProfileManager.Instance.ShowWarningTonePopup();
+            return;
+        }
+
+        // 一人称が空欄もしくは20文字を越える場合は警告ポップアップを出して保存処理を中止
+        if (string.IsNullOrWhiteSpace(firstPerson) || firstPerson.Length > 20)
+        {
+            // 警告ポップアップ表示
+            ProfileManager.Instance.ShowWarningFpPopup();
+            return;
+        }
+
+        // プロファイル作成
         ProfileManager.Instance.CreateProfile(
             selectedModelIndex,
             title,
             chara,
             tone,
             firstPerson
-            );
+        );
+
+        // 保存成功ポップアップを表示
+        ProfileManager.Instance.ShowSuccessSavePopup();
 
         Close();
     }

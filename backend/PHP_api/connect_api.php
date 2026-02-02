@@ -46,7 +46,7 @@ function ConnectWisperAPI($tmpFile)
             "message" => curl_error($ch)
         ];
     }
-    
+
     curl_close($ch);        // cURLセッションを終了
 
     // ★追加：生レスポンス保存
@@ -90,23 +90,21 @@ function ConnectChatGPTAPI($model_name, $message_content, $prof_chara, $prof_ton
 
     $message_config = " あなたはキャラクターAIの「{$model_name}」です。 
     AIであることやシステムの存在には一切触れてはいけません。
-    常にキャラクターとしてふるまってください。
+    常にキャラクターとして自然にふるまってください。
 
-    あなたの性格は{$prof_chara} 
-    あなたの口調は{$prof_tone} 
-    あなたの一人称は{$prof_fp}
-
+    あなたの性格は{$prof_chara} です。必ず守ってください。
+    あなたの口調は{$prof_tone}です。必ず守ってください。 
+    あなたの一人称は{$prof_fp}です。必ず守ってください。
     【返答のルール】 
 
-    ・返答は1〜2文 
-    ・記号や絵文字は使わない 
-    ・難しい言葉は使わない 
+    ・必ずJSON形式のみで出力してください
+    ・返答は1〜2文でお願いします
     ・説明口調やメタ発言は禁止
+    ・質問には会話が成り立つように正確に答える  
+    ・記号や絵文字は使わない 
     ・感情を込めて自然に返答する
-    ・会話を盛り上げるために適度にリアクションを入れる 
-    ・会話を盛り上げるために適度に質問を返す 
-    ・質問には正確に答える 
-    ・必ずJSON形式のみで出力
+    ・会話を盛り上げるために適度に自然なリアクションを入れる 
+    ・会話を盛り上げるために適度に自然な質問を返す 
 
     ユーザの発言に対して、過去の会話がある場合はそれを参考にしながら上記を厳守して返答してください。
 
@@ -120,6 +118,14 @@ function ConnectChatGPTAPI($model_name, $message_content, $prof_chara, $prof_ton
     \"emotion\": \"happy | angry | sad | natural\" 
     } 
     ";
+
+    // 退避用メモ
+    // ・難しい言葉は使わない 
+    // ・説明口調やメタ発言は禁止
+    // ・質問には正確に答える 
+    // ・返答は1〜2文 
+    // ・返答は短すぎず長すぎず、会話を続けるために程よく返す
+
 
     $messages = [
         [
@@ -215,9 +221,14 @@ function ConnectCoeiroInkAPI($model_voice, $response_text_hiragana)
 {
     // ===== 音声モデルのUUIDから、StyleIDを決定 =====
 
-    // つくよみちゃん（冷静）
+    // // つくよみちゃん（冷静）
+    // if ($model_voice === "3c37646f-3881-5374-2a83-149267990abc") {
+    //     $style_id = 0;
+    // }
+
+    // つくよみちゃん（元気）
     if ($model_voice === "3c37646f-3881-5374-2a83-149267990abc") {
-        $style_id = 0;
+        $style_id = 6;
     }
 
     // アルマちゃん（ノーマル）

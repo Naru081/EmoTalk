@@ -26,10 +26,14 @@ public class WhisperClient : MonoBehaviour
     {
         if (!res.success || string.IsNullOrEmpty(res.text))
         {
-            Debug.LogError("Whisper���s: " + res.message);
+            SEManager.Instance?.PlayWhisperError();
+
+            Debug.LogError("Whisper_response: " + res.message);
             OnWhisperCompleted?.Invoke("");
             return;
         }
+
+        SEManager.Instance?.PlayWhisperSuccess();
 
         //Debug.Log("Whisper成功: " + res.text);
         OnWhisperCompleted?.Invoke(res.text);

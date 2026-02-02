@@ -39,6 +39,22 @@ public class TopController : MonoBehaviour
 
     private Base64WavPlayer wavPlayer;
 
+    // 入力受付禁止ポップアップ
+    [Header("Popups")]
+    public PopupManager maskSendPopup;
+
+    IEnumerator OpenNextFrame(PopupManager popup)
+    {
+        yield return null; // 次のフレームまで待機
+        popup.Open();
+    }
+
+    IEnumerator CloseNextFrame(PopupManager popup)
+    {
+        yield return null; // 次のフレームまで待機
+        popup.Close();
+    }
+
     void Awake()
     {
         wavPlayer = FindObjectOfType<Base64WavPlayer>();
@@ -52,7 +68,7 @@ public class TopController : MonoBehaviour
     public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
 
     // ngrok http 80で起動したURLを指定すること
-    //public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
+    // public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php"
 
     [Tooltip("通信失敗時に従来のテスト返信を出す（デバッグ用）")]
     public bool fallbackToDebugReply = true;
@@ -124,7 +140,10 @@ public class TopController : MonoBehaviour
         // 入力欄クリア
         chatInput.text = "";
 
-        // AIに送信
+        // AIに送信と同時に入力受付を禁止にする
+        maskSendPopup.Open();
+        StartCoroutine(OpenNextFrame(maskSendPopup));
+
         StartCoroutine(SendMessageToAI(rawMsg));
     }
 
@@ -141,6 +160,10 @@ public class TopController : MonoBehaviour
         // ▼ ユーザの吹き出しを追加
         AddLogItem(rawText, true);
         ScrollToBottom();
+
+        // AIに送信と同時に入力受付を禁止にする
+        maskSendPopup.Open();
+        StartCoroutine(OpenNextFrame(maskSendPopup));
 
         // ChatGPT APIに送信
         StartCoroutine(SendMessageToAI(rawText));
@@ -194,7 +217,7 @@ public class TopController : MonoBehaviour
                 Debug.Log("感情タグ: " + emotion);
 
                 string model_voice = res.model_voice;
-                 Debug.Log("モデル音声: " + model_voice);
+                Debug.Log("モデル音声: " + model_voice);
 
                 // CoeiroInkに送信
                 StartCoroutine(RequestCoeiroInk(model_voice, responseText_hiragana));
@@ -245,7 +268,12 @@ public class TopController : MonoBehaviour
                     Debug.LogError("モデルPrefabのルートに Base64WavPlayer が付いていません");
                     return;
                 }
+
                 player.PlayFromBase64(voiceBase64);
+
+                // 送信処理完了でポップアップ閉じる
+                maskSendPopup.Open();
+                StartCoroutine(CloseNextFrame(maskSendPopup));
             },
             error =>
             {

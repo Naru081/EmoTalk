@@ -68,7 +68,7 @@ public class TopController : MonoBehaviour
     public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
 
     // ngrok http 80で起動したURLを指定すること
-    // public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php"
+    // public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
 
     [Tooltip("通信失敗時に従来のテスト返信を出す（デバッグ用）")]
     public bool fallbackToDebugReply = true;

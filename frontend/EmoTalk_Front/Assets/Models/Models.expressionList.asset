@@ -13,4 +13,18 @@ MonoBehaviour:
   m_Name: Models.expressionList
   m_EditorClassIdentifier: 
   CubismExpressionObjects:
-  - {fileID: 11400000, guid: 3c395d2ca35264333a7cff0f71d024d4, type: 2}
+  - {fileID: 11400000, guid: f1e0b9acd86d878479138c1078d51860, type: 2}
+  - {fileID: 11400000, guid: ef1c2fded36f8124187803755bb3ed4c, type: 2}
+  - {fileID: 11400000, guid: 612cb7b082cabf84386b2cca00c5a51b, type: 2}
+  - {fileID: 11400000, guid: 8b57327eef7312441ac14e4340538e4e, type: 2}
+  - {fileID: 11400000, guid: dcbe99ccae525ac439c753153e7578c7, type: 2}
+  - {fileID: 11400000, guid: 43f60a0613e631b45b1c4157a7acd043, type: 2}
+  - {fileID: 11400000, guid: 23aca994d6eb1284e97dd2525f2f1d92, type: 2}
+  - {fileID: 11400000, guid: fe35e09e71c5d834cb0087a9d3155039, type: 2}
+  - {fileID: 11400000, guid: cf97308be221bfa449a024218923d7fc, type: 2}
+  - {fileID: 11400000, guid: 49d9e688401ce4348b82c96073664cfb, type: 2}
+  - {fileID: 11400000, guid: ba4f5a95072ee6549bfaf542a7497903, type: 2}
+  - {fileID: 11400000, guid: c3f030c2ae5702945b2b9c74b9da3607, type: 2}
+  - {fileID: 11400000, guid: 5092a4652ef29cb42a9b5c34c5ec74e4, type: 2}
+  - {fileID: 11400000, guid: 193a5316b11978c41848d56bf99beaff, type: 2}
+  - {fileID: 11400000, guid: 018584c60e115bb47ae9f18f61378fbb, type: 2}

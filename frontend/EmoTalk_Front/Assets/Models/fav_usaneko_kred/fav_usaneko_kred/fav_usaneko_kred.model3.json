@@ -14,131 +14,131 @@
 		"Expressions": [
 			{
 				"Name": "01.blush",
-				"File": "animation/01.blush.exp3.json"
+				"File": "01.blush.exp3.json"
 			},
 			{
 				"Name": "02.angry",
-				"File": "animation/02.angry.exp3.json"
+				"File": "02.angry.exp3.json"
 			},
 			{
 				"Name": "03.cry",
-				"File": "animation/03.cry.exp3.json"
+				"File": "03.cry.exp3.json"
 			},
 			{
 				"Name": "04.pale",
-				"File": "animation/04.pale.exp3.json"
+				"File": "04.pale.exp3.json"
 			},
 			{
 				"Name": "05.highlight_onoff",
-				"File": "animation/05.highlight_onoff.exp3.json"
+				"File": "05.highlight_onoff.exp3.json"
 			},
 			{
 				"Name": "06.wink_R",
-				"File": "animation/06.wink_R.exp3.json"
+				"File": "06.wink_R.exp3.json"
 			},
 			{
 				"Name": "07.wink_L",
-				"File": "animation/07.wink_L.exp3.json"
+				"File": "07.wink_L.exp3.json"
 			},
 			{
 				"Name": "08.XD",
-				"File": "animation/08.XD.exp3.json"
+				"File": "08.XD.exp3.json"
 			},
 			{
 				"Name": "09.oo",
-				"File": "animation/09.oo.exp3.json"
+				"File": "09.oo.exp3.json"
 			},
 			{
 				"Name": "10.jitome",
-				"File": "animation/10.jitome.exp3.json"
+				"File": "10.jitome.exp3.json"
 			},
 			{
 				"Name": "11.perori",
-				"File": "animation/11.perori.exp3.json"
+				"File": "11.perori.exp3.json"
 			},
 			{
 				"Name": "12.cat_mouth",
-				"File": "animation/12.cat_mouth.exp3.json"
+				"File": "12.cat_mouth.exp3.json"
 			},
 			{
 				"Name": "13.surprised",
-				"File": "animation/13.surprised.exp3.json"
+				"File": "13.surprised.exp3.json"
 			},
 			{
 				"Name": "14.kukkoro",
-				"File": "animation/14.kukkoro.exp3.json"
+				"File": "14.kukkoro.exp3.json"
 			},
 			{
 				"Name": "15.angry2",
-				"File": "animation/15.angry2.exp3.json"
+				"File": "15.angry2.exp3.json"
 			},
 			{
 				"Name": "16.gonyogonyo",
-				"File": "animation/16.gonyogonyo.exp3.json"
+				"File": "16.gonyogonyo.exp3.json"
 			},
 			{
 				"Name": "17.sleep",
-				"File": "animation/17.sleep.exp3.json"
+				"File": "17.sleep.exp3.json"
 			},
 			{
 				"Name": "costume",
-				"File": "animation/costume.exp3.json"
+				"File": "costume.exp3.json"
 			},
 			{
 				"Name": "costume2",
-				"File": "animation/costume2.exp3.json"
+				"File": "costume2.exp3.json"
 			},
 			{
 				"Name": "fx_01_heart",
-				"File": "animation/fx_01_heart.exp3.json"
+				"File": "fx_01_heart.exp3.json"
 			},
 			{
 				"Name": "fx_02_pale2",
-				"File": "animation/fx_02_pale2.exp3.json"
+				"File": "fx_02_pale2.exp3.json"
 			},
 			{
 				"Name": "fx_03_note",
-				"File": "animation/fx_03_note.exp3.json"
+				"File": "fx_03_note.exp3.json"
 			},
 			{
 				"Name": "fx_04_sweat",
-				"File": "animation/fx_04_sweat.exp3.json"
+				"File": "fx_04_sweat.exp3.json"
 			},
 			{
 				"Name": "fx_05_sweat_2",
-				"File": "animation/fx_05_sweat_2.exp3.json"
+				"File": "fx_05_sweat_2.exp3.json"
 			},
 			{
 				"Name": "fx_06_surprised",
-				"File": "animation/fx_06_surprised.exp3.json"
+				"File": "fx_06_surprised.exp3.json"
 			},
 			{
 				"Name": "fx_07_question",
-				"File": "animation/fx_07_question.exp3.json"
+				"File": "fx_07_question.exp3.json"
 			},
 			{
 				"Name": "fx_08_exclamation",
-				"File": "animation/fx_08_exclamation.exp3.json"
+				"File": "fx_08_exclamation.exp3.json"
 			},
 			{
 				"Name": "fx_09_swirl",
-				"File": "animation/fx_09_swirl.exp3.json"
+				"File": "fx_09_swirl.exp3.json"
 			},
 			{
 				"Name": "fx_10_yellowline",
-				"File": "animation/fx_10_yellowline.exp3.json"
+				"File": "fx_10_yellowline.exp3.json"
 			},
 			{
 				"Name": "fx_11_star",
-				"File": "animation/fx_11_star.exp3.json"
+				"File": "fx_11_star.exp3.json"
 			},
 			{
 				"Name": "fx_12_zzz",
-				"File": "animation/fx_12_zzz.exp3.json"
+				"File": "fx_12_zzz.exp3.json"
 			},
 			{
 				"Name": "fx_13_angry",
-				"File": "animation/fx_13_angry.exp3.json"
+				"File": "fx_13_angry.exp3.json"
 			}
 		]
 	},

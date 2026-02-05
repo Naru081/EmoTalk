@@ -1,10 +1,14 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class Base64WavPlayer : MonoBehaviour
 {
     // 互換用：未指定ならこれを使う
     public AudioSource defaultAudioSource;
+
+    // 音声再生終了イベント
+    public Action OnVoiceFinished;
 
     private void Awake()
     {
@@ -14,7 +18,7 @@ public class Base64WavPlayer : MonoBehaviour
         }
     }
 
-    // ★再生先を指定できる版
+    // 再生先を指定可能
     public void PlayFromBase64(string base64, AudioSource target)
     {
         AudioSource audioSource = target != null ? target : defaultAudioSource;
@@ -49,13 +53,29 @@ public class Base64WavPlayer : MonoBehaviour
             return;
         }
 
+        StopAllCoroutines(); // 既存の再生待機を停止
         audioSource.clip = clip;
         audioSource.Play();
 
         Debug.Log($"CoeiroInk 音声再生開始: {clip.length:F2} 秒");
+
+        // 再生終了を検知
+        StartCoroutine(WaitVoiceEnd(audioSource));
     }
 
-    // 既存コード互換（呼び出し側をすぐ変えられない場合用）
+    // 音声再生終了待機コルーチン
+    private IEnumerator WaitVoiceEnd(AudioSource source)
+    {
+        while (source != null && source.isPlaying)
+        {
+            yield return null;
+        }
+
+        Debug.Log("CoeiroInk 音声再生終了");
+        OnVoiceFinished?.Invoke();
+    }
+
+    // 既存コード互換（呼び出し側を変えられない場合用）
     public void PlayFromBase64(string base64)
     {
         PlayFromBase64(base64, null);

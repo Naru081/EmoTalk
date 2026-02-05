@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f401bb1c5c52514eba33c0c2ffdc8ff, type: 3}
+  m_Name: lanhei.expressionList
+  m_EditorClassIdentifier: 
+  CubismExpressionObjects:
+  - {fileID: 11400000, guid: 987788b07a3f80d48a88ad64f49ca528, type: 2}
+  - {fileID: 11400000, guid: f900526f04cef104d92c554098219fb8, type: 2}
+  - {fileID: 11400000, guid: fb0c6086ae1b41840ae6f1c8f34f48fa, type: 2}
+  - {fileID: 11400000, guid: e26356582ebc34e46b28479673471c0b, type: 2}

@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: export.expressionList
   m_EditorClassIdentifier: 
   CubismExpressionObjects:
-  - {fileID: 11400000, guid: 930c453bb2b324717bc7f7e35a80d3a7, type: 2}
-  - {fileID: 11400000, guid: 8942890f5f8b741dca2e120cd3f242a9, type: 2}
-  - {fileID: 11400000, guid: c62921706b76f4c1194033b528cc743a, type: 2}
-  - {fileID: 11400000, guid: d8e2a8de006ef4e3582a10cf065eec2d, type: 2}
   - {fileID: 11400000, guid: 14de6015b6dfb49abaa202da033e9705, type: 2}
-  - {fileID: 11400000, guid: 0ee1c7a6b7fca4d6fb054f9e7bd5b2ca, type: 2}
   - {fileID: 11400000, guid: 823743af6c1764bb2b3ebb315aa07fe3, type: 2}
+  - {fileID: 11400000, guid: c62921706b76f4c1194033b528cc743a, type: 2}
+  - {fileID: 11400000, guid: 930c453bb2b324717bc7f7e35a80d3a7, type: 2}

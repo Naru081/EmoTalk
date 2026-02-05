@@ -6,17 +6,37 @@
 		{
 			"Id": "ParamEye_k3",
 			"Value": 1,
-			"Blend": "Add"
+			"Blend": "Overwrite"
 		},
 		{
 			"Id": "shimeji",
 			"Value": 1,
-			"Blend": "Add"
+			"Blend": "Overwrite"
 		},
 		{
 			"Id": "doukou",
 			"Value": 1,
-			"Blend": "Add"
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "ParamCheek",
+			"Value": 1,
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "piace",
+			"Value": 2,
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "ParamBrowRForm",
+			"Value": -1,
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "ParamBrowLForm",
+			"Value": 0.494,
+			"Blend": "Overwrite"
 		}
 	]
 }

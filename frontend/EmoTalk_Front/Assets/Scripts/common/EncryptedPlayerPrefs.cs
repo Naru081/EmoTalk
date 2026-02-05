@@ -1,26 +1,32 @@
 using UnityEngine;
 
-/// <summary>
-/// 暗号化PlayerPrefs
-/// </summary>
+// 暗号化されたPlayerPrefsを扱うクラス
 public static class EncryptedPlayerPrefs
 {
+    // ================ 保存系 ===================
 
+    // INT型の保存
     public static void SaveInt(string key, int value)
     {
         string valueString = value.ToString();
         SaveString(key, valueString);
     }
+
+    // FLOAT型の保存
     public static void SaveFloat(string key, float value)
     {
         string valueString = value.ToString();
         SaveString(key, valueString);
     }
+
+    // BOOL型の保存
     public static void SaveBool(string key, bool value)
     {
         string valueString = value.ToString();
         SaveString(key, valueString);
     }
+
+    // STRING型の保存
     public static void SaveString(string key, string value)
     {
         string encKey = Enc.EncryptString(key);
@@ -29,53 +35,68 @@ public static class EncryptedPlayerPrefs
         PlayerPrefs.Save();
     }
 
+    // ================ 読み込み（取得）系 ===================
+
+    // INT型の読み込み
     public static int LoadInt(string key, int defult)
     {
         string defaultValueString = defult.ToString();
         string valueString = LoadString(key, defaultValueString);
-
         int res;
+
         if (int.TryParse(valueString, out res))
         {
             return res;
         }
         return defult;
     }
+
+    // FLOAT型の読み込み
     public static float LoadFloat(string key, float defult)
     {
         string defaultValueString = defult.ToString();
         string valueString = LoadString(key, defaultValueString);
-
         float res;
+
         if (float.TryParse(valueString, out res))
         {
             return res;
         }
         return defult;
     }
+
+    // BOOL型の読み込み
     public static bool LoadBool(string key, bool defult)
     {
         string defaultValueString = defult.ToString();
         string valueString = LoadString(key, defaultValueString);
-
         bool res;
+
         if (bool.TryParse(valueString, out res))
         {
             return res;
         }
         return defult;
     }
+
+    // STRING型の読み込み
     public static string LoadString(string key, string defult)
     {
         string encKey = Enc.EncryptString(key);
         string encString = PlayerPrefs.GetString(encKey, string.Empty);
+
         if (string.IsNullOrEmpty(encString))
         {
             return defult;
         }
+
         string decryptedValueString = Enc.DecryptString(encString);
         return decryptedValueString;
     }
+
+    // ================ 削除系 ===================
+
+    // 指定したキーのデータを削除
     public static void DeleteKey(string key)
     {
         string encKey = Enc.EncryptString(key);
@@ -83,6 +104,7 @@ public static class EncryptedPlayerPrefs
         PlayerPrefs.Save();
     }
 
+    // すべてのデータを削除
     public static void DeleteAll()
     {
         PlayerPrefs.DeleteAll();
@@ -90,10 +112,10 @@ public static class EncryptedPlayerPrefs
     }
 
 
-    /// <summary>
-    /// 文字列の暗号化・復号化
-    /// 参考：http://dobon.net/vb/dotnet/string/encryptstring.html
-    /// </summary>
+    // ================ 文字列の暗号化・復号化 ===================
+    // 参考：http://dobon.net/vb/dotnet/string/encryptstring.html
+
+    // 内部クラス：文字列の暗号化・復号化を行う
     private static class Enc
     {
         const string PASS = "ynmfNqUYih5sFNQFu3ju";
@@ -111,12 +133,7 @@ public static class EncryptedPlayerPrefs
             rijndael.IV = iv;
         }
 
-
-        /// <summary>
-        /// 文字列を暗号化する
-        /// </summary>
-        /// <param name="sourceString">暗号化する文字列</param>
-        /// <returns>暗号化された文字列</returns>
+        // 文字列を暗号化
         public static string EncryptString(string sourceString)
         {
             //文字列をバイト型配列に変換する
@@ -131,11 +148,7 @@ public static class EncryptedPlayerPrefs
             return System.Convert.ToBase64String(encBytes);
         }
 
-        /// <summary>
-        /// 暗号化された文字列を復号化する
-        /// </summary>
-        /// <param name="sourceString">暗号化された文字列</param>
-        /// <returns>復号化された文字列</returns>
+        // 暗号化された文字列を復号化
         public static string DecryptString(string sourceString)
         {
             //文字列をバイト型配列に戻す
@@ -151,14 +164,7 @@ public static class EncryptedPlayerPrefs
             return System.Text.Encoding.UTF8.GetString(decBytes);
         }
 
-        /// <summary>
-        /// パスワードから共有キーと初期化ベクタを生成する
-        /// </summary>
-        /// <param name="password">基になるパスワード</param>
-        /// <param name="keySize">共有キーのサイズ（ビット）</param>
-        /// <param name="key">作成された共有キー</param>
-        /// <param name="blockSize">初期化ベクタのサイズ（ビット）</param>
-        /// <param name="iv">作成された初期化ベクタ</param>
+        // パスワードから共有キーと初期化ベクタを生成
         private static void GenerateKeyFromPassword(int keySize, out byte[] key, int blockSize, out byte[] iv)
         {
             //パスワードから共有キーと初期化ベクタを作成する

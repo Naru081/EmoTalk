@@ -13,24 +13,21 @@ MonoBehaviour:
   m_Name: 07.wink_L.exp3
   m_EditorClassIdentifier: 
   Type: Live2D Expression
-  FadeInTime: 1
-  FadeOutTime: 1
+  FadeInTime: 0.5
+  FadeOutTime: 0.5
   Parameters:
-  - Id: Param81
-    Value: 1
-    Blend: 1
   - Id: e2_Param519
     Value: 0
-    Blend: 1
+    Blend: 0
+  - Id: e_Param110
+    Value: 0
+    Blend: 0
   - Id: e2_Param3
     Value: 0
-    Blend: 1
-  - Id: e2_Param4
+    Blend: 0
+  - Id: e2_Param17
     Value: 0
-    Blend: 1
-  - Id: e2_Param55
+    Blend: 0
+  - Id: e_Param62
     Value: 0
-    Blend: 1
-  - Id: Param13
-    Value: 0
-    Blend: 1
+    Blend: 0

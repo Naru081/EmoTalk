@@ -1,0 +1,25 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "lanhei.moc3",
+		"Textures": [
+			"lanhei.4096/texture_00.png",
+			"lanhei.4096/texture_01.png",
+			"lanhei.4096/texture_02.png"
+		],
+		"Physics": "lanhei.physics3.json",
+		"DisplayInfo": "lanhei.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}

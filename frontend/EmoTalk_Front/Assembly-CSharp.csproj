@@ -66,6 +66,7 @@
     <Compile Include="Assets/Scripts/02Top_Scripts/DeleteConfirmPopup.cs" />
     <Compile Include="Assets/Scripts/04SE/SEManager.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/CreateProfileWindow.cs" />
+    <Compile Include="Assets/Scripts/03Motion_Scripts/Live2DExpressionController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileListWrapper.cs" />
     <Compile Include="Assets/Scripts/common/UserData.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/DeleteDeniedPopup.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Assets/Scripts/02Top_Scripts/WhisperClient.cs" />
     <Compile Include="Assets/Scripts/01Login_Scripts/LoginController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/TopController.cs" />
+    <Compile Include="Assets/Scripts/03Motion_Scripts/Live2DLookAtSimple.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/WavUtility.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/TopSceneController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/Base64WavPlayer.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Assets/Scripts/04SE/UISEPlayer.cs" />
     <Compile Include="Assets/Scripts/common/GetProfileList.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/PopupManager.cs" />
+    <Compile Include="Assets/Scripts/03Motion_Scripts/Live2DBreathController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfilePropertyWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileData.cs" />
     <Compile Include="Assets/Scripts/common/apiconnect.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileEditWindow.cs" />
     <Compile Include="Assets/Scripts/common/requestdata.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/PropertyWindow.cs" />
+    <Compile Include="Assets/Scripts/03Motion_Scripts/Live2DBlinkController.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ProfileLIstWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/ModelChangeWindow.cs" />
     <Compile Include="Assets/Scripts/02Top_Scripts/LogoutPopup.cs" />

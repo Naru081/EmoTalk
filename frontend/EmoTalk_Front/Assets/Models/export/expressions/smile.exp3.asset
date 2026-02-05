@@ -18,13 +18,28 @@ MonoBehaviour:
   Parameters:
   - Id: ParamEyeLOpen
     Value: -1
-    Blend: 1
+    Blend: 0
   - Id: ParamEyeLSmile
     Value: 1
-    Blend: 1
+    Blend: 0
   - Id: ParamEyeROpen
     Value: -1
-    Blend: 1
+    Blend: 0
   - Id: ParamEyeRSmile
     Value: 1
-    Blend: 1
+    Blend: 0
+  - Id: ParamCheek
+    Value: 1
+    Blend: 0
+  - Id: piace
+    Value: 2
+    Blend: 0
+  - Id: ParamEye_k3
+    Value: 1
+    Blend: 0
+  - Id: ParamBrowLForm
+    Value: 1
+    Blend: 0
+  - Id: ParamBrowRForm
+    Value: 1
+    Blend: 0

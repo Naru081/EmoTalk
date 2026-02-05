@@ -1,6 +1,6 @@
 using UnityEngine;
 
-
+// ユーザーデータを保存・取得するクラス
 public static class UserData
 {
     private const string KEY_USER_ID = "user_id";
@@ -46,7 +46,7 @@ public static class UserData
         return PlayerPrefs.GetInt(KEY_USER_CURRENT_PROF, -1);
     }
 
-    // ログアウト時にユーザーデータをクリア
+    // ログアウト時に全ユーザーデータをクリア
     public static void ClearUserData()
     {
         PlayerPrefs.DeleteKey(KEY_USER_ID);

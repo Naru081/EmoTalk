@@ -58,13 +58,14 @@ public static class ApiConnect
         string raw = request.downloadHandler.text.Trim();
         Debug.Log("レスポンス生データ: [" + raw + "]");
 
-        // ★ JSONじゃなかったら即エラーにする
+        // レスポンスデータがJSONじゃなかったら即エラーにする
         if (!raw.StartsWith("{"))
         {
             onError?.Invoke("JSONではありません:\n" + raw);
             yield break;
         }
 
+        // JSONをC#のクラスに変換
         try
         {
             TResponse res = JsonUtility.FromJson<TResponse>(raw);
@@ -86,8 +87,10 @@ public static class ApiConnect
         Action<string> onError = null
         )
     {
+        // URLの作成
         string url = BASE_URL + endpoint;
 
+        // フォームデータの作成
         WWWForm form = new WWWForm();
         form.AddBinaryData(
             "audio",                    // 送信するファイルのキー名 (php側で$_FILES['audio']で受け取る)
@@ -96,25 +99,31 @@ public static class ApiConnect
             "audio/wav"
         );
 
+        // 通信リクエストの作成
         UnityWebRequest request = UnityWebRequest.Post(url, form);
 
+        // 通信実行
         yield return request.SendWebRequest();
 
+        // 通信エラーのチェック
         if (request.result != UnityWebRequest.Result.Success)
         {
             onError?.Invoke("通信エラー:" + request.error);
             yield break;
         }
 
+        // レスポンスの取得
         string raw = request.downloadHandler.text.Trim();
         Debug.Log("レスポンス生データ: [" + raw + "]");
 
+        // レスポンスデータがJSONじゃなかったら即エラー出力
         if (!raw.StartsWith("{"))
         {
             onError?.Invoke("JSONではありません:\n" + raw);
             yield break;
         }
 
+        // JSONをC#のクラスに変換
         try
         {
             TResponse res = JsonUtility.FromJson<TResponse>(raw);

@@ -4,14 +4,29 @@
 	"FadeOutTime": 0.5,
 	"Parameters": [
 		{
-			"Id": "ParamEye_k2",
-			"Value": 1,
-			"Blend": "Add"
-		},
-		{
 			"Id": "shock",
 			"Value": 1,
-			"Blend": "Add"
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "white_black",
+			"Value": 0,
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "piace",
+			"Value": 2,
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "ParamBrowLForm",
+			"Value": -1,
+			"Blend": "Overwrite"
+		},
+		{
+			"Id": "ParamBrowRForm",
+			"Value": 0.122,
+			"Blend": "Overwrite"
 		}
 	]
 }

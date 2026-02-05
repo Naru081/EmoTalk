@@ -16,9 +16,18 @@ MonoBehaviour:
   FadeInTime: 0.5
   FadeOutTime: 0.5
   Parameters:
-  - Id: ParamEye_k2
-    Value: 1
-    Blend: 1
   - Id: shock
     Value: 1
-    Blend: 1
+    Blend: 0
+  - Id: white_black
+    Value: 0
+    Blend: 0
+  - Id: piace
+    Value: 2
+    Blend: 0
+  - Id: ParamBrowLForm
+    Value: -1
+    Blend: 0
+  - Id: ParamBrowRForm
+    Value: 0.122
+    Blend: 0

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Networking;
+using TMPro;
 
 public class TopController : MonoBehaviour
 {
@@ -37,11 +38,38 @@ public class TopController : MonoBehaviour
     public InputField chatInput;
     public Button sendButton;
 
+    // 会話のネーム表示用
+    [Header("Chat Log Name")]
+    public GameObject fnameUserPrefab;
+    public GameObject fnameAiPrefab; 
+
+    [Header("Chat Log Spacing")]
+    [Tooltip("同じ話者が連続する時の間隔")]
+    public float sameSpeakerGap = 12f;
+
+    [Tooltip("話者が切り替わる時の間隔")]
+    public float changeSpeakerGap = 28f;
+
+
+    // 直前の話者情報
+    private bool hasLastSpeaker = false;
+    private bool lastSpeakerIsUser = false;
+
+
+
+    // 音声再生用
     private Base64WavPlayer wavPlayer;
+
+    // 音声再生中フラグ
+    private bool isVoicePlaying = false;
 
     // 入力受付禁止ポップアップ
     [Header("Popups")]
     public PopupManager maskSendPopup;
+
+    [Header("Log Wrap")]
+    public float forceWrapWidth; // 強制改行幅（TMP用）　
+
 
     IEnumerator OpenNextFrame(PopupManager popup)
     {
@@ -68,7 +96,7 @@ public class TopController : MonoBehaviour
     public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
 
     // ngrok http 80で起動したURLを指定すること
-    // public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
+    //public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
 
     [Tooltip("通信失敗時に従来のテスト返信を出す（デバッグ用）")]
     public bool fallbackToDebugReply = true;
@@ -216,11 +244,13 @@ public class TopController : MonoBehaviour
                 string emotion = res.emotion;
                 Debug.Log("感情タグ: " + emotion);
 
+                var model = ModelManager.Instance.CurrentModel;
+
                 string model_voice = res.model_voice;
                 Debug.Log("モデル音声: " + model_voice);
 
                 // CoeiroInkに送信
-                StartCoroutine(RequestCoeiroInk(model_voice, responseText_hiragana));
+                StartCoroutine(RequestCoeiroInk(model_voice, responseText_hiragana, emotion));
             },
             error =>
             {
@@ -234,7 +264,7 @@ public class TopController : MonoBehaviour
     // ==============================
     // CoeiroInkへ音声生成リクエスト及び再生処理
     // ==============================
-    private IEnumerator RequestCoeiroInk(string model_voice, string responseText_hiragana)
+    private IEnumerator RequestCoeiroInk(string model_voice, string responseText_hiragana, string emotion)
     {
         yield return ApiConnect.Post<CoeiroInkRequest, CoeiroInkResponse>(
             "PHP_api/coeiroink_api.php",
@@ -269,11 +299,27 @@ public class TopController : MonoBehaviour
                     return;
                 }
 
-                player.PlayFromBase64(voiceBase64);
+                var exp = model.GetComponent<Live2DExpressionController>();
+                Live2DExpressionController expLocal = exp; // ローカルコピー
 
-                // 送信処理完了でポップアップ閉じる
-                maskSendPopup.Open();
-                StartCoroutine(CloseNextFrame(maskSendPopup));
+                player.OnVoiceFinished = () =>
+                {
+                    Debug.Log("表情を元に戻す");
+                    isVoicePlaying = false;
+                    exp.ReturnToNatural();
+
+                    maskSendPopup.Open();
+                    StartCoroutine(CloseNextFrame(maskSendPopup));
+                };
+                // 音声再生開始とともに表情を切り替え
+
+                if (exp != null && !isVoicePlaying)
+                {
+                    exp.SetExpression(emotion); // 感情タグに基づいて表情変更
+                }
+
+                isVoicePlaying = true;
+                player.PlayFromBase64(voiceBase64);
             },
             error =>
             {
@@ -297,15 +343,60 @@ public class TopController : MonoBehaviour
     // ==============================
     public void AddLogItem(string message, bool isUser)
     {
-        GameObject prefab = isUser ? logItemUserPrefab : logItemEmoPrefab;
+        // 直前の話者との関係で、先頭にスペースを入れる（見やすさ）
+        float gap = sameSpeakerGap;
 
+        if (hasLastSpeaker && lastSpeakerIsUser != isUser)
+        {
+            gap = changeSpeakerGap; // 話者が切り替わったら広め
+        }
+
+        if (hasLastSpeaker) // 最初の1個目は不要なら入れない
+        {
+            CreateSpacer(gap);
+        }
+
+        // 名前（Fname_user / Fname_ai）を生成
+        GameObject namePrefab = isUser ? fnameUserPrefab : fnameAiPrefab;
+        if (namePrefab != null)
+        {
+            Instantiate(namePrefab, logContent);
+        }
+        else
+        {
+            Debug.LogWarning("Fname prefab が未設定です（fnameUserPrefab / fnameAiPrefab）。");
+        }
+
+        // 吹き出し（Logitem_User / Logitem_Emo）を生成
+        GameObject prefab = isUser ? logItemUserPrefab : logItemEmoPrefab;
         GameObject item = Instantiate(prefab, logContent);
-        Text text = item.GetComponentInChildren<Text>();
-        text.text = message;
+
+        TMP_Text tmpText = item.GetComponentInChildren<TMP_Text>(true);
+        if (tmpText == null)
+        {
+            Debug.LogError("ログアイテムPrefab内に TMP_Text が見つかりません。");
+            return;
+        }
+
+        // テキストを入れる
+        tmpText.text = message;
+
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(item.GetComponent<RectTransform>());
+        Canvas.ForceUpdateCanvases();
+
+        float maxWidth = forceWrapWidth;
+        Debug.Log($"[LogWrap] maxWidth(forced)={maxWidth}");
+        tmpText.text = ApplyAutoLineBreakTMP(tmpText, message, maxWidth);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(item.GetComponent<RectTransform>());
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform);
+
+        // 状態更新
+        hasLastSpeaker = true;
+        lastSpeakerIsUser = isUser;
     }
+
 
     // ==============================
     // 会話更新時スクロールを一番下に移動
@@ -382,4 +473,70 @@ public class TopController : MonoBehaviour
         // 指を離した位置が「一定以上右に出ていれば」開く
         isOpen = (ratio >= openThreshold);
     }
+
+    // ==============================
+    // TextMeshPro用自動改行処理
+    // ==============================
+    private string ApplyAutoLineBreakTMP(TMP_Text tmp, string src, float maxWidth)
+    {
+        if (string.IsNullOrEmpty(src)) return src;
+        if (maxWidth <= 0.01f) return src; // 幅が取れないならそのまま
+
+        // 既存の改行は一旦統一（ブログでも Parse 時に \n を外していたのと同じ意図） :contentReference[oaicite:1]{index=1}
+        src = src.Replace("\r\n", "\n");
+
+        System.Text.StringBuilder builder = new System.Text.StringBuilder();
+        System.Text.StringBuilder line = new System.Text.StringBuilder();
+
+        // 文字単位で積む（MeCabなしの簡易版：依存を増やさない）
+        for (int i = 0; i < src.Length; i++)
+        {
+            char c = src[i];
+
+            // 元々の改行は維持
+            if (c == '\n')
+            {
+                builder.Append(line.ToString());
+                builder.Append('\n');
+                line.Clear();
+                continue;
+            }
+
+            // 次の1文字を足した時に横幅に収まるかを計測
+            string candidate = line.ToString() + c;
+            Vector2 preferred = tmp.GetPreferredValues(candidate, maxWidth, 0f);
+
+            if (preferred.x <= maxWidth || line.Length == 0)
+            {
+                line.Append(c);
+            }
+            else
+            {
+                // 収まらないので改行
+                builder.Append(line.ToString());
+                builder.Append('\n');
+                line.Clear();
+                line.Append(c);
+            }
+        }
+
+        builder.Append(line.ToString());
+        return builder.ToString();
+    }
+
+    // ==============================
+    // ログ間スペーサー生成
+    // ==============================
+
+    private void CreateSpacer(float height)
+    {
+        GameObject spacer = new GameObject("LogSpacer", typeof(RectTransform), typeof(LayoutElement));
+        spacer.transform.SetParent(logContent, false);
+
+        LayoutElement le = spacer.GetComponent<LayoutElement>();
+        le.minHeight = height;
+        le.preferredHeight = height;
+        le.flexibleHeight = 0f;
+    }
+
 }

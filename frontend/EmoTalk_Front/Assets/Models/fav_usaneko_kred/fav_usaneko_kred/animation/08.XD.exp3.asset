@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 08.XD.exp3
   m_EditorClassIdentifier: 
   Type: Live2D Expression
-  FadeInTime: 0
-  FadeOutTime: 0
+  FadeInTime: 0.5
+  FadeOutTime: 0.5
   Parameters:
   - Id: e2_Param519
     Value: 1

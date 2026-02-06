@@ -7,51 +7,51 @@ using UnityEngine.Networking;
 public class LoginController : MonoBehaviour
 {
     // ログイン画面
-    [Header("Login UI (Canvas root)")]
-    public InputField loginUserMail;      // Canvas/user_mail
-    public InputField loginUserPass;      // Canvas/user_pass
-    public Text loginErrorText;           // Canvas/error_text
+    [Header("Login UI (Canvas root)")]
+    public InputField loginUserMail; // Canvas/user_mail
+    public InputField loginUserPass; // Canvas/user_pass
+    public Text loginErrorText; // Canvas/error_text
 
     // ローディングパネル
-    [Header("Loading Panel")]
-    public GameObject loadingPanel;       // Canvas/loadingPanel
-    public Text loadingText;              // loadingPanel/loading_text
+    [Header("Loading Panel")]
+    public GameObject loadingPanel; // Canvas/loadingPanel
+    public Text loadingText; // loadingPanel/loading_text
 
 
     // 新規登録パネル
-    [Header("Register Panel")]
-    public GameObject registerPanel;          // Canvas/RegisterPanel
-    public InputField registerNewMail;        // RegisterPanel/Window/new_mail
-    public InputField registerNewPass;        // RegisterPanel/Window/new_pass
-    public Text registerErrorText;            // RegisterPanel/Window/error_text
+    [Header("Register Panel")]
+    public GameObject registerPanel; // Canvas/RegisterPanel
+    public InputField registerNewMail; // RegisterPanel/Window/new_mail
+    public InputField registerNewPass; // RegisterPanel/Window/new_pass
+    public Text registerErrorText; // RegisterPanel/Window/error_text
 
-    public GameObject registerCompletePanel;  // Canvas/RegisterComletePanel
+     public GameObject registerCompletePanel; // Canvas/RegisterComletePanel
 
 
     // パスワード再設定：メール送信パネル
-    [Header("Reset Mail Panel")]
-    public GameObject resetMailPanel;         // Canvas/ResetMailPanel
-    public InputField resetMailUserMail;      // ResetMailPanel/Window/user_mail
-    public Text resetMailErrorText;           // ResetMailPanel/Window/error_text
+    [Header("Reset Mail Panel")]
+    public GameObject resetMailPanel; // Canvas/ResetMailPanel
+    public InputField resetMailUserMail; // ResetMailPanel/Window/user_mail
+    public Text resetMailErrorText; // ResetMailPanel/Window/error_text
 
 
     // パスワード再設定：ワンタイムキーパネル
-    [Header("Reset Key Panel")]
-    public GameObject resetKeyPanel;          // Canvas/ResetKeyPanel
-    public InputField resetKeyInput;          // ResetKeyPanel/Window/key_in
-    public Text resetKeyErrorText;            // ResetKeyPanel/Window/error_text
+    [Header("Reset Key Panel")]
+    public GameObject resetKeyPanel; // Canvas/ResetKeyPanel
+    public InputField resetKeyInput; // ResetKeyPanel/Window/key_in
+    public Text resetKeyErrorText; // ResetKeyPanel/Window/error_text
 
 
     // パスワード再設定：新パスワード入力パネル
-    [Header("Reset Password Panel")]
-    public GameObject resetPasswordPanel;     // Canvas/ResetPasswordPanel
-    public InputField resetNewPass;           // ResetPasswordPanel/Window/new_pass
-    public InputField resetNewPass2;          // ResetPasswordPanel/Window/new_pass2
-    public Text resetPasswordErrorText;       // ResetPasswordPanel/Window/error_text
+    [Header("Reset Password Panel")]
+    public GameObject resetPasswordPanel; // Canvas/ResetPasswordPanel
+    public InputField resetNewPass; // ResetPasswordPanel/Window/new_pass
+    public InputField resetNewPass2; // ResetPasswordPanel/Window/new_pass2
+    public Text resetPasswordErrorText; // ResetPasswordPanel/Window/error_text
 
 
     // パスワード再設定：完了パネル
-    [Header("Reset Complete Panel")]
+    [Header("Reset Complete Panel")]
     public GameObject resetCompletePanel;     // Canvas/ResetCompletePanel
 
     // =====================================================================
@@ -120,7 +120,7 @@ public class LoginController : MonoBehaviour
     // =====================================================================
 
     // ログインボタンを押したときの処理
-    public void OnLoginButtonClicked()
+    public void OnLoginButtonClicked()
     {
         // ユーザが入力したメールアドレスとパスワードを取得
         string email = loginUserMail.text.Trim();
@@ -155,7 +155,7 @@ public class LoginController : MonoBehaviour
                 // 取得したuser_idとuser_mailとtokenをデバイスに保存
                 UserData.SaveUserId(res.user_id);
                 UserData.SaveUserMail(registerNewMail.text);
-                UserData.SaveUserCurrentProfId(res.user_currentprof);;
+                UserData.SaveUserCurrentProfId(res.user_currentprof); ;
 
                 // 自動ログイン用のトークンを暗号化してから暗号化用PlayerPrefsに保存
                 EncryptedPlayerPrefs.SaveString("token", res.token);
@@ -232,7 +232,7 @@ public class LoginController : MonoBehaviour
     // =====================================================================
 
     // 「新規登録」ボタン（Canvas/new_user）を押したときの処理
-    public void OnOpenRegisterPanel()
+    public void OnOpenRegisterPanel()
     {
         if (registerPanel == null) return;
 
@@ -254,7 +254,7 @@ public class LoginController : MonoBehaviour
     }
 
     // 「新規登録」パネルの「登録」ボタンを押したときの処理
-    public void OnRegisterButtonClicked()
+    public void OnRegisterButtonClicked()
     {
         // ユーザが入力したメールアドレスとパスワードを取得
         string email = registerNewMail != null ? registerNewMail.text.Trim() : "";
@@ -319,7 +319,7 @@ public class LoginController : MonoBehaviour
     }
 
     // 「新規登録成功」パネルの閉じるボタンを押したときの処理
-    public void OnCloseRegisterCompletePanel()
+    public void OnCloseRegisterCompletePanel()
     {
         if (registerCompletePanel == null) return;
 
@@ -332,7 +332,7 @@ public class LoginController : MonoBehaviour
     // =====================================================================
 
     // 「パスワードを忘れた場合はこちら」（Canvas/loss_pass）ボタンから呼ぶ
-    public void OnOpenResetMailPanel()
+    public void OnOpenResetMailPanel()
     {
         // すべてのエラーメッセージをクリア
         ClearAllResetErrors();
@@ -350,7 +350,7 @@ public class LoginController : MonoBehaviour
     }
 
     // 各「閉じる」ボタンを押したときの処理（メール/キー/パスワード）
-    public void OnCloseResetPanels()
+    public void OnCloseResetPanels()
     {
         // すべてのパスワード再設定パネルを非表示にする
         if (resetMailPanel != null) resetMailPanel.SetActive(false);
@@ -363,7 +363,7 @@ public class LoginController : MonoBehaviour
     }
 
     //  パスワード再設定：メール送信パネルの「送信」ボタンを押したときの処理
-    public void OnSendResetMailButtonClicked()
+    public void OnSendResetMailButtonClicked()
     {
         // ユーザが入力したメールアドレスを取得
         string email = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
@@ -417,7 +417,7 @@ public class LoginController : MonoBehaviour
     }
 
     // ワンタイムキー入力パネルの「確認」ボタンを押したときの処理
-    public void OnSendResetKeyButtonClicked()
+    public void OnSendResetKeyButtonClicked()
     {
         // ユーザが入力したワンタイムキーとメールアドレスを取得
         string otk = resetKeyInput != null ? resetKeyInput.text.Trim() : "";
@@ -450,7 +450,7 @@ public class LoginController : MonoBehaviour
                 if (res.success)
                 {
                     // ワンタイムキー認証成功時
-                    
+
                     // ワンタイムキー認証をパネルを非表示にし新パスワード入力パネルを表示
                     if (resetKeyPanel != null) resetKeyPanel.SetActive(false);
                     if (resetPasswordPanel != null) resetPasswordPanel.SetActive(true);
@@ -478,7 +478,7 @@ public class LoginController : MonoBehaviour
     }
 
     // 新パスワード入力パネルの「再設定」ボタンを押したときの処理
-    public void OnResetPasswordButtonClicked()
+    public void OnResetPasswordButtonClicked()
     {
         // ユーザが入力したメールアドレスと新しいパスワード、確認用パスワードを取得
         string mail = resetMailUserMail != null ? resetMailUserMail.text.Trim() : "";
@@ -519,7 +519,7 @@ public class LoginController : MonoBehaviour
                 if (res.success)
                 {
                     // パスワードの再設定成功時
-                    
+
                     // パスワード再設定パネルを非表示にし、完了パネルを表示
                     if (resetPasswordPanel != null) resetPasswordPanel.SetActive(false);
                     if (resetCompletePanel != null) resetCompletePanel.SetActive(true);
@@ -543,7 +543,7 @@ public class LoginController : MonoBehaviour
     }
 
     // 完了パネルの閉じるボタンを押したときの処理
-    public void OnCloseResetCompletePanel() // 完了パネルを閉じる
+    public void OnCloseResetCompletePanel() // 完了パネルを閉じる
     {
         if (resetCompletePanel != null)
             resetCompletePanel.SetActive(false);

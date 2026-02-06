@@ -5,9 +5,9 @@ Array
             [name] => audio.wav
             [full_path] => audio.wav
             [type] => audio/wav
-            [tmp_name] => D:\XAMPP\tmp\phpFFA4.tmp
+            [tmp_name] => /Applications/XAMPP/xamppfiles/temp/phpp3VBWD
             [error] => 0
-            [size] => 57324
+            [size] => 49644
         )
 
 )

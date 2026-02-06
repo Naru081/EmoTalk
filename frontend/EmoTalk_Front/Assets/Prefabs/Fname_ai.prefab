@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: EmoTalk
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9ddae43e90f31408b9f6fc100ea2f701, type: 2}
-  m_sharedMaterial: {fileID: -7130098161339199819, guid: 9ddae43e90f31408b9f6fc100ea2f701, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 78437d02f06cf4fdab192c2c40345bed, type: 2}
+  m_sharedMaterial: {fileID: 3084256010378301807, guid: 78437d02f06cf4fdab192c2c40345bed, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -14844,7 +14844,7 @@ GameObject:
   - component: {fileID: 5603538899767143699}
   - component: {fileID: 229675227697586932}
   - component: {fileID: 4768647687055045539}
-  - component: {fileID: 43822258675049471}
+  - component: {fileID: 8306728658828009373}
   - component: {fileID: 9147903444807404479}
   - component: {fileID: 7252226991628882722}
   - component: {fileID: -8681789328093043585}
@@ -16138,7 +16138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 3122833851579467982}
-  model: {fileID: 0}
+  model: {fileID: 5865986744164068214}
   mouthParamId: ParamMouthOpenY
   sampleSize: 1024
   gain: 30
@@ -16156,7 +16156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6802761fed3d8247936c0b72dcfcdd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &43822258675049471
+--- !u!114 &8306728658828009373
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

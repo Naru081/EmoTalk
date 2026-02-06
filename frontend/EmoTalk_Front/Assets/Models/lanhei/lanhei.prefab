@@ -6785,7 +6785,7 @@ MonoBehaviour:
   - {fileID: 6604091563362488075}
   - {fileID: 1771112337731050736}
   _childParts:
-  - {fileID: 0}
+  - {fileID: 6826076186691274314}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -13222,7 +13222,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 99
   _depthOffset: 0.00001
-  _opacity: 0.0961
+  _opacity: 1
 --- !u!1 &1826494871226498963
 GameObject:
   m_ObjectHideFlags: 0
@@ -15424,7 +15424,7 @@ MonoBehaviour:
   - {fileID: 5874520769960428322}
   - {fileID: 2893743290991601785}
   _childParts:
-  - {fileID: 0}
+  - {fileID: 1753306327135711997}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -17951,9 +17951,9 @@ MonoBehaviour:
   - {fileID: 2647268390309310937}
   - {fileID: 4163114563332350869}
   _childParts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4269701167848795886}
+  - {fileID: 501206105662387758}
+  - {fileID: 8284551870786309473}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20401,11 +20401,11 @@ MonoBehaviour:
   - {fileID: 7444263177959603584}
   - {fileID: 6294548206628689954}
   _childParts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2289049352169655880}
+  - {fileID: 3353240415940994225}
+  - {fileID: 6402598844630275681}
+  - {fileID: 8266115917859765180}
+  - {fileID: 6186480902539563609}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20750,23 +20750,23 @@ MonoBehaviour:
   - {fileID: 4977247795728212204}
   - {fileID: 5221733106456938710}
   _childParts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4829646613378848697}
+  - {fileID: 6149188892724644152}
+  - {fileID: 9077440789896546587}
+  - {fileID: 525496496509213238}
+  - {fileID: 3959265578801744732}
+  - {fileID: 8891136627226293050}
+  - {fileID: 52329400194719356}
+  - {fileID: 6144319290881768784}
+  - {fileID: 9010277432023627598}
+  - {fileID: 56785225253176060}
+  - {fileID: 3990847177039310689}
+  - {fileID: 6722821641062241417}
+  - {fileID: 5729205456416851515}
+  - {fileID: 8374690358812802796}
+  - {fileID: 7718483690233847343}
+  - {fileID: 1888335384633603687}
+  - {fileID: 8087674161322842973}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -21325,7 +21325,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 87
   _depthOffset: 0.00001
-  _opacity: 0.31
+  _opacity: 1
 --- !u!1 &2877275624582470322
 GameObject:
   m_ObjectHideFlags: 0
@@ -27743,12 +27743,12 @@ MonoBehaviour:
   _childDrawableRenderers:
   - {fileID: 904728065837289222}
   _childParts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8421476752832763535}
+  - {fileID: 2673921652052905808}
+  - {fileID: 6320234373382090369}
+  - {fileID: 3364860209808912514}
+  - {fileID: 5458155492568902779}
+  - {fileID: 77289259660402218}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -28461,7 +28461,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 98
   _depthOffset: 0.00001
-  _opacity: 0.0961
+  _opacity: 1
 --- !u!1 &3731742233002243176
 GameObject:
   m_ObjectHideFlags: 0
@@ -28965,28 +28965,28 @@ MonoBehaviour:
   - {fileID: 1872523445990577012}
   - {fileID: 62254558225266956}
   _childParts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 6074163365926151410}
+  - {fileID: 5054007358152813342}
+  - {fileID: 440794793510944822}
+  - {fileID: 8978494210558020243}
+  - {fileID: 9040815149176770889}
+  - {fileID: 7019126854582138439}
+  - {fileID: 1426446166519228066}
+  - {fileID: 1053878492657422733}
+  - {fileID: 5678710107048592737}
+  - {fileID: 7179758671092822682}
+  - {fileID: 5440760792329950537}
+  - {fileID: 1369882935437304471}
+  - {fileID: 1313264690095830006}
+  - {fileID: 9144908805188381715}
+  - {fileID: 6425635482222133704}
+  - {fileID: 7591206669740959159}
+  - {fileID: 1050524583492079219}
+  - {fileID: 3363181755716688764}
+  - {fileID: 526497887551564161}
+  - {fileID: 8405384754823974695}
+  - {fileID: 5477760919534820277}
+  - {fileID: 2464321308576708297}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -30028,9 +30028,9 @@ MonoBehaviour:
   _childDrawableRenderers:
   - {fileID: 8830127643433551562}
   _childParts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 7564273996706162451}
+  - {fileID: 7100049470132603156}
+  - {fileID: 8789038048205750663}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -37245,7 +37245,7 @@ GameObject:
   - component: {fileID: 4035962757452264129}
   - component: {fileID: 7743066518290338925}
   - component: {fileID: 770864192703255075}
-  - component: {fileID: 7672751585128977423}
+  - component: {fileID: 7689303624657582907}
   - component: {fileID: 8205947105626704437}
   - component: {fileID: 2408923360873764620}
   - component: {fileID: 9110699170816930043}
@@ -41169,7 +41169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 8855075935768247236}
-  model: {fileID: 0}
+  model: {fileID: 1275473799066179720}
   mouthParamId: ParamMouthOpenY
   sampleSize: 1024
   gain: 30
@@ -41187,7 +41187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6802761fed3d8247936c0b72dcfcdd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7672751585128977423
+--- !u!114 &7689303624657582907
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44967,7 +44967,7 @@ MonoBehaviour:
   - {fileID: 9039826460282701996}
   - {fileID: 5056945801031386363}
   _childParts:
-  - {fileID: 0}
+  - {fileID: 8388870021806121749}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -45698,7 +45698,7 @@ MonoBehaviour:
   - {fileID: 3943803993641950859}
   - {fileID: 5381856428544408896}
   _childParts:
-  - {fileID: 0}
+  - {fileID: 2616483737857345630}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -46628,8 +46628,8 @@ MonoBehaviour:
   - {fileID: 5145309457751937819}
   - {fileID: 4544709982683766236}
   _childParts:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5757271420984586928}
+  - {fileID: 3078584235814040908}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}
@@ -50493,7 +50493,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 85
   _depthOffset: 0.00001
-  _opacity: 0.31
+  _opacity: 1
 --- !u!1 &5978655182289916962
 GameObject:
   m_ObjectHideFlags: 0
@@ -53388,7 +53388,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 117
   _depthOffset: 0.00001
-  _opacity: 0.0961
+  _opacity: 1
 --- !u!1 &6380686491698445676
 GameObject:
   m_ObjectHideFlags: 0
@@ -54994,7 +54994,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 385
   _depthOffset: 0.00001
-  _opacity: 0.31
+  _opacity: 1
 --- !u!1 &6535303019382924236
 GameObject:
   m_ObjectHideFlags: 0
@@ -55240,7 +55240,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 386
   _depthOffset: 0.00001
-  _opacity: 0.31
+  _opacity: 1
 --- !u!1 &6536760742599130414
 GameObject:
   m_ObjectHideFlags: 0
@@ -58406,7 +58406,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 97
   _depthOffset: 0.00001
-  _opacity: 0.0961
+  _opacity: 1
 --- !u!1 &6916912127623680752
 GameObject:
   m_ObjectHideFlags: 0
@@ -59044,7 +59044,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 116
   _depthOffset: 0.00001
-  _opacity: 0.0961
+  _opacity: 1
 --- !u!1 &7018893802455144030
 GameObject:
   m_ObjectHideFlags: 0
@@ -59337,7 +59337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _unmanagedIndex: 61
-  Value: 0.1
+  Value: 0
   _isOverriddenUserParameterRepeat: 0
   _isParameterRepeated: 0
 --- !u!114 &8547817147890143563
@@ -60114,7 +60114,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 88
   _depthOffset: 0.00001
-  _opacity: 0.31
+  _opacity: 1
 --- !u!1 &7105860377678604589
 GameObject:
   m_ObjectHideFlags: 0
@@ -63865,7 +63865,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 89
   _depthOffset: 0.00001
-  _opacity: 0.31
+  _opacity: 1
 --- !u!1 &7482076436288521377
 GameObject:
   m_ObjectHideFlags: 0
@@ -64035,7 +64035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _unmanagedIndex: 0
-  Value: 0.69
+  Value: 0
   _isOverriddenUserParameterRepeat: 0
   _isParameterRepeated: 0
 --- !u!114 &7821418325293413180
@@ -71384,7 +71384,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 115
   _depthOffset: 0.00001
-  _opacity: 0.0961
+  _opacity: 1
 --- !u!1 &8404989997339651508
 GameObject:
   m_ObjectHideFlags: 0
@@ -73801,7 +73801,7 @@ MonoBehaviour:
   _sortingOrder: 0
   _renderOrder: 387
   _depthOffset: 0.00001
-  _opacity: 0.31
+  _opacity: 1
 --- !u!1 &8714481902877725933
 GameObject:
   m_ObjectHideFlags: 0
@@ -75318,7 +75318,7 @@ MonoBehaviour:
   - {fileID: 5281682797062429588}
   - {fileID: 3138939047777875395}
   _childParts:
-  - {fileID: 0}
+  - {fileID: 6340145288510906684}
   _isOverriddenPartMultiplyColors: 0
   _isOverriddenPartScreenColors: 0
   _multiplyColor: {r: 1, g: 1, b: 1, a: 1}

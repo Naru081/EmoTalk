@@ -1,6 +1,7 @@
 <?php
 // パスワード再設定認証用のワンタイムキーを発行するPHP(メールでユーザに送信しDBに登録する)
 require_once __DIR__ . '/../common_function.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // .env 読み込み
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
@@ -44,6 +45,8 @@ $result = $DBuser->CreateOtk($otk, $otk_created, $email);
 try {
     $mail = new PHPMailer(true);
 
+    $mail->CharSet = 'UTF-8';
+    
     // メール送信設定
     $mail->isSMTP();
     $mail->Host       = $_ENV['MAIL_HOST'];

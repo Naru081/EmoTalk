@@ -259,7 +259,7 @@ class DBuser extends DBcommon
         if ($result["success"]) {
             return [
                 "success" => true,
-                "message" => "プロファイルに切り替えに成功しました"
+                "message" => "プロファイルの切り替えに成功しました"
             ];
         } else {
             return [

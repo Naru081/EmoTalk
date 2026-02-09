@@ -4,37 +4,33 @@ using UnityEngine.UI;
 public class ProfileEditWindow : MonoBehaviour
 {
     [Header("UI")]
-    public GameObject root;      // ウインドウの一番上のパネル(ないなら this.gameObject を使う)
-    public Image modelImg;
+    public GameObject root;      // ルートオブジェクト
+    public Image modelImg;      // プロフィール画像表示用
 
-    // ここは後で実装するボタン
-    public Button selectButton;
-    public Button deleteButton;
-    public Button detailButton;
-    public Button closeButton;
+    // ボタン群
+    public Button selectButton; // 選択ボタン
+    public Button deleteButton; // 削除ボタン
+    public Button detailButton; // 詳細編集ボタン
+    public Button closeButton;  // 閉じるボタン
 
     [Header("Name Edit")]
-    [SerializeField] private Text nameText;
-    [SerializeField] private InputField nameInput;
-    [SerializeField] private Button editNameButton;
+    [SerializeField] private Text nameText;               // 表示用
+    [SerializeField] private InputField nameInput;        // 編集用
+    [SerializeField] private Button editNameButton;      // 名前編集ボタン
 
-    private ProfileData currentProfile;
+    private ProfileData currentProfile;                  // 現在編集中のプロファイルデータ
 
-    // リスト名更新用
-    public ProfileListWindow listWindow;
-    private string originalName;    // 名前変更前の値を避難用
+    public ProfileListWindow listWindow;               // プロファイルリストウィンドウ参照
+    private string originalName;                       // 名前の変更前の値を保存
 
-    // モデル変更表示
-    public ModelChangeWindow modelChangeWindow;
+    public ModelChangeWindow modelChangeWindow;         // モデル変更ウィンドウ参照
 
-    // 削除確認ポップアップ・削除拒否ポップアップ
     [Header("Delete UI")]
-    public DeleteConfirmPopup deleteConfirmPopup;
-    public DeleteDeniedPopup deleteDeniedPopup;
+    public DeleteConfirmPopup deleteConfirmPopup;   // 削除確認ポップアップ
+    public DeleteDeniedPopup deleteDeniedPopup;    // 削除不可ポップアップ
 
-    // プロファイル編集画面を開く
     [Header("Detail Window")]
-    public PropertyWindow detailWindow;
+    public PropertyWindow detailWindow;               // 詳細編集ウィンドウ参照
 
     // ==============================
     // プロファイル画面を開く
@@ -46,14 +42,12 @@ public class ProfileEditWindow : MonoBehaviour
         currentProfile = profile;
         Debug.Log("Open called. currentProfile=" + (currentProfile != null ? currentProfile.displayName : "NULL"));
 
-        // 表示用（Text）
+        //  UI表示を更新
         if (nameText != null) nameText.text = profile.displayName;
-
         if (modelImg != null) modelImg.sprite = ProfileController.GetImgSprite(profile.modelIndex);
-
-        // 編集用（InputField）
         if (nameInput != null) nameInput.text = profile.displayName;
 
+        // 初期状態は表示モードにする
         if (nameText != null) nameText.gameObject.SetActive(true);
         if (nameInput != null) nameInput.gameObject.SetActive(false);
 
@@ -118,6 +112,7 @@ public class ProfileEditWindow : MonoBehaviour
         if (currentProfile == null) return;
         if (detailWindow == null) return;
 
+        // 詳細編集画面を開く
         detailWindow.Open(currentProfile);
     }
 
@@ -178,7 +173,9 @@ public class ProfileEditWindow : MonoBehaviour
         ResetNameUI();
     }
 
+    // ==============================
     // UIを元に戻し、元の名前に復元する処理関数
+    // ==============================
     private void RestoreOriginalName()
     {
         if (nameInput != null) nameInput.text = originalName;
@@ -188,8 +185,9 @@ public class ProfileEditWindow : MonoBehaviour
 
         ResetNameUI();
     }
-
+    // ==============================
     //  タイトル名を元のUI状態に戻す関数
+    // ==============================
     private void ResetNameUI()
     {
         if (nameInput != null) nameInput.gameObject.SetActive(false);

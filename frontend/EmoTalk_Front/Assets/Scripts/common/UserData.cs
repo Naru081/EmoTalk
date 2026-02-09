@@ -1,57 +1,73 @@
 using UnityEngine;
 
-// ���[�U�[�f�[�^��ۑ��E�擾����N���X
+// ユーザーデータを保存・取得するための静的クラス
 public static class UserData
 {
+    // PlayerPrefsで使用する保存用のキー名
     private const string KEY_USER_ID = "user_id";
     private const string KEY_USER_MAIL = "user_mail";
     private const string KEY_USER_CURRENT_PROF = "user_currentprof";
 
-    // user_id�̕ۑ�
+    // ==============================
+    // user_idの保存
+    // ==============================
     public static void SaveUserId(int userId)
     {
         PlayerPrefs.SetInt(KEY_USER_ID, userId);
-        PlayerPrefs.Save();
+        PlayerPrefs.Save(); // データをディスクに即時書き込み
     }
 
-    // user_id�̎擾
+    // ==============================
+    // user_idの取得
+    // ==============================
     public static int GetUserId()
     {
         return PlayerPrefs.GetInt(KEY_USER_ID, -1);
     }
 
-    // user_mail�̕ۑ�
+    // ==============================
+    // user_mailの保存
+    // ==============================
     public static void SaveUserMail(string userMail)
     {
         PlayerPrefs.SetString(KEY_USER_MAIL, userMail);
         PlayerPrefs.Save();
     }
 
-    // user_mail�̎擾
+    // ==============================
+    // user_mailの取得
+    // ==============================
     public static string GetUserMail()
     {
         return PlayerPrefs.GetString(KEY_USER_MAIL, "");
     }
 
-    // user_currentprof�̕ۑ�
+    // ==============================
+    // user_currentprofの保存
+    // ==============================
     public static void SaveUserCurrentProfId(int profileId)
     {
         PlayerPrefs.SetInt(KEY_USER_CURRENT_PROF, profileId);
         PlayerPrefs.Save();
     }
 
-    // user_currentprof�̎擾
+    // ==============================
+    // user_currentprofの取得
+    // ==============================
     public static int GetUserCurrentProfId()
     {
         return PlayerPrefs.GetInt(KEY_USER_CURRENT_PROF, -1);
     }
 
-    // ���O�A�E�g���ɑS���[�U�[�f�[�^���N���A
+    // ログアウト時などに全ユーザーデータをクリア
     public static void ClearUserData()
     {
+        // 個別のキーを取得して削除
         PlayerPrefs.DeleteKey(KEY_USER_ID);
         PlayerPrefs.DeleteKey(KEY_USER_MAIL);
         PlayerPrefs.DeleteKey(KEY_USER_CURRENT_PROF);
+
+        // 削除状態を確定
         PlayerPrefs.Save();
     }
 }

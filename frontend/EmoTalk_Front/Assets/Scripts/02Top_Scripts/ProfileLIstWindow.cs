@@ -1,17 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 要録されているプロファイルデータをリスト表示するウインドウ
 public class ProfileListWindow : MonoBehaviour
 {
     [Header("UI")]
-    public Transform contentRoot;            
-    public GameObject profileItemPrefab;
+    public Transform contentRoot;          // プロファイルアイテムのコンテンツルート
+    public GameObject profileItemPrefab;    // プロファイルアイテムのプレハブ
 
-    // プロファイル編集画面を開く
-    public ProfileEditWindow editWindow;
+    public ProfileEditWindow editWindow;    // プロファイル編集画面を開く参照
 
-    // プロファイルデータ更新
-    public static ProfileListWindow Instance{ get; private set;}
+    public static ProfileListWindow Instance{ get; private set;}    // プロファイルデータ更新
 
     // ==============================
     // 保存されたプロファイルデータをリスト表示
@@ -28,7 +27,10 @@ public class ProfileListWindow : MonoBehaviour
     {
         if (ProfileManager.Instance == null) return;
 
+        // プロファイルデータの変更を監視
         ProfileManager.Instance.OnProfilesChanged += RefreshList;
+
+        // 最初のリスト表示
         ProfileManager.Instance.LoadProfilesFromDB();
     }
 
@@ -37,6 +39,7 @@ public class ProfileListWindow : MonoBehaviour
     // ==============================
     void OnDisable()
     {
+        // プロファイルデータの変更監視解除
         if (ProfileManager.Instance != null)
             ProfileManager.Instance.OnProfilesChanged -= RefreshList;
     }
@@ -49,9 +52,11 @@ public class ProfileListWindow : MonoBehaviour
         if (ProfileManager.Instance == null)
             return;
 
+        // 既存のリストをクリア
         foreach (Transform child in contentRoot)
             Destroy(child.gameObject);
 
+        // 新しいプロファイルデータでリストを再生成
         foreach (var data in ProfileManager.Instance.Profiles)
         {
             GameObject obj = Instantiate(profileItemPrefab, contentRoot);
@@ -67,7 +72,7 @@ public class ProfileListWindow : MonoBehaviour
     // ==============================
     private void OnItemClicked(ProfileData data)
     {
-
+        // プロファイル編集画面を開く
         if (editWindow != null)
             editWindow.Open(data);
     }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 
+// プロファイル管理クラス
 public class ProfileManager : MonoBehaviour
 {
-    public static ProfileManager Instance;
+    public static ProfileManager Instance;  // シングルトンインスタンス
 
     // プロファイル一覧
     public List<ProfileData> Profiles = new List<ProfileData>();
@@ -14,29 +15,37 @@ public class ProfileManager : MonoBehaviour
     private int selectedProfileId = -1;
 
     // 警告文ポップアップ
-    [SerializeField] private PopupManager successSavePopup;
-    [SerializeField] private PopupManager warningTitlePopup;
-    [SerializeField] private PopupManager warningCharaPopup;
-    [SerializeField] private PopupManager warningTonePopup;
-    [SerializeField] private PopupManager warningFpPopup;
-    [SerializeField] private PopupManager maskSendPopup;
+    [SerializeField] private PopupManager successSavePopup;     // 保存成功ポップアップ
+    [SerializeField] private PopupManager warningTitlePopup;    // タイトル警告ポップアップ
+    [SerializeField] private PopupManager warningCharaPopup;    // 性格警告ポップアップ
+    [SerializeField] private PopupManager warningTonePopup;     // 口調警告ポップアップ  
+    [SerializeField] private PopupManager warningFpPopup;       // 一人称警告ポップアップ
+    [SerializeField] private PopupManager maskSendPopup;        // チャット機能処理中の入力受付禁止マスクポップアップ
 
     // プロファイルリスト変更通知
     public event Action OnProfilesChanged;
+
+    // ==============================
+    // プロファイルリスト変更通知を発行
+    // ==============================
     public void NotifyChanged()
     {
         // リスト更新処理
         OnProfilesChanged?.Invoke();
 
+        // プロファイルリストウィンドウの更新
         if (ProfileListWindow.Instance != null)
         {
             ProfileListWindow.Instance.RefreshList();
         }
     }
 
+    // ==============================
     // ユーザの新規登録後、選択中のプロファイルを強調表示する
+    // ==============================
     public void SyncSelectedProfileFromUserData()
     {
+        // UserDataから選択中プロファイルIDを取得して同期
         selectedProfileId = UserData.GetUserCurrentProfId();
         NotifyChanged();
     }
@@ -79,10 +88,15 @@ public class ProfileManager : MonoBehaviour
         );
     }
 
+    // ==============================
+    // プロファイル取得成功時コールバック
+    // ==============================
     private void OnProfilesLoaded(GetProfileResponse res)
     {
+        // 既存データをクリア
         Profiles.Clear();
 
+        // DBデータをProfileDataに変換して追加
         foreach (var dbProf in res.profile_data)
         {
             Profiles.Add(ConvertFromDB(dbProf));
@@ -93,6 +107,9 @@ public class ProfileManager : MonoBehaviour
         SyncSelectedProfileFromUserData();
     }
 
+    // ==============================
+    // プロファイル取得失敗時コールバック
+    // ==============================
     private void OnProfileLoadError(string error)
     {
         Debug.LogError("プロファイル取得失敗: " + error);
@@ -103,6 +120,7 @@ public class ProfileManager : MonoBehaviour
     // ==============================
     private ProfileData ConvertFromDB(ProfileDataFromDB db)
     {
+        // 基本データをセット
         ProfileData data = new ProfileData(
             db.model_id,
             db.prof_title
@@ -138,6 +156,7 @@ public class ProfileManager : MonoBehaviour
         ));
     }
 
+    // プロファイル作成コルーチン
     private IEnumerator CreateProfileCoroutine(
         int modelIndex,
         string title,
@@ -146,6 +165,7 @@ public class ProfileManager : MonoBehaviour
         string firstPerson
         )
     {
+        // リクエストデータ作成
         var req = new CreateProfileRequest
         {
             user_id = UserData.GetUserId(),
@@ -156,6 +176,7 @@ public class ProfileManager : MonoBehaviour
             prof_fp = firstPerson
         };
 
+        // APIコール
         yield return ApiConnect.Post<CreateProfileRequest, CreateProfileResponse>(
             "PHP_profile/create_profile.php",
             req,
@@ -195,8 +216,12 @@ public class ProfileManager : MonoBehaviour
         StartCoroutine(UpdateProfileTitleCoroutine(data));
     }
 
+    // ==============================
+    // プロファイルタイトル更新コルーチン
+    // ==============================
     private IEnumerator UpdateProfileTitleCoroutine(ProfileData data)
     {
+        // リクエストデータ作成
         var req = new UpdateProfileTitleRequest
         {
             user_id = UserData.GetUserId(),
@@ -204,6 +229,7 @@ public class ProfileManager : MonoBehaviour
             prof_title = data.displayName
         };
 
+        // APIコール
         yield return ApiConnect.Post<UpdateProfileTitleRequest, GetProfileResponse>(
             "PHP_profile/update_profile_title.php",
             req,
@@ -230,16 +256,21 @@ public class ProfileManager : MonoBehaviour
         );
     }
 
+    // ==============================
     // プロファイルの性格・口調・一人称を変更
+    // ==============================
     public void UpdateProfileCustom(ProfileData data, Action onSuccess)
     {
         //Debug.Log("UpdateProfileCustom 呼び出し完了");
-
         StartCoroutine(UpdateProfileCustomCoroutine(data, onSuccess));
     }
 
+    // ==============================
+    // プロファイルの性格・口調・一人称更新コルーチン
+    // ==============================
     private IEnumerator UpdateProfileCustomCoroutine(ProfileData data, Action onSuccess)
     {
+        // リクエストデータ作成
         var req = new UpdateProfileCustomRequest
         {
             user_id = UserData.GetUserId(),
@@ -248,6 +279,7 @@ public class ProfileManager : MonoBehaviour
             prof_tone = data.tone,
             prof_fp = data.pronoun
         };
+        // APIコール
         yield return ApiConnect.Post<UpdateProfileCustomRequest, GetProfileResponse>(
             "PHP_profile/update_profile_custom.php",
             req,
@@ -288,27 +320,33 @@ public class ProfileManager : MonoBehaviour
         );
     }
 
-    // ポップアップを正しく表示するために1フレーム待つ
-    IEnumerator OpenNextFrame(PopupManager popup)
+    IEnumerator OpenNextFrame(PopupManager popup)   // ポップアップを正しく表示するために1フレーム待つ
     {
         yield return null; // 1フレーム待つ
         popup.Open();
     }
 
+    // ==============================
     // プロファイルのモデルを変更
+    // ==============================
     public void UpdateProfileModel(ProfileData data)
     {
         StartCoroutine(UpdateProfileModelCoroutine(data));
     }
 
+    // ==============================
+    // プロファイルモデル更新コルーチン
+    // ==============================
     private IEnumerator UpdateProfileModelCoroutine(ProfileData data)
     {
+        // リクエストデータ作成
         var req = new UpdateProfileModelRequest
         {
             user_id = UserData.GetUserId(),
             prof_id = data.profileId,
             model_id = data.modelIndex
         };
+        // APIコール
         yield return ApiConnect.Post<UpdateProfileModelRequest, GetProfileResponse>(
             "PHP_profile/update_profile_model.php",
             req,
@@ -334,14 +372,18 @@ public class ProfileManager : MonoBehaviour
         StartCoroutine(DeleteProfilesCoroutine(profileId));
     }
 
+    // ==============================
+    // プロファイル削除コルーチン
+    // ==============================
     private IEnumerator DeleteProfilesCoroutine(int profileId)
     {
+        // リクエストデータ作成
         var req = new DeleteProfileRequest
         {
             user_id = UserData.GetUserId(),
             prof_id = profileId
         };
-
+        // APIコール
         yield return ApiConnect.Post<DeleteProfileRequest, GetProfileResponse>(
             "PHP_profile/delete_profile.php",
             req,
@@ -362,6 +404,9 @@ public class ProfileManager : MonoBehaviour
         );
     }
 
+    // ==============================
+    // プロファイルリストからプロファイルを削除（DB削除後に呼び出す）
+    // ==============================
     public void RemoveProfileFromList(int profileId)
     {
         var target = Profiles.Find(p => p.profileId == profileId);
@@ -395,12 +440,17 @@ public class ProfileManager : MonoBehaviour
         StartCoroutine(UpdateCurrentProfileOnDB(newId, data.modelIndex));
     }
 
+    // ==============================
     // 選択中プロファイルを取得
+    // ==============================
     public ProfileData GetSelectedProfile()
     {
         return Profiles.Find(p => p.profileId == selectedProfileId);
     }
 
+    // ==============================
+    // 選択中プロファイルIDを取得
+    // ==============================
     public int GetSelectedProfileId()
     {
         return selectedProfileId;
@@ -413,13 +463,14 @@ public class ProfileManager : MonoBehaviour
     {
         int oldProfileId = UserData.GetUserCurrentProfId(); // 変更前のIDをここで取得
 
+        // リクエストデータ作成
         var req = new UserCurrentProfileRequest
         {
             user_id = UserData.GetUserId(),
             prof_id = newProfileId,
             current_prof_id = oldProfileId
         };
-
+        // APIコール
         yield return ApiConnect.Post<UserCurrentProfileRequest, GetProfileResponse>(
             "PHP_profile/change_profile.php",
             req,

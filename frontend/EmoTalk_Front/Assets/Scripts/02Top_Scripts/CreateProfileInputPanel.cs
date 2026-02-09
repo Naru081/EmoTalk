@@ -4,14 +4,17 @@ using UnityEngine.UI;
 public class CreateProfileInputPanel : MonoBehaviour
 {
     [Header("Input UI")]
+    // ユーザーの各入力フィールド
     public InputField nameInput;
     public InputField personalityInput;
     public InputField toneInput;
     public InputField pronounInput;
 
     [Header("Windows")]
-    public CreateProfileModelSelect modelSelectPanel;  // CreatePanel_M
+    // 戻るボタンを押したときに表示するモデル選択パネル
+    public CreateProfileModelSelect modelSelectPanel;
 
+    // 選択したモデルのインデックス
     private int selectedModelIndex = 0;
 
     // ===============================
@@ -21,7 +24,7 @@ public class CreateProfileInputPanel : MonoBehaviour
     {
         selectedModelIndex = modelIndex;
 
-        // 初期値設定（名前はモデル番号によって変える）
+        // 初期値設定（名前はモデル番号によって自動入力する）
         nameInput.text = $"Model #{modelIndex + 1}";
         personalityInput.text = "";
         toneInput.text = "";
@@ -41,6 +44,7 @@ public class CreateProfileInputPanel : MonoBehaviour
     // ==============================
     // 保存処理
     // ==============================
+    // 入力された文字をバリデーションして、プロファイルを保存
     public void OnSave()
     {
         string title = nameInput.text.Trim();
@@ -98,7 +102,7 @@ public class CreateProfileInputPanel : MonoBehaviour
     }
 
     // ==============================
-    // 戻る
+    // 戻る(入力途中の項目は破棄する)
     // ==============================
     public void OnBack()
     {

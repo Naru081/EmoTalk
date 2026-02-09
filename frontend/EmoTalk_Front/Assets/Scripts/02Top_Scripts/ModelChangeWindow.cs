@@ -1,18 +1,19 @@
 using UnityEngine;
 
+// 既存プロファイルの Live2D モデル（アバター）を変更するためのウィンドウを制御するクラス
 public class ModelChangeWindow : MonoBehaviour
 {
-    public GameObject root;                 // このパネル（自分自身でもOK）
-    public ProfileEditWindow editWindow;    // 戻り先（編集画面）
+    public GameObject root;                 // パネルのルートオブジェクト
+    public ProfileEditWindow editWindow;    // 編集画面への参照
 
-    private ProfileData targetProfile;
+    private ProfileData targetProfile;      // モデル変更対象のプロファイルデータ
 
     // ==============================
     // モデル変更ウィンドウの表示
     // ==============================
     public void Open(ProfileData profile)
     {
-        targetProfile = profile;
+        targetProfile = profile;    // 対象プロファイルをセット
         if (root != null) root.SetActive(true);
         else gameObject.SetActive(true);
     }
@@ -31,22 +32,24 @@ public class ModelChangeWindow : MonoBehaviour
     // ==============================
     public void SelectModel(int modelIndex)
     {
+        // UI上のアバター画像ボタン（引数に modelIndex）が押された際の処理
         if (targetProfile == null) return;
 
-        // ① データ更新
+        // 保持しているプロファイルデータのモデル番号を書き換え
         targetProfile.modelIndex = modelIndex;
 
-        // ② DB保存
-        //ProfileManager.Instance.UpdateProfile(targetProfile);  // SaveProfilesしてくれる :contentReference[oaicite:3]{index=3}
+        // データベース（サーバー/ローカル保存）へ変更を同期
+        // ProfileManager を介して永続化を行う
         ProfileManager.Instance.UpdateProfileModel(targetProfile);
 
-        // ④ 編集画面の表示更新（画像・名前など）
+        // 呼び出し元の編集画面（ProfileEditWindow）の見た目を最新の状態に反映
         if (editWindow != null)
-            editWindow.RefreshCurrentView();   // ↓次で追加する
+            editWindow.RefreshCurrentView();
 
-        // ⑤ ハンバーガーリスト即更新（イベント通知） :contentReference[oaicite:5]{index=5}
+        // 他のUIコンポーネント（サイドメニューのリストなど）へ変更を通知
         ProfileManager.Instance.NotifyChanged();
 
+        // ウィンドウを閉じる
         Close();
     }
 }

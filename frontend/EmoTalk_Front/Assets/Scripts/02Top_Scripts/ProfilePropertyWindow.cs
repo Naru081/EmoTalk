@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// プロファイルの性格や口調などの詳細プロパティを設定・編集するウィンドウを管理するクラス。
 public class ProfilePropertyWindow : MonoBehaviour
 {
     // ==============================

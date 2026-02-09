@@ -3,7 +3,7 @@ using UnityEngine;
 // 暗号化されたPlayerPrefsを扱うクラス
 public static class EncryptedPlayerPrefs
 {
-    // ================ 保存系 ===================
+    //　保存系 ===================
 
     // INT型の保存
     public static void SaveInt(string key, int value)
@@ -34,8 +34,10 @@ public static class EncryptedPlayerPrefs
         PlayerPrefs.SetString(encKey, encValue);
         PlayerPrefs.Save();
     }
+    // ==============================
 
-    // ================ 読み込み（取得）系 ===================
+
+    // 読み込み（取得）系 ===================
 
     // INT型の読み込み
     public static int LoadInt(string key, int defult)
@@ -93,8 +95,10 @@ public static class EncryptedPlayerPrefs
         string decryptedValueString = Enc.DecryptString(encString);
         return decryptedValueString;
     }
+    // ==============================
 
-    // ================ 削除系 ===================
+
+    // 削除系 ===================
 
     // 指定したキーのデータを削除
     public static void DeleteKey(string key)
@@ -110,9 +114,10 @@ public static class EncryptedPlayerPrefs
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
     }
+    // ==============================
 
 
-    // ================ 文字列の暗号化・復号化 ===================
+    // 文字列の暗号化・復号化 ===================
     // 参考：http://dobon.net/vb/dotnet/string/encryptstring.html
 
     // 内部クラス：文字列の暗号化・復号化を行う
@@ -182,5 +187,6 @@ public static class EncryptedPlayerPrefs
             iv = deriveBytes.GetBytes(blockSize / 8);
         }
     }
-
+    // ==============================
+    
 }

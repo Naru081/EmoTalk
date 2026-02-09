@@ -19,20 +19,23 @@ if (empty($prof_id) || empty($message_content)) {
 // プロファイル取得
 $profile_config = $DBprofile->GetProfileConfig($prof_id);
 
-$model_id = $profile_config['model_id'];
-$prof_chara = $profile_config['prof_chara'];
-$prof_tone = $profile_config['prof_tone'];
-$prof_fp = $profile_config['prof_fp'];
+$model_id = $profile_config['model_id'];        // モデルID
+$prof_chara = $profile_config['prof_chara'];    // キャラクター性格
+$prof_tone = $profile_config['prof_tone'];      // キャラクター口調
+$prof_fp = $profile_config['prof_fp'];          // キャラクター一人称
 
 // モデル名とVOICE UUID
 $model_data = $DBmodel->GetModelNameVoice($model_id);
-$model_name = $model_data['model_name'];
-$model_voice = $model_data['model_voice'];
+$model_name = $model_data['model_name'];        // モデル名
+$model_voice = $model_data['model_voice'];      // VOICE UUID
 
-// 過去メッセージ
+// ユーザとAIの過去3往復分のメッセージを取得
 $recent_messages = $DBmessage->GetRecentMessages($prof_id, 6);
 
-$message_sender = 0; // ユーザが送信したメッセージなので0を指定
+// ユーザが送信したメッセージなのでメッセージ送信者フラグに0を指定
+$message_sender = 0; 
+
+// ユーザメッセージをDBに保存
 $user_result = $DBmessage->InsertMessage($prof_id, $message_sender, $message_content);
 
 // ChatGPT 呼び出し
@@ -45,7 +48,10 @@ $ChatGPT_res = ConnectChatGPTAPI(
     $recent_messages
 );
 
-$message_sender = 1; // AIが送信したメッセージなので0を指定
+// AIが送信したメッセージなのでメッセージ送信者フラグに0を指定
+$message_sender = 1; 
+
+// AIメッセージをDBに保存
 $ai_result = $DBmessage->InsertMessage($prof_id, $message_sender, $ChatGPT_res['response_text']);
 
 // ChatGPT の返答をそのまま返す

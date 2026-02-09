@@ -2,21 +2,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+// プロファイルの詳細情報（性格、口調、一人称）を編集・保存するためのUIウィンドウを管理するクラス。
 public class PropertyWindow : MonoBehaviour
 {
     [Header("Root")]
-    public GameObject root; // このパネル
+    public GameObject root; // プロパティ画面のルートオブジェクト
 
     [Header("Inputs")]
-    public InputField personalityInput;
-    public InputField toneInput;
-    public InputField pronounInput;
+    public InputField personalityInput; // 性格入力フィールド
+    public InputField toneInput;        // 口調入力フィールド
+    public InputField pronounInput;    // 一人称入力フィールド
 
     [Header("Buttons")]
-    public Button saveButton;
-    public Button cancelButton;
+    public Button saveButton;      // 保存ボタン
+    public Button cancelButton;   // キャンセルボタン
 
-    private ProfileData target;
+    private ProfileData target;         // 編集対象のプロファイルデータ
     private string originalPersonality; // テキストボックスの元の性格を避難用
     private string originalTone;        // テキストボックスの元の口調を避難用
     private string originalPronoun;     // テキストボックスの元の一人称を避難用
@@ -52,6 +53,7 @@ public class PropertyWindow : MonoBehaviour
             saveButton.onClick.RemoveAllListeners();
             saveButton.onClick.AddListener(OnClickSave);
         }
+        // キャンセルボタン
         if (cancelButton != null)
         {
             cancelButton.onClick.RemoveAllListeners();
@@ -120,6 +122,7 @@ public class PropertyWindow : MonoBehaviour
         target.tone = t;
         target.pronoun = f;
 
+        // プロファイル保存
         ProfileManager.Instance.UpdateProfileCustom(
             target,
             () =>

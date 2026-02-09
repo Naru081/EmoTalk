@@ -2,34 +2,39 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-// ƒvƒƒtƒ@ƒCƒ‹ˆê——‚ğæ“¾‚·‚éƒNƒ‰ƒX
+// ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’å–å¾—ã™ã‚‹ãŸã‚ã®é™çš„ã‚¯ãƒ©ã‚¹
 public static class GetProfileList
 {
-    // PHP‚©‚ç‚ÌƒŒƒXƒ|ƒ“ƒX‚ğó‚¯æ‚éƒNƒ‰ƒX
+    // ==============================
+    // PHPã¸é€ä¿¡ã™ã‚‹ãƒªã‚¯ã‚¨ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã‚’å®šç¾©
+    // ==============================
     [Serializable]
     public class Request
     {
-        public int user_id;
+        public int user_id; // å–å¾—å¯¾è±¡ã¨ãªã‚‹ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®è­˜åˆ¥ID
     }
 
-    // PHP‚©‚ç‚ÌƒŒƒXƒ|ƒ“ƒX‚ğó‚¯æ‚éƒNƒ‰ƒX
+    // ==============================
+    // ãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«ä¸€è¦§ã‚’å–å¾—ã™ã‚‹ãŸã‚ã®ã‚³ãƒ«ãƒ¼ãƒãƒ³ãƒ¡ã‚¾ãƒƒãƒˆ
+    // ==============================
     public static IEnumerator GetProfiles(
         int user_id,
         Action<GetProfileResponse> onSuccess,
         Action<string> onError = null
     )
     {
+        // ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã—ã€ãƒ¦ãƒ¼ã‚¶IDã‚’æ ¼ç´
         var req = new Request
         {
             user_id = user_id
         };
 
-        // ƒvƒƒtƒ@ƒCƒ‹ˆê——‚ğæ“¾‚·‚éˆ—‚ğs‚¤PHP‚ğŒÄ‚Ño‚·
+        //å…±é€šé€šä¿¡ã‚’åˆ©ç”¨ã—ã¦ã€æŒ‡å®šã—ãŸPHPã‚¨ãƒ³ãƒ‰ãƒã‚¤ãƒ³ãƒˆã«POSTãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’é€ä¿¡
         yield return ApiConnect.Post<GetProfileList.Request, GetProfileResponse>(
-            "PHP_profile/get_profile.php",
-            req,
-            onSuccess,
-            onError
+            "PHP_profile/get_profile.php",  // APIã®ç›¸å¯¾ãƒ‘ã‚¹
+            req,                            // ãƒªã‚¯ã‚¨ã‚¹ãƒˆæœ¬ä½“
+            onSuccess,                      // æˆåŠŸæ™‚å‡¦ç†
+            onError                         // å¤±æ•—æ™‚å‡¦ç†
         );
     }
 }

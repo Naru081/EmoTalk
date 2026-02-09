@@ -18,7 +18,7 @@ public class ProfileData
     // ==============================
     public ProfileData(int modelIndex, string name = "New Profile")
     {
-        this.profileId   = -1;           // 未保存
+        this.profileId   = -1;           // サーバー未保存状態を示す -1 に設定
         this.displayName = name;
         this.modelIndex  = modelIndex;
         this.personality = "";

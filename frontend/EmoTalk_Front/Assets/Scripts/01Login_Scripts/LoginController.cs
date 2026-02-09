@@ -8,51 +8,51 @@ public class LoginController : MonoBehaviour
 {
     // ログイン画面
     [Header("Login UI (Canvas root)")]
-    public InputField loginUserMail; // Canvas/user_mail
-    public InputField loginUserPass; // Canvas/user_pass
-    public Text loginErrorText; // Canvas/error_text
+    public InputField loginUserMail; // メールアドレス入力
+    public InputField loginUserPass; // パスワード入力
+    public Text loginErrorText; // エラーメッセージ
 
     // ローディングパネル
     [Header("Loading Panel")]
-    public GameObject loadingPanel; // Canvas/loadingPanel
-    public Text loadingText; // loadingPanel/loading_text
+    public GameObject loadingPanel; // 読み込み画面
+    public Text loadingText; // 読み込み中テキスト
 
 
     // 新規登録パネル
     [Header("Register Panel")]
-    public GameObject registerPanel; // Canvas/RegisterPanel
-    public InputField registerNewMail; // RegisterPanel/Window/new_mail
-    public InputField registerNewPass; // RegisterPanel/Window/new_pass
-    public Text registerErrorText; // RegisterPanel/Window/error_text
+    public GameObject registerPanel; // 新規登録画面
+    public InputField registerNewMail; // 新規メール入力
+    public InputField registerNewPass; // 新規パスワード入力
+    public Text registerErrorText; // エラーメッセージ
 
-     public GameObject registerCompletePanel; // Canvas/RegisterComletePanel
+     public GameObject registerCompletePanel; // 登録完了パネル
 
 
     // パスワード再設定：メール送信パネル
     [Header("Reset Mail Panel")]
-    public GameObject resetMailPanel; // Canvas/ResetMailPanel
-    public InputField resetMailUserMail; // ResetMailPanel/Window/user_mail
-    public Text resetMailErrorText; // ResetMailPanel/Window/error_text
+    public GameObject resetMailPanel; // メール送信画面
+    public InputField resetMailUserMail; // ユーザメール入力
+    public Text resetMailErrorText; // エラーメッセージ
 
 
     // パスワード再設定：ワンタイムキーパネル
     [Header("Reset Key Panel")]
-    public GameObject resetKeyPanel; // Canvas/ResetKeyPanel
-    public InputField resetKeyInput; // ResetKeyPanel/Window/key_in
-    public Text resetKeyErrorText; // ResetKeyPanel/Window/error_text
+    public GameObject resetKeyPanel; // パスワードパネル
+    public InputField resetKeyInput; // キー入力
+    public Text resetKeyErrorText; // エラーメッセージ
 
 
     // パスワード再設定：新パスワード入力パネル
     [Header("Reset Password Panel")]
-    public GameObject resetPasswordPanel; // Canvas/ResetPasswordPanel
-    public InputField resetNewPass; // ResetPasswordPanel/Window/new_pass
-    public InputField resetNewPass2; // ResetPasswordPanel/Window/new_pass2
-    public Text resetPasswordErrorText; // ResetPasswordPanel/Window/error_text
+    public GameObject resetPasswordPanel; // パスワード再登録画面
+    public InputField resetNewPass; // パスワード入力
+    public InputField resetNewPass2; // パスワード確認用入力
+    public Text resetPasswordErrorText; // エラーメッセージ
 
 
     // パスワード再設定：完了パネル
     [Header("Reset Complete Panel")]
-    public GameObject resetCompletePanel;     // Canvas/ResetCompletePanel
+    public GameObject resetCompletePanel;     // 再設定完了パネル
 
     // =====================================================================
     //  自動ログイン処理

@@ -1,17 +1,22 @@
 using UnityEngine;
 
+// TOP画面のシーンコントローラー
 public class TopSceneController : MonoBehaviour
 {
 
+    // 初期化済みフラグ
     private bool initialized = false;
 
+    // ==============================
+    // MonoBehaviour関数
+        // ==============================
     private void Start()
     {
-        // ��d���s�h�~
+        // 初期化処理
         if (initialized) return;
         initialized = true;
 
-        // ProfileManager�̃v���t�@�C���ꗗ��DB����擾
+        // プロフィール情報の読み込み
         ProfileManager.Instance.LoadProfilesFromDB();
     }
 

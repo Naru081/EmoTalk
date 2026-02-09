@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// プロファイル削除確認のポップアップ
 public class DeleteConfirmPopup : MonoBehaviour
 {
-    [SerializeField] private GameObject root;
-    [SerializeField] private Button okButton;
-    [SerializeField] private Button cancelButton;
+    [SerializeField] private GameObject root; // 親オブジェクト
+    [SerializeField] private Button okButton;   // 実行ボタン
+    [SerializeField] private Button cancelButton; // キャンセルボタン
 
+    // 実行時のコールバック
     private System.Action onConfirm;
 
     // ==============================
@@ -18,16 +20,18 @@ public class DeleteConfirmPopup : MonoBehaviour
 
         this.onConfirm = onConfirm;
 
-        // 念のため毎回クリア
+        // ボタンのクリックイベントをリセットして重複登録を防止
         okButton.onClick.RemoveAllListeners();
         cancelButton.onClick.RemoveAllListeners();
 
+        // 処理後、閉じる
         okButton.onClick.AddListener(() =>
         {
             this.onConfirm?.Invoke();
             Close();
         });
-
+        
+        // 何もせず閉じる
         cancelButton.onClick.AddListener(Close);
 
         root.SetActive(true);
@@ -39,6 +43,6 @@ public class DeleteConfirmPopup : MonoBehaviour
     public void Close()
     {
         root.SetActive(false);
-        onConfirm = null;
+        onConfirm = null;   // メモリリーク防止のためコールバックをクリア
     }
 }

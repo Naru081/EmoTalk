@@ -2,18 +2,19 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+// ハンバーガーメニュー制御
 public class MenuController : MonoBehaviour
 {
     [Header("UI")]
-    public GameObject menuMask;         // MenuMask
-    public RectTransform menuPanel;     // MenuPanel
+    public GameObject menuMask;         // メニューの背景マスク
+    public RectTransform menuPanel;     // メニューの本体
 
     [Header("Hamburger Button")]
     public Button btnMenu;            // ハンバーガーボタン
-    public Image btnMenuImage;        // ボタン画像
-    public Sprite iconMenu;           // 三本線
-    public Sprite iconClose;          // ×
-    public LogoutPopup logoutPopup;   // ログアウト
+    public Image btnMenuImage;        // メニュー展開ボタン
+    public Sprite iconMenu;           // 通常のアイコン
+    public Sprite iconClose;          // 展開中のアイコン
+    public LogoutPopup logoutPopup;   // ログアウトボタン
 
     [Header("Animation")]
     public float slideDuration = 0.25f;      // スライド速度
@@ -23,9 +24,11 @@ public class MenuController : MonoBehaviour
     private Vector2 panelHiddenPos;
     private Vector2 panelShownPos;
 
+    // メニューが開いているかどうか
     private bool isOpen = false;
 
     [Header("ProfileListWindow")]
+    // メニュー内のプロフィールリストウィンドウ
     public ProfileListWindow listWindow;
 
     // ==============================

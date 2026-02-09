@@ -45,8 +45,8 @@ class DBmodel extends DBcommon
         }
     }
 
-    // -------------------- control_message.php --------------------
-
+    // -------------------- chatgpt_api.php --------------------
+    
     // model_idからmodel_nameを取得
     public function GetModelNameVoice($model_id){
         $result = $this->ExecuteSelect("SELECT model_name, model_voice FROM model WHERE model_id = ?", [$model_id]);

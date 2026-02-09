@@ -1,4 +1,5 @@
 <?PHP
+// PHPとDBの接続を簡略化するための共通クラス
 class DBcommon
 {
     private $pdo;
@@ -12,9 +13,9 @@ class DBcommon
     function ExecuteSelect($sql, $param)
     {
         try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute($param);   // SQL実行 
-            $alldata = $stmt->fetchAll(PDO::FETCH_ASSOC); // 実行した結果(メッセージ情報)を取得 PDO::FETCH_ASSOCで連想配列として取得(余計な情報を省く)
+            $stmt = $this->pdo->prepare($sql);  // SQL準備
+            $stmt->execute($param);             // SQL実行 
+            $alldata = $stmt->fetchAll(PDO::FETCH_ASSOC); // 実行した結果(メッセージ情報)を取得 PDO::FETCH_ASSOCで連想配列として余計な情報を省いたうえで取得
 
             return $alldata;    // 取得した全データを返す
         } catch (PDOException $e) {
@@ -27,9 +28,9 @@ class DBcommon
     function ExecuteSelectNoParam($sql)
     {
         try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute();   // SQL実行 
-            $alldata = $stmt->fetchAll(PDO::FETCH_ASSOC); // 実行した結果(メッセージ情報)を取得 PDO::FETCH_ASSOCで連想配列として取得(余計な情報を省く)
+            $stmt = $this->pdo->prepare($sql);  // SQL準備
+            $stmt->execute();                   // SQL実行 
+            $alldata = $stmt->fetchAll(PDO::FETCH_ASSOC); // 実行した結果(メッセージ情報)を取得 PDO::FETCH_ASSOCで連想配列として余計な情報を省いたうえで取得
 
             return $alldata;    // 取得した全データを返す
         } catch (PDOException $e) {
@@ -42,7 +43,7 @@ class DBcommon
     function ExecuteUpdate($sql, $param)
     {
         try {
-            $stmt = $this->pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);  // SQL準備
             $result = $stmt->execute($param);   // SQL実行 
 
             if ($result) {

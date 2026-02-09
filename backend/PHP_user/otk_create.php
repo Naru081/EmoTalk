@@ -1,7 +1,7 @@
 <?php
 // パスワード再設定認証用のワンタイムキーを発行するPHP(メールでユーザに送信しDBに登録する)
 require_once __DIR__ . '/../common_function.php';
-require_once __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 // .env 読み込み
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
@@ -45,16 +45,17 @@ $result = $DBuser->CreateOtk($otk, $otk_created, $email);
 try {
     $mail = new PHPMailer(true);
 
+    // 文字コードを設定(UTF-8)
     $mail->CharSet = 'UTF-8';
     
     // メール送信設定
     $mail->isSMTP();
-    $mail->Host       = $_ENV['MAIL_HOST'];
-    $mail->SMTPAuth   = true;
-    $mail->Username   = $_ENV['MAIL_USERNAME'];  // Gmail のアドレス
-    $mail->Password   = $_ENV['MAIL_PASSWORD'];  // Gmail アプリパスワード
-    $mail->SMTPSecure = 'tls'; 
-    $mail->Port       = $_ENV['MAIL_PORT'];
+    $mail->Host = $_ENV['MAIL_HOST'];
+    $mail->SMTPAuth = true;
+    $mail->Username = $_ENV['MAIL_USERNAME'];
+    $mail->Password = $_ENV['MAIL_PASSWORD'];
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;    
     $mail->setFrom($_ENV['MAIL_FROM']); // 送信者のメールアドレス
     $mail->addAddress($email);          // 送信先のメールアドレス
 

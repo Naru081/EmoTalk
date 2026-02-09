@@ -97,11 +97,12 @@ public class MicController : MonoBehaviour
             return;
         }
 
+        // 現在の音量を取得
         float volume = micRecorder.GetCurrentVolume();
 
-        // 音が出ているか判定
         if (volume >= silenceThreshold)
-        {
+        {   
+            // 音を検出して値を超えたら無音タイマーリセット
             hasDetectedSound = true;
             silenceTimer = 0f;
             return;
@@ -127,6 +128,7 @@ public class MicController : MonoBehaviour
         if (!isRecording) return;
         isRecording = false;
 
+        // 録音を停止して音声データを取得
         AudioClip clip = micRecorder.StopRecording();
         if (clip == null)
         {
@@ -140,7 +142,7 @@ public class MicController : MonoBehaviour
     }
 
     // ==============================
-    // UI
+    // エラー表示
     // ==============================
     private void ShowMicDisabled()
     {
@@ -153,7 +155,9 @@ public class MicController : MonoBehaviour
         StartCoroutine(TestAutoClose());
     }
 
-    // テスト用：自動閉じる
+    // ==============================
+    // マイクパネルを自動で閉じる
+    // ==============================
     private IEnumerator TestAutoClose()
     {
         yield return new WaitForSeconds(3f);
@@ -175,7 +179,7 @@ public class MicController : MonoBehaviour
     }
 
     private void OnDestroy()
-    {
+    {   // メモリリーク防止の処理
         whisperClient.OnWhisperCompleted -= OnWhisperResult;
     }
 
@@ -201,13 +205,12 @@ public class MicController : MonoBehaviour
         // 録音状態終了
         isRecording = false;
 
-        // 念のためマイク停止
+        //マイク停止
         micRecorder.StopRecording();
-
         titleText.text = message;
         micImage.sprite = micDisableSprite;
 
-        // Whisperには行かない
+        // 解析せずに閉じる
         StartCoroutine(TestAutoClose());
     }
 }

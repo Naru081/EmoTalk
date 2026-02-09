@@ -1,8 +1,10 @@
 using UnityEngine;
 
+// 新規プロファイル作成：モデル選択画面の制御
 public class CreateProfileModelSelect : MonoBehaviour
 {
-    public CreateProfileInputPanel inputPanel; // CreatePanel_P を指定
+    // プロファイルを入力する画面の参照
+    public CreateProfileInputPanel inputPanel;
 
     // ==============================
     // モデル選択画面(新規)を開く
@@ -25,7 +27,7 @@ public class CreateProfileModelSelect : MonoBehaviour
     // ==============================
     public void OnSelectModel(int index)
     {
-        Close();                      // 自分を閉じる
+        Close();                      // 閉じる
         inputPanel.Open(index);       // 入力画面へ
     }
 }

@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+// ログアウトによる認証情報破棄とログイン画面遷移
 public class LogoutPopup : MonoBehaviour
 {
-    [SerializeField] private GameObject root;
-    [SerializeField] private Button yesButton;
-    [SerializeField] private Button noButton;
+    [SerializeField] private GameObject root;   //　ポップアップの表示実態　 
+    [SerializeField] private Button yesButton;  // 実行ボタン
+    [SerializeField] private Button noButton;   // キャンセルボタン
 
     // ログイン画面
     [SerializeField] private string loginSceneName = "LoginScene";
@@ -18,10 +19,11 @@ public class LogoutPopup : MonoBehaviour
     {
         if (root == null) root = gameObject;
 
-        // 毎回クリーンに
+        // ボタンイベント初期化
         yesButton.onClick.RemoveAllListeners();
         noButton.onClick.RemoveAllListeners();
 
+        // 各ボタンに処理を割り当てる
         yesButton.onClick.AddListener(DoLogout);
         noButton.onClick.AddListener(Close);
 
@@ -43,7 +45,7 @@ public class LogoutPopup : MonoBehaviour
         // 自動ログインのためのトークンを削除
         EncryptedPlayerPrefs.DeleteKey("token");
 
-        // 今回は「仮ログアウト」なのでシーン遷移のみ
+        // ログイン画面へ遷移して、アプリを再起動した状態にする
         SceneManager.LoadScene(loginSceneName);
     }
 }

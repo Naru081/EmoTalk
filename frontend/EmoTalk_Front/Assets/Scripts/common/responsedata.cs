@@ -80,7 +80,6 @@ public class  MessageResponse
     public string model_voice;
 }
 
-// 1/14追加
 [Serializable]                      // CoeiroInkレスポンス
 public class CoeiroInkResponse
 {

@@ -1,9 +1,12 @@
 using UnityEngine;
 
+// プロファイル新規制作のウィンドウ
 public class CreateProfileWindow : MonoBehaviour
 {
-    public GameObject window; // "Window" をアタッチ
+    // ウィンドウ本体
+    public GameObject window;
 
+    // ユーザーが現在選んでいるモデルの番号
     private int selectedModelIndex = 0;
 
     // ==============================

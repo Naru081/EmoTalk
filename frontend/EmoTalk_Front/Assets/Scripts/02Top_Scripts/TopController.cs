@@ -4,56 +4,56 @@ using System.Collections;
 using UnityEngine.Networking;
 using TMPro;
 
+// TOP画面のUI制御を行うクラス
 public class TopController : MonoBehaviour
 {
-    // 会話ログパネル
     [Header("Log Panel")]
-    public RectTransform logPanel;
-    public Button handleButton;
+    public RectTransform logPanel;  // チャットログパネル
+    public Button handleButton;     // ハンドルボタン
 
     // パネル位置設定
     [Header("Positions")]
-    public float openX = 0f;
-    public float closeX = -1028f;
-    private bool isOpen = false;
-    private float slideSpeed = 10f;
+    public float openX = 0f;        // 開いたときのX位置
+    public float closeX = -1028f;   // 閉じたときのX位置
+    private bool isOpen = false;    // パネル開閉状態
+    private float slideSpeed = 10f; // スライド速度
 
     // スワイプ用の変数を追加
-    private bool isDragging = false;
-    private Vector2 dragStartPos;
-    private float panelStartX;
+    private bool isDragging = false;    // ドラッグ中フラグ
+    private Vector2 dragStartPos;       // ドラッグ開始位置
+    private float panelStartX;          // パネルの開始X位置
     [Range(0.1f, 0.9f)]
     public float openThreshold = 0.5f;   // 開き具合が何割以上なら「開く」とみなすか
 
     // チャットログ追加
     [Header("Chat Log")]
-    public Transform logContent;
-    public GameObject logItemUserPrefab;
-    public GameObject logItemEmoPrefab;
+    public Transform logContent;        // チャットログコンテンツの親
+    public GameObject logItemUserPrefab;    // ユーザ吹き出しPrefab
+    public GameObject logItemEmoPrefab;     // AI吹き出しPrefab
     public RectTransform contentTransform;
     public ScrollRect scrollRect;
 
     // チャット入力UI
     [Header("Input UI")]
-    public InputField chatInput;
-    public Button sendButton;
+    public InputField chatInput;    // チャット入力欄
+    public Button sendButton;       // 送信ボタン
 
     // 会話のネーム表示用
     [Header("Chat Log Name")]
-    public GameObject fnameUserPrefab;
-    public GameObject fnameAiPrefab; 
+    public GameObject fnameUserPrefab;   // ユーザ名Prefab
+    public GameObject fnameAiPrefab;    // AI名Prefab
 
     [Header("Chat Log Spacing")]
     [Tooltip("同じ話者が連続する時の間隔")]
-    public float sameSpeakerGap = 12f;
+    public float sameSpeakerGap = 12f;      // 同じ話者が連続する時の間隔
 
     [Tooltip("話者が切り替わる時の間隔")]
-    public float changeSpeakerGap = 28f;
+    public float changeSpeakerGap = 28f;    // 話者が切り替わる時の間隔
 
 
     // 直前の話者情報
-    private bool hasLastSpeaker = false;
-    private bool lastSpeakerIsUser = false;
+    private bool hasLastSpeaker = false;    // 最初の1個目かどうか
+    private bool lastSpeakerIsUser = false; // 直前の話者がユーザかどうか
 
 
 
@@ -70,13 +70,14 @@ public class TopController : MonoBehaviour
     [Header("Log Wrap")]
     public float forceWrapWidth; // 強制改行幅（TMP用）　
 
-
+    // ポップアップを次フレームで開閉
     IEnumerator OpenNextFrame(PopupManager popup)
     {
         yield return null; // 次のフレームまで待機
         popup.Open();
     }
 
+    // ポップアップを次フレームで閉じる
     IEnumerator CloseNextFrame(PopupManager popup)
     {
         yield return null; // 次のフレームまで待機
@@ -202,6 +203,7 @@ public class TopController : MonoBehaviour
     // ==============================
     private IEnumerator SendMessageToAI(string messageContent)
     {
+        // 選択中のプロファイルIDを取得
         int profileId = ProfileManager.Instance != null ? ProfileManager.Instance.GetSelectedProfileId() : -1;
         if (profileId <= 0)
         {
@@ -211,12 +213,13 @@ public class TopController : MonoBehaviour
             yield break;
         }
 
+        // APIリクエスト作成
         var req = new MessageRequest
         {
             prof_id = profileId,
             message_content = messageContent
         };
-
+        // API送信
         yield return ApiConnect.Post<MessageRequest, MessageResponse>(
             "PHP_api/chatgpt_api.php",
             req,
@@ -266,6 +269,7 @@ public class TopController : MonoBehaviour
     // ==============================
     private IEnumerator RequestCoeiroInk(string model_voice, string responseText_hiragana, string emotion)
     {
+        // CoeiroInk API送信
         yield return ApiConnect.Post<CoeiroInkRequest, CoeiroInkResponse>(
             "PHP_api/coeiroink_api.php",
             new CoeiroInkRequest
@@ -527,7 +531,6 @@ public class TopController : MonoBehaviour
     // ==============================
     // ログ間スペーサー生成
     // ==============================
-
     private void CreateSpacer(float height)
     {
         GameObject spacer = new GameObject("LogSpacer", typeof(RectTransform), typeof(LayoutElement));
@@ -538,5 +541,4 @@ public class TopController : MonoBehaviour
         le.preferredHeight = height;
         le.flexibleHeight = 0f;
     }
-
 }

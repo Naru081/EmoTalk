@@ -6,6 +6,7 @@ using System.Collections;
 using System.Text;
 using System;
 
+// APIを接続するクラス
 public static class ApiConnect
 {
     // 実機テスト時のURL(※ngrok http 80で起動したURLを指定すること)
@@ -22,7 +23,9 @@ public static class ApiConnect
         public string message;
     }
 
+    // ==============================
     // 通信の処理を共通化するメソッド
+    // ==============================
     public static IEnumerator Post<TRequest, TResponse>(
         string endpoint,    // PHPのファイル名(例：PHP_user/register.php)
         TRequest requestData,   // 送るデータの内容をクラスで受け取る

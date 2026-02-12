@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 1023632}
   m_Layer: 5
   m_Name: Viewport
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 4439440}
   m_Layer: 5
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 7128288}
   m_Layer: 5
   m_Name: btn_close
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 18254760}
   m_Layer: 5
   m_Name: model_0
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -672,7 +672,7 @@ GameObject:
   - component: {fileID: 65054478}
   m_Layer: 5
   m_Name: warning_fp
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -763,7 +763,7 @@ GameObject:
   - component: {fileID: 76248783}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -842,7 +842,7 @@ GameObject:
   - component: {fileID: 95481527}
   m_Layer: 5
   m_Name: log_panel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -861,7 +861,9 @@ RectTransform:
   m_Children:
   - {fileID: 1665007043}
   - {fileID: 340840293}
+  - {fileID: 1415817933}
   - {fileID: 389259842}
+  - {fileID: 1399714285}
   - {fileID: 516695794}
   m_Father: {fileID: 1783011666}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -923,7 +925,7 @@ GameObject:
   - component: {fileID: 126593953}
   m_Layer: 5
   m_Name: close
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1080,7 +1082,7 @@ GameObject:
   - component: {fileID: 141180352}
   m_Layer: 5
   m_Name: toneInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1225,7 +1227,7 @@ GameObject:
   - component: {fileID: 147488118}
   m_Layer: 5
   m_Name: message
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1302,7 +1304,7 @@ GameObject:
   - component: {fileID: 158295153}
   m_Layer: 5
   m_Name: btn_menu
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1663,7 +1665,7 @@ GameObject:
   - component: {fileID: 258894846}
   m_Layer: 5
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1743,7 +1745,7 @@ GameObject:
   - component: {fileID: 277186439}
   m_Layer: 5
   m_Name: bottom_bar
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1822,7 +1824,7 @@ GameObject:
   - component: {fileID: 278800862}
   m_Layer: 5
   m_Name: warning_tone
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1914,7 +1916,7 @@ GameObject:
   - component: {fileID: 310626913}
   m_Layer: 5
   m_Name: Content
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2006,7 +2008,7 @@ GameObject:
   - component: {fileID: 331418417}
   m_Layer: 5
   m_Name: btn_save
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2138,7 +2140,7 @@ GameObject:
   - component: {fileID: 340840294}
   m_Layer: 5
   m_Name: close_area_up
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2159,8 +2161,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -49.272, y: 1075.9}
-  m_SizeDelta: {x: 1026.5, y: 243.7}
+  m_AnchoredPosition: {x: -0.022018, y: 1074.8}
+  m_SizeDelta: {x: 1125, y: 243.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &340840294
 MonoBehaviour:
@@ -2270,7 +2272,7 @@ GameObject:
   - component: {fileID: 389259843}
   m_Layer: 5
   m_Name: close_area_un
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2401,7 +2403,7 @@ GameObject:
   - component: {fileID: 395397469}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2480,7 +2482,7 @@ GameObject:
   - component: {fileID: 429697355}
   m_Layer: 5
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2558,7 +2560,7 @@ GameObject:
   - component: {fileID: 441160833}
   m_Layer: 5
   m_Name: model_1
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2690,7 +2692,7 @@ GameObject:
   - component: {fileID: 463814084}
   m_Layer: 5
   m_Name: Scroll View
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2913,7 +2915,7 @@ GameObject:
   - component: {fileID: 500550069}
   m_Layer: 5
   m_Name: NameArea
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2953,7 +2955,7 @@ GameObject:
   - component: {fileID: 508611973}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3033,7 +3035,7 @@ GameObject:
   - component: {fileID: 516695795}
   m_Layer: 5
   m_Name: Scroll View
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3139,7 +3141,7 @@ GameObject:
   - component: {fileID: 532256418}
   m_Layer: 5
   m_Name: message
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3216,7 +3218,7 @@ GameObject:
   - component: {fileID: 535710581}
   m_Layer: 5
   m_Name: btn_logout
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3439,7 +3441,7 @@ GameObject:
   - component: {fileID: 552933042}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3518,7 +3520,7 @@ GameObject:
   - component: {fileID: 586314033}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3665,7 +3667,7 @@ GameObject:
   - component: {fileID: 594690879}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3744,7 +3746,7 @@ GameObject:
   - component: {fileID: 605540202}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3824,7 +3826,7 @@ GameObject:
   - component: {fileID: 609960104}
   m_Layer: 5
   m_Name: personInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3969,7 +3971,7 @@ GameObject:
   - component: {fileID: 625073435}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4179,7 +4181,7 @@ GameObject:
   - component: {fileID: 656148241}
   m_Layer: 5
   m_Name: btn_select
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4310,7 +4312,7 @@ GameObject:
   - component: {fileID: 703946659}
   m_Layer: 5
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4388,7 +4390,7 @@ GameObject:
   - component: {fileID: 727758794}
   m_Layer: 5
   m_Name: underber
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4464,7 +4466,7 @@ GameObject:
   - component: {fileID: 794736339}
   m_Layer: 5
   m_Name: MenuPanel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4643,7 +4645,7 @@ MonoBehaviour:
   logContent: {fileID: 2137172773}
   logItemUserPrefab: {fileID: 2005710714515534971, guid: 177901371bf2943b080040cb280cb59b, type: 3}
   logItemEmoPrefab: {fileID: 2005710714515534971, guid: 7aa70875b0dce4d1d954becb53c94091, type: 3}
-  contentTransform: {fileID: 2137172773}
+  contentTransform: {fileID: 95481526}
   scrollRect: {fileID: 516695795}
   chatInput: {fileID: 2020549783}
   sendButton: {fileID: 1226783012}
@@ -4681,7 +4683,7 @@ GameObject:
   - component: {fileID: 920364972}
   m_Layer: 5
   m_Name: btn_back
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4813,7 +4815,7 @@ GameObject:
   - component: {fileID: 939076277}
   m_Layer: 5
   m_Name: model_0
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4945,7 +4947,7 @@ GameObject:
   - component: {fileID: 940405072}
   m_Layer: 5
   m_Name: warning_title
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5041,7 +5043,7 @@ GameObject:
   - component: {fileID: 967960519}
   m_Layer: 5
   m_Name: message
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5117,7 +5119,7 @@ GameObject:
   - component: {fileID: 1014522349}
   m_Layer: 5
   m_Name: Viewport
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5218,7 +5220,7 @@ GameObject:
   - component: {fileID: 1028535699}
   m_Layer: 5
   m_Name: NameInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5376,7 +5378,7 @@ GameObject:
   - component: {fileID: 1028592874}
   m_Layer: 5
   m_Name: LogoutPanel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5468,7 +5470,7 @@ GameObject:
   - component: {fileID: 1036421488}
   m_Layer: 5
   m_Name: mic_icon
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5544,7 +5546,7 @@ GameObject:
   - component: {fileID: 1045761850}
   m_Layer: 5
   m_Name: pronounInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5690,7 +5692,7 @@ GameObject:
   - component: {fileID: 1064344499}
   m_Layer: 5
   m_Name: nameInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5835,7 +5837,7 @@ GameObject:
   - component: {fileID: 1064816194}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5914,7 +5916,7 @@ GameObject:
   - component: {fileID: 1072215233}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5993,7 +5995,7 @@ GameObject:
   - component: {fileID: 1108075140}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6073,7 +6075,7 @@ GameObject:
   - component: {fileID: 1116460963}
   m_Layer: 5
   m_Name: btn_delete
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6334,7 +6336,7 @@ GameObject:
   - component: {fileID: 1128378878}
   m_Layer: 5
   m_Name: message
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6409,7 +6411,7 @@ GameObject:
   - component: {fileID: 1165875491}
   m_Layer: 5
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6497,7 +6499,7 @@ GameObject:
   - component: {fileID: 1168088695}
   m_Layer: 5
   m_Name: warning_chara
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6620,7 +6622,7 @@ GameObject:
   - component: {fileID: 1197471118}
   m_Layer: 5
   m_Name: model_2
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6753,7 +6755,7 @@ GameObject:
   - component: {fileID: 1226783015}
   m_Layer: 5
   m_Name: btn_send
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6929,7 +6931,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -7042,7 +7044,7 @@ GameObject:
   - component: {fileID: 1238570171}
   m_Layer: 5
   m_Name: model_2
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7173,7 +7175,7 @@ GameObject:
   - component: {fileID: 1239378003}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7253,7 +7255,7 @@ GameObject:
   - component: {fileID: 1249883455}
   m_Layer: 5
   m_Name: toneInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7398,7 +7400,7 @@ GameObject:
   - component: {fileID: 1274963302}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7478,7 +7480,7 @@ GameObject:
   - component: {fileID: 1296582895}
   m_Layer: 5
   m_Name: success_save
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7570,7 +7572,7 @@ GameObject:
   - component: {fileID: 1297561001}
   m_Layer: 5
   m_Name: personInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7767,7 +7769,7 @@ GameObject:
   - component: {fileID: 1327155897}
   m_Layer: 5
   m_Name: pronounInput
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7913,7 +7915,7 @@ GameObject:
   - component: {fileID: 1335720784}
   m_Layer: 5
   m_Name: btn_beta
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8044,7 +8046,7 @@ GameObject:
   - component: {fileID: 1372652672}
   m_Layer: 5
   m_Name: message
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8106,6 +8108,138 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1372652670}
   m_CullTransparentMesh: 1
+--- !u!1 &1399714284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1399714285}
+  - component: {fileID: 1399714288}
+  - component: {fileID: 1399714287}
+  - component: {fileID: 1399714286}
+  m_Layer: 5
+  m_Name: close_area_Run
+  m_TagString: Emo_UI
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1399714285
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399714284}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 95481526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 513.83, y: -552.73}
+  m_SizeDelta: {x: 97.325, y: 800.65}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1399714286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399714284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1399714287}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 907166537}
+        m_TargetAssemblyTypeName: TopController, Assembly-CSharp
+        m_MethodName: ToggleLogPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1399714287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399714284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1399714288
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399714284}
+  m_CullTransparentMesh: 1
 --- !u!1 &1403622029
 GameObject:
   m_ObjectHideFlags: 0
@@ -8119,7 +8253,7 @@ GameObject:
   - component: {fileID: 1403622031}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8198,7 +8332,7 @@ GameObject:
   - component: {fileID: 1406251587}
   m_Layer: 5
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8265,6 +8399,138 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1406251585}
   m_CullTransparentMesh: 1
+--- !u!1 &1415817932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1415817933}
+  - component: {fileID: 1415817936}
+  - component: {fileID: 1415817935}
+  - component: {fileID: 1415817934}
+  m_Layer: 5
+  m_Name: close_area_Rup
+  m_TagString: Emo_UI
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1415817933
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415817932}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 95481526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 513.83, y: 493.8}
+  m_SizeDelta: {x: 97.3, y: 918.4}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1415817934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415817932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1415817935}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 907166537}
+        m_TargetAssemblyTypeName: TopController, Assembly-CSharp
+        m_MethodName: ToggleLogPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1415817935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415817932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1415817936
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1415817932}
+  m_CullTransparentMesh: 1
 --- !u!1 &1418365779
 GameObject:
   m_ObjectHideFlags: 0
@@ -8279,7 +8545,7 @@ GameObject:
   - component: {fileID: 1418365783}
   m_Layer: 5
   m_Name: DletePanel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8370,7 +8636,7 @@ GameObject:
   - component: {fileID: 1419323402}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8451,7 +8717,7 @@ GameObject:
   - component: {fileID: 1429710504}
   m_Layer: 5
   m_Name: btn_mic
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8607,7 +8873,7 @@ GameObject:
   - component: {fileID: 1429746931}
   m_Layer: 5
   m_Name: ModelCreate
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8686,7 +8952,7 @@ GameObject:
   - component: {fileID: 1463487764}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8925,7 +9191,7 @@ GameObject:
   - component: {fileID: 1468895429}
   m_Layer: 5
   m_Name: model_1
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9056,7 +9322,7 @@ GameObject:
   - component: {fileID: 1490061641}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9135,7 +9401,7 @@ GameObject:
   - component: {fileID: 1497127766}
   m_Layer: 5
   m_Name: message
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9210,7 +9476,7 @@ GameObject:
   - component: {fileID: 1516821241}
   m_Layer: 5
   m_Name: message
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9414,7 +9680,7 @@ GameObject:
   - component: {fileID: 1613130470}
   m_Layer: 5
   m_Name: Window
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9492,7 +9758,7 @@ GameObject:
   - component: {fileID: 1656684773}
   m_Layer: 5
   m_Name: mask_stopsend
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9584,7 +9850,7 @@ GameObject:
   - component: {fileID: 1665007047}
   m_Layer: 5
   m_Name: handel_button
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9605,8 +9871,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -50.200012, y: -60}
-  m_SizeDelta: {x: 96.69995, y: 189.26}
+  m_AnchoredPosition: {x: -57.7, y: -58.899963}
+  m_SizeDelta: {x: 180, y: 187}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1665007044
 MonoBehaviour:
@@ -9651,19 +9917,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1665007047}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 907166534}
-        m_TargetAssemblyTypeName: TopController, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
 --- !u!222 &1665007046
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9715,7 +9969,7 @@ GameObject:
   - component: {fileID: 1672382646}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9794,7 +10048,7 @@ GameObject:
   - component: {fileID: 1696718985}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9873,7 +10127,7 @@ GameObject:
   - component: {fileID: 1699940874}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9952,7 +10206,7 @@ GameObject:
   - component: {fileID: 1704225350}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10032,7 +10286,7 @@ GameObject:
   - component: {fileID: 1751202676}
   m_Layer: 5
   m_Name: ChangePanel_M
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10124,7 +10378,7 @@ GameObject:
   - component: {fileID: 1752708618}
   m_Layer: 5
   m_Name: btn_cancel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10268,7 +10522,7 @@ GameObject:
   - component: {fileID: 1754103900}
   m_Layer: 5
   m_Name: NameText
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10348,7 +10602,7 @@ GameObject:
   - component: {fileID: 1766650336}
   m_Layer: 5
   m_Name: NonDeletePanel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10439,7 +10693,7 @@ GameObject:
   - component: {fileID: 1769325508}
   m_Layer: 5
   m_Name: ModelImg
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10653,7 +10907,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1561487114}
-  - {fileID: 158295149}
   - {fileID: 277186438}
   - {fileID: 95481526}
   - {fileID: 1945683529}
@@ -10673,6 +10926,7 @@ RectTransform:
   - {fileID: 1296582894}
   - {fileID: 940405068}
   - {fileID: 1656684776}
+  - {fileID: 158295149}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -10701,7 +10955,7 @@ GameObject:
   - component: {fileID: 1805306157}
   m_Layer: 5
   m_Name: ModelSelect
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10912,7 +11166,7 @@ GameObject:
   - component: {fileID: 1927097666}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10992,7 +11246,7 @@ GameObject:
   - component: {fileID: 1945683532}
   m_Layer: 5
   m_Name: MicPanel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11093,7 +11347,7 @@ GameObject:
   - component: {fileID: 1962711702}
   m_Layer: 5
   m_Name: btn_cancel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11213,7 +11467,7 @@ GameObject:
   - component: {fileID: 1988032607}
   m_Layer: 5
   m_Name: btn_save
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11333,7 +11587,7 @@ GameObject:
   - component: {fileID: 2020549783}
   m_Layer: 5
   m_Name: chat_input
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11478,7 +11732,7 @@ GameObject:
   - component: {fileID: 2029178197}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11558,7 +11812,7 @@ GameObject:
   - component: {fileID: 2037556836}
   m_Layer: 5
   m_Name: CreatePanel_M
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11777,7 +12031,7 @@ GameObject:
   - component: {fileID: 2047284908}
   m_Layer: 5
   m_Name: ProfWindow
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11858,7 +12112,7 @@ GameObject:
   - component: {fileID: 2050404739}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11937,7 +12191,7 @@ GameObject:
   - component: {fileID: 2064031198}
   m_Layer: 5
   m_Name: Text (Legacy)
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12017,7 +12271,7 @@ GameObject:
   - component: {fileID: 2078630814}
   m_Layer: 5
   m_Name: ProfPanel
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12119,7 +12373,7 @@ GameObject:
   - component: {fileID: 2097481079}
   m_Layer: 5
   m_Name: Placeholder
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12198,7 +12452,7 @@ GameObject:
   - component: {fileID: 2098218660}
   m_Layer: 5
   m_Name: ModelCreate
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12279,7 +12533,7 @@ GameObject:
   - component: {fileID: 2102606060}
   m_Layer: 5
   m_Name: btn_create
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12428,7 +12682,7 @@ GameObject:
   - component: {fileID: 2120454996}
   m_Layer: 5
   m_Name: ChangePanel_P
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12526,7 +12780,7 @@ GameObject:
   - component: {fileID: 2120974126}
   m_Layer: 5
   m_Name: CreatePanel_P
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12620,7 +12874,7 @@ GameObject:
   - component: {fileID: 2122938602}
   m_Layer: 5
   m_Name: btn_delete
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12739,7 +12993,7 @@ GameObject:
   - component: {fileID: 2124711743}
   m_Layer: 5
   m_Name: MenuMask
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12814,7 +13068,7 @@ GameObject:
   - component: {fileID: 2125232732}
   m_Layer: 5
   m_Name: ModelCreate
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12893,7 +13147,7 @@ GameObject:
   - component: {fileID: 2137172774}
   m_Layer: 5
   m_Name: Conten
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

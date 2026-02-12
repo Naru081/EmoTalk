@@ -41248,6 +41248,8 @@ MonoBehaviour:
   bodyStrength: 20
   faceSmooth: 20
   bodySmooth: 10
+  blockTag: Emo_UI
+  idleReturnSpeed: 5
 --- !u!1 &4818029277462242430
 GameObject:
   m_ObjectHideFlags: 0

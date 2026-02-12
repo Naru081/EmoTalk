@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5396562743637675733}
   m_Layer: 5
   m_Name: close
-  m_TagString: Untagged
+  m_TagString: Emo_UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,127 +1,123 @@
 using UnityEngine;
+using System.Collections;
 
-// Unityのマイク機能を使用して音声を録音し、解析に適した形式（モノラル）に整えて出力するクラス
+// マイク録音とデータ整形を行うクラス
 public class MicRecorder : MonoBehaviour
 {
-    private AudioClip recording;    // Microphone.Start で確保される生の録音バッファ
-    private string device;          // 使用するマイクデバイス名
-    private int sampleRate = 16000; // サンプリングレート（Whisper等の推奨値 16kHz に設定）
+    private AudioClip recording;         // 録音バッファ
+    private string device;               // 使用デバイス名
+    private int sampleRate = 44100;      // iOSで安定するサンプリングレート
 
-    // ==============================
-    // 録音開始
-    // ==============================
+    // 録音開始処理
     public bool StartRecording()
     {
-        // 接続されているマイクデバイスを確認
+        // 使用可能なマイクデバイスを取得
         device = Microphone.devices.Length > 0 ? Microphone.devices[0] : null;
         if (device == null)
         {
-            Debug.LogError("マイクデバイスが見つかりません。");
+            Debug.LogError("マイクデバイスが見つかりません");
             return false;
         }
 
-        // 録音バッファの確保（最大30秒、ループなし）
+        // 録音バッファを確保して録音を開始
         recording = Microphone.Start(device, false, 30, sampleRate);
         Debug.Log("録音開始");
         return true;
     }
 
-    // ==============================
-    // 音量の取得
-    // ==============================
+    // 現在の音量を取得する処理
     public float GetCurrentVolume()
     {
-        // MicController が「無音かどうか」を判定するために、直近の波形データの平均振幅を計算する
-        if (recording == null || device == null) return 0f;
+        if (recording == null || device == null)
+        {
+            return 0f;
+        }
 
-        // 録音位置を取得
+        // 現在の録音位置を取得
         int micPosition = Microphone.GetPosition(device);
-        if (micPosition <= 0) return 0f;
+        if (micPosition <= 0)
+        {
+            return 0f;
+        }
 
-        // // 256を解析対象とする
+        // 直近256サンプルを取得して音量を計算
         int sampleSize = 256;
         float[] samples = new float[sampleSize];
-
-        // 録音位置から遡ってデータを取得
         int startPosition = Mathf.Max(0, micPosition - sampleSize);
         recording.GetData(samples, startPosition);
 
-        // RMSを計算して音量を算出
+        // RMS値を計算
         float sum = 0f;
         for (int i = 0; i < sampleSize; i++)
         {
             sum += samples[i] * samples[i];
         }
 
-        return Mathf.Sqrt(sum / sampleSize); // RMS値を返す
+        return Mathf.Sqrt(sum / sampleSize);
     }
 
-    // ==============================
-    // 録音停止
-    // ==============================
-    public AudioClip StopRecording()
+    // 録音停止とデータ整形処理
+    public IEnumerator StopRecordingAsync(System.Action<AudioClip> callback)
     {
-        // 録音を終了し、実際に喋った長さ分だけを切り出したモノラル AudioClip を生成する
         if (recording == null || device == null)
         {
-            return null;
+            callback(null);
+            yield break;
         }
 
-        // 録音位置を取得して録音停止
+        // iOSは停止直後にデータが反映されないため待機
+        yield return new WaitForSeconds(0.1f);
+
+        // 録音位置を取得して録音を終了
         int position = Microphone.GetPosition(device);
         Microphone.End(device);
 
+        // 録音データが無い場合は終了
         if (position <= 0)
         {
-            Debug.LogWarning("録音が正常に行われませんでした。");
-            return null;
+            Debug.LogWarning("録音データが取得できませんでした");
+            callback(null);
+            yield break;
         }
 
         // 録音データを取得
-        int originalChannels = recording.channels;
-        float[] data = new float[position * originalChannels];
+        int channels = recording.channels;
+        float[] data = new float[position * channels];
         recording.GetData(data, 0);
 
-        // モノラル変換
-        // Whisperなどの音声認識APIはモノラルを好むため、ステレオの場合は平均化する
-        float[] monoData = new float[position];
-        if (originalChannels == 2)
+        // モノラル化処理
+        float[] mono = new float[position];
+        if (channels == 2)
         {
             for (int i = 0; i < position; i++)
             {
-                monoData[i] = (data[i * 2] + data[i * 2 + 1]) * 0.5f;
+                mono[i] = (data[i * 2] + data[i * 2 + 1]) * 0.5f;
             }
         }
         else
         {
-            monoData = data;
+            mono = data;
         }
 
-        // 切り出したデータで新しいAudioClipを作成
+        // モノラルデータをAudioClipとして生成
         AudioClip clip = AudioClip.Create(
             "RecordedClip",
             position,
-            1, // モノラル
-            recording.frequency,
+            1,
+            sampleRate,
             false
         );
-        Debug.Log($"clip.length={clip.length}, expected={position / (float)clip.frequency}");
-
-        // 整形したデータをセット
-        clip.SetData(monoData, 0);
+        clip.SetData(mono, 0);
 
         Debug.Log("録音終了");
-        return clip;
+        callback(clip);
     }
 
-    // ==============================
-    // ダミー音声生成（テスト用）
-    // ==============================
+    // ダミー音声クリップ生成処理
     public AudioClip CreateDummyClip(float lengthSec = 1.2f)
     {
-        // 指定秒数の無音AudioClipを生成
         int samples = Mathf.CeilToInt(sampleRate * lengthSec);
-        float[] data = new float[samples]; // 完全な無音
+        float[] data = new float[samples];
 
         AudioClip clip = AudioClip.Create(
             "DummyClip",
@@ -133,6 +129,4 @@ public class MicRecorder : MonoBehaviour
         clip.SetData(data, 0);
         return clip;
     }
-
-
 }

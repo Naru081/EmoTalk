@@ -25,6 +25,11 @@ public class TopController : MonoBehaviour
     [Range(0.1f, 0.9f)]
     public float openThreshold = 0.5f;   // 開き具合が何割以上なら「開く」とみなすか
 
+    // 追加：handle内判定用
+    private Canvas uiCanvas;
+    private RectTransform handleRect;
+
+
     // チャットログ追加
     [Header("Chat Log")]
     public Transform logContent;        // チャットログコンテンツの親
@@ -97,7 +102,7 @@ public class TopController : MonoBehaviour
     public string serverUrl = "http://172.20.10.6/backend/PHP_message/control_message.php";
 
     // ngrok http 80で起動したURLを指定すること
-    //public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
+    // public string serverUrl = "http://ernestine-geoidal-gaynelle.ngrok-free.dev/backend/PHP_message/control_message.php";
 
     [Tooltip("通信失敗時に従来のテスト返信を出す（デバッグ用）")]
     public bool fallbackToDebugReply = true;
@@ -119,6 +124,10 @@ public class TopController : MonoBehaviour
         // 送信処理
         sendButton.onClick.RemoveAllListeners();
         sendButton.onClick.AddListener(OnSendMessage);
+
+        // handleのRectとCanvas参照を取る
+        handleRect = handleButton != null ? handleButton.GetComponent<RectTransform>() : null;
+        uiCanvas = handleButton != null ? handleButton.GetComponentInParent<Canvas>() : null;
     }
 
     // ==============================
@@ -413,6 +422,22 @@ public class TopController : MonoBehaviour
     }
 
     // =====================================
+    // ドラッグ位置の判定
+    // =====================================
+    private bool IsPointerOnHandle(Vector2 screenPos)
+    {
+        if (handleRect == null) return false;
+
+        Camera cam = null;
+        if (uiCanvas != null && uiCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        {
+            cam = uiCanvas.worldCamera;
+        }
+
+        return RectTransformUtility.RectangleContainsScreenPoint(handleRect, screenPos, cam);
+    }
+
+    // =====================================
     // iPhone風スワイプ開閉処理（元のまま）
     // =====================================
     void DetectDrag()
@@ -421,9 +446,15 @@ public class TopController : MonoBehaviour
         // --- マウス操作（エディタ確認用） ---
         if (Input.GetMouseButtonDown(0))
         {
+            Vector2 pos = Input.mousePosition;
+
+            // ★追加：handle内で押してないならドラッグ開始しない
+            if (!IsPointerOnHandle(pos)) return;
+
             isDragging = true;
-            dragStartPos = Input.mousePosition;
+            dragStartPos = pos;
             panelStartX = logPanel.localPosition.x;
+
         }
         else if (Input.GetMouseButton(0) && isDragging)
         {
@@ -443,6 +474,9 @@ public class TopController : MonoBehaviour
 
             if (t.phase == TouchPhase.Began)
             {
+                // ★追加：handle内で触ってないならドラッグ開始しない
+                if (!IsPointerOnHandle(t.position)) return;
+
                 isDragging = true;
                 dragStartPos = t.position;
                 panelStartX = logPanel.localPosition.x;
@@ -476,6 +510,8 @@ public class TopController : MonoBehaviour
 
         // 指を離した位置が「一定以上右に出ていれば」開く
         isOpen = (ratio >= openThreshold);
+        float targetX = isOpen ? openX : closeX;
+        logPanel.localPosition = new Vector3(targetX, logPanel.localPosition.y, logPanel.localPosition.z);
     }
 
     // ==============================

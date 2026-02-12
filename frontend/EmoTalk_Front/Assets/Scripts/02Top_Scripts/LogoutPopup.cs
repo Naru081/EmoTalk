@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 // ログアウトによる認証情報破棄とログイン画面遷移
 public class LogoutPopup : MonoBehaviour
@@ -42,10 +43,37 @@ public class LogoutPopup : MonoBehaviour
     // ==============================
     private void DoLogout()
     {
-        // 自動ログインのためのトークンを削除
-        EncryptedPlayerPrefs.DeleteKey("token");
+        // UserIDの取得
+        int userId = UserData.GetUserId();
 
-        // ログイン画面へ遷移して、アプリを再起動した状態にする
-        SceneManager.LoadScene(loginSceneName);
+        // リクエストデータの準備
+        LogoutRequest request = new LogoutRequest
+        {
+            user_id = userId
+        };
+
+        // トークンの削除を行うPHPとの通信を開始
+        StartCoroutine(ApiConnect.Post<LogoutRequest, BaseResponseData>(
+            "PHP_user/logout.php",
+            request,
+            (res) =>
+            {
+                // 結果の処理
+                if (res.success)
+                {
+                    // 端末からトークンを削除
+                    EncryptedPlayerPrefs.DeleteKey("token");
+
+                    // ログイン画面へ遷移して、アプリを再起動した状態にする
+                    SceneManager.LoadScene(loginSceneName);
+                }
+            },
+            (err) =>
+            {
+                // エラー時の処理
+                Debug.LogError("Logout API Error: " + err);
+            }
+        ));
+
     }
 }

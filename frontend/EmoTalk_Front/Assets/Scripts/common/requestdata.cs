@@ -9,6 +9,12 @@ public class UserRequest        // 新規登録・ログイン共通リクエス
     public string user_pass;
 }
 
+[System.Serializable]   // ログアウトリクエスト
+public class LogoutRequest
+{
+    public int user_id;
+}
+
 [System.Serializable]           // メールアドレスのみリクエスト
 public class User_mailRequest
 {

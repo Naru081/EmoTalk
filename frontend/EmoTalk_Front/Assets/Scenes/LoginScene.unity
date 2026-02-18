@@ -4303,10 +4303,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
+    m_FontSize: 38
     m_FontStyle: 2
     m_BestFit: 0
-    m_MinSize: 4
+    m_MinSize: 3
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -4314,7 +4314,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30D1\u30B9\u30EF\u30FC\u30C9"
+  m_Text: "\u30D1\u30B9\u30EF\u30FC\u30C9(\u534A\u89D2\u82F1\u6570\u304B\u30648~16\u6587\u5B57\u307E\u3067)"
 --- !u!222 &1149022918
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4528,7 +4528,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
+    m_FontSize: 38
     m_FontStyle: 2
     m_BestFit: 0
     m_MinSize: 0
@@ -4539,7 +4539,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30D1\u30B9\u30EF\u30FC\u30C9"
+  m_Text: "\u30D1\u30B9\u30EF\u30FC\u30C9(\u534A\u89D2\u82F1\u6570\u304B\u30648~16\u6587\u5B57\u307E\u3067)"
 --- !u!222 &1180191000
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5048,7 +5048,7 @@ MonoBehaviour:
     m_FontSize: 40
     m_FontStyle: 2
     m_BestFit: 0
-    m_MinSize: 4
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0

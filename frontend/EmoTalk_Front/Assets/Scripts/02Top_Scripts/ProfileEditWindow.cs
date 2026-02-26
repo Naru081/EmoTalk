@@ -32,6 +32,8 @@ public class ProfileEditWindow : MonoBehaviour
     [Header("Detail Window")]
     public PropertyWindow detailWindow;               // 詳細編集ウィンドウ参照
 
+    public TopController topController;                   // TopController参照
+
     // ==============================
     // プロファイル画面を開く
     // ==============================
@@ -73,6 +75,12 @@ public class ProfileEditWindow : MonoBehaviour
 
         // 選択状態を保存 + Live2Dを切り替え
         ProfileManager.Instance.SelectProfile(currentProfile);
+
+        // ログの削除
+        if(topController != null)
+        {
+            topController.ClearAllLogs();
+        }
 
         // リストを即更新
         if (listWindow != null) listWindow.RefreshList();

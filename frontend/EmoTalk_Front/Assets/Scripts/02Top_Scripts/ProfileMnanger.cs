@@ -574,4 +574,16 @@ public class ProfileManager : MonoBehaviour
         maskSendPopup.Open();
         StartCoroutine(OpenNextFrame(maskSendPopup));
     }
+
+    // ==============================
+    // ログアウト時にDontDestroyオブジェクトをリセットするための関数
+    // ==============================
+    public void DestroySelf()
+    {
+        if(Instance == this)
+        {
+            Instance = null;
+        }
+        Destroy(gameObject);
+    }
 }

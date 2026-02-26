@@ -409,7 +409,29 @@ public class TopController : MonoBehaviour
         hasLastSpeaker = true;
         lastSpeakerIsUser = isUser;
     }
+    
+    // ==============================
+    // ログを全て削除
+    // ==============================
+    public void ClearAllLogs()
+    {
+        // すべての子オブジェクトを削除
+        foreach (Transform child in logContent)
+        {
+            Destroy(child.gameObject);
+        }
 
+        // 状態リセット
+        hasLastSpeaker = false;
+        lastSpeakerIsUser = false;
+
+        // スクロールを一番上に移動
+        if(scrollRect != null)
+        {
+            scrollRect.verticalNormalizedPosition = 1f;
+        }
+        Debug.Log("全てのログを削除しました。");
+    }
 
     // ==============================
     // 会話更新時スクロールを一番下に移動

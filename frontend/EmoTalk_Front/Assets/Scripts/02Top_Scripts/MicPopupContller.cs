@@ -19,7 +19,7 @@ public class MicController : MonoBehaviour
     public GameObject close;         // 閉じるボタン
 
     [Header("Auto Stop")]
-    public float silenceThreshold = 0.01f; // 無音判定閾値
+    public float silenceThreshold = 0.03f; // 無音判定閾値
     public float silenceDuration = 1.5f;   // 無音継続時間
     public float maxRecordTime = 10f;      // 最大録音時間
 
